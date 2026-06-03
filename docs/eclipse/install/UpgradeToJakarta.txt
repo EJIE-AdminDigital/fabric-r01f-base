@@ -1,0 +1,57 @@
+Pasos para crear entorno jakarta:
+1 - Descargar jdk17 (https://adoptium.net/es/temurin/releases/?os=windows&arch=x64&package=jdk&version=17) e instalarla p.e.: C:\develop\java\jdk-17.0.10
+
+2 - Crear un workspace nuevo y totalmente limpio, p.e. C:\develop\eclipse_workspaces\met01.jakarta y copiar los archivos del cirectorio master
+
+3 - Arrancar eclipse con ese workspace
+
+4 - Establecer la jdk17 como JRE por defecto y verificar en las Properties el Java>>Compiler con la especificación de la 17
+
+5 - Crear el directorio C:\develop\projects\opendata\meteo.jakarta para la descarga de los repositorios
+
+6 - Descargar las versiones .jakarta de los repositorios en un nuevo directorio local C:\develop\projects\opendata\meteo.jakarta
+
+7 - Importar los proyectos
+
+Cambios para ajustar otros proyectos:
+1 - Cambiar el pom.xml la version en maven.compiler.source y maven.compiler.target a 17
+
+2 - Cambiar el pom.xml añadir al final de la versión -JAKARTA
+
+3 - En los proyectos War abrir su pom.xml y especificar la versión jakarta para la dependencia de servlets, cambiar javax. por jakarta. y la version 6.0.0, también se debe cambisar la especificación en el web.xml, poner esta:
+<web-app xmlns = "https://jakarta.ee/xml/ns/jakartaee"
+         xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation = "https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd"
+         version = "6.0"
+         metadata-complete = "false">
+
+4 - En las dependencias perfiladas agregar una dependencia con el proyecto r01fBaseConfigByEnv 
+		<profile>
+			<id>env_profile</id>
+			<dependencies>
+			..............
+				<dependency>
+					<groupId>r01.r01f.config</groupId>
+					<artifactId>r01fBaseConfigByEnv</artifactId>
+					<version>${r01f.config.version}</version>
+				</dependency>
+			..............
+	y en el pom.xml principal especificar la version de r01f.config.version
+			<!-- Dependencies versions -->
+			<r01f.version>R01F-VERSION-JAKARTA</r01f.version>
+			..............
+			<r01f.config.version>R01F-CONFIG-VERSION-JAKARTA</r01f.config.version>
+			..............
+				
+
+5 - Resolver problemas de compilación:
+		- import javax.Inject y javax.Provider cambiar por import jakarta.Inject y jakarta.Provider
+		- cambiar javax.persistence por jakarta.persistence en clases y en los elementos de los archivos X.dbpersistence.properties.xml 
+		- HttpClient cambiar por la versión de la JDK java.net.http
+
+6 - Cambiar la cabecera en los archivos persistence.xml
+<persistence version="3.0" xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+
+7 - Nueva versión de tomcat apache-tomcat-10.1.xx

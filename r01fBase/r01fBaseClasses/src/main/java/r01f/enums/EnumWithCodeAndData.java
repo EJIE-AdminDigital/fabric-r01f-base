@@ -1,0 +1,18 @@
+package r01f.enums;
+
+
+
+
+/**
+ * Enum with a code and label operations 
+ * @see EnumWithCodeAndDataWrapper
+ * @param C
+ * @param E 
+ */
+public interface EnumWithCodeAndData<C,D,E extends Enum<E>> 
+         extends EnumWithCode<C,E> {
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
+	public D getData();
+}

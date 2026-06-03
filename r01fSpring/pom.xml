@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+
+<!-- ====================================================================== -->
+<!-- PROPERTIES                                                             -->
+<!-- ====================================================================== -->
+	<properties>
+	 
+		  <spring.version>7.0.7</spring.version>	 
+	      <spring.security.version>7.1.0-RC1</spring.security.version>	     
+	      <spring.boot.version>4.1.0-RC1</spring.boot.version>
+		  
+		  
+		  <!-- #############################################################################################
+			   [STEPS TO USE Spring  4 ! 
+		      ##############################################################################################
+		       
+		        [1] Change the Spring Dependecies, in this pom, just this : 		        
+		            _______________________________________________________________________________________
+		            
+		            [Spring 4 Versions]
+		            
+		            <spring.version>7.0.6</spring.version>	 
+	                <spring.security.version>7.1.0-M3</spring.security.version>	     
+	                <spring.boot.version>4.1.0-M3</spring.boot.version>
+	                
+	                [Spring 3 Versions]
+	                
+	                   <spring.version>6.2.8</spring.version>			    
+		               <spring.security.version>6.3.4</spring.security.version>			     
+		               <spring.boot.version>3.5.2</spring.boot.version>
+	                
+	                
+		       
+		       [2] [r01fSprinBootClass] project , set this exclusions for auto-configurations at SpringBootFabricApplication
+		           ___________________________________________________________________________________________________________
+		           
+		       			  SpringBootAutoconfigurationNames.V4.DATA_SOURCE,       
+	                      SpringBootAutoconfigurationNames.V4.HIBERNATE_JPA,     
+	                      SpringBootAutoconfigurationNames.V4.TRANSACTION
+	                      
+	           [3] [r01fBusinessServices] project/repo set jakarta.persitence version 4
+	               __________________________________________________________________________________________________________
+	               
+	                	  <jakarta.persistence.version>4.0.0-M1</jakarta.persistence.version>
+	                	  
+	           [4] [ r01fDBPersistenceHibernateClasses] project :
+	               __________________________________________________________________________________________________________
+	               
+	                   [Be Carefull !  groupId has changed to : org.hibernate.orm]
+					    
+					     <dependency>
+						    <groupId>org.hibernate.orm</groupId>
+						    <artifactId>hibernate-core</artifactId>
+						    <version>8.0.0.Alpha1</version>		
+						</dependency>					    
+						<dependency>
+						    <groupId>org.hibernate.orm</groupId>
+						    <artifactId>hibernate-hikaricp</artifactId>
+						    <version>8.0.0.Alpha1</version>		    
+						</dependency>
+						
+			   [5] Code  :  CoreSpringBootstrapPersistenceConfigurationAbstract
+		             1. Change imports : 
+		                       
+		                        org.springframework.boot.autoconfigure.orm.jpa.JpaProperties    [to]    org.springframework.boot.jpa.autoconfigure.JpaProperties; 
+		                                                                                                org.springframework.boot.jpa.EntityManagerFactoryBuilder;
+
+		   -->
+	
+	</properties>
+<!-- ====================================================================== -->
+<!-- PARENT                                                                 -->
+<!-- ====================================================================== -->
+	<parent>
+		<groupId>r01.fabric.base</groupId>
+		<artifactId>r01f</artifactId>
+		<version>${revision}</version>
+	</parent>
+<!-- ====================================================================== -->
+<!-- ARTIFACT                                                               -->
+<!-- ====================================================================== -->
+	<groupId>r01.fabric.base.spring</groupId>
+	<name>r01fSpring</name>
+	<artifactId>r01fSpring</artifactId>
+	<packaging>pom</packaging>				<!-- it's a parent project -->
+
+<!-- ====================================================================== -->
+<!-- MODULES                                                                -->
+<!-- ====================================================================== -->
+	<modules>
+		<module>r01fSpringClasses</module>		
+		<module>r01fSpringWeb</module>
+		<module>r01fSpringSecurityClasses</module>
+		<module>r01fSpringBoot</module>
+	</modules>
+
+<!-- ====================================================================== -->
+<!-- DEPENDENCIES                                                           -->
+<!-- ====================================================================== -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<!-- ///////////////////////////////////////// -->
+		<!-- Spring                                    -->
+		<!-- ///////////////////////////////////////// -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-beans</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-context-support</artifactId>
+		</dependency>
+	</dependencies>
+</project>

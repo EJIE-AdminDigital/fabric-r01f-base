@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+<!-- ====================================================================== -->
+<!-- PARENT                                                                 -->
+<!-- ====================================================================== -->
+	<parent>
+		<groupId>r01.fabric.base.remoteservices</groupId>
+		<artifactId>r01fRemoteServices</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+<!-- ====================================================================== -->
+<!-- ARTIFACT                                                               -->
+<!-- ====================================================================== -->
+	<name>r01fRMIClasses</name>
+	<artifactId>r01fRMIClasses</artifactId>
+
+<!-- ====================================================================== -->
+<!-- DEPENDENCIES                                                           -->
+<!-- ====================================================================== -->
+	<dependencies>
+		<!-- corba -->
+		<!-- DO NOT MOVE!!!! must be BEFORE weblogicthint3client -->
+		<dependency>
+			<groupId>org.glassfish.corba</groupId>
+			<artifactId>glassfish-corba-orb</artifactId>
+			<version>4.2.4</version>
+		</dependency>
+		<!-- 
+		Primitive Function Library (PFL): utility functions for Glassfish
+			- pfl-basic: common functionalities
+			- pfl-tf: timer framework
+			- pfl-edl: legacy ORB support 
+		-->
+		<!--
+		<dependency>
+		    <groupId>org.glassfish.pfl</groupId>
+		    <artifactId>pfl-tf</artifactId>
+		    <version>4.1.2</version>
+		</dependency>
+		-->
+		
+		<!--
+		Oracle Maven repo: https://maven.oracle.com > https://www.oracle.com/webfolder/application/maven/index.html
+		is NOT browseable: https://blogs.oracle.com/weblogicserver/oracle-maven-repository-index-now-available
+		(the only solution is to download the index and use [NetBeans] to browse it)
+		-->
+		<!-- all weblogic deps http://developer.osinerg.gob.pe/nexus/content/repositories/public/com/oracle/weblogic/ -->
+		<dependency>
+			<groupId>ejie.weblogic</groupId>
+			<artifactId>wlthint3client</artifactId>
+			<version>${weblogic.thint3client.version}</version> 
+	   </dependency>
+		
+		<!-- Apache commons beanutils is also required -->
+		<!--
+		<dependency>
+		    <groupId>commons-beanutils</groupId>
+		    <artifactId>commons-beanutils</artifactId>
+		    <version>1.9.4</version>
+		</dependency>
+		-->
+	</dependencies>
+
+<!-- ====================================================================== -->
+<!-- BUILD                                                                  -->
+<!-- ====================================================================== -->
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!--
+				ECLIPSE (see main pom.xml for further info) ===================
+				This plugin has NO effects in maven build:
+					m2e ONLY runs some 'standard' goals of the maven pom.xml since the aim of m2e is NOT to be a complete CI tool
+					... in order to include 'non-standard' goals in m2e execution and avoid [plugin execution not covered by the eclipse m2e plugin project build lifecycle mapping]
+						the 'non-standard' plugin MUST be explicitly included in m2e execution
+				-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<!-- flatten plugin -->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>flatten-maven-plugin</artifactId>
+										<versionRange>[1.1.0,)</versionRange>
+										<goals>
+											<goal>flatten</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

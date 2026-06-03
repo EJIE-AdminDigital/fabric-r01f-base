@@ -1,0 +1,111 @@
+<!--
+================================================================================
+	 LOGBACK CONFIG
+================================================================================
+Every project will have it's own logback.xml file like:
+	<configuration debug="false">
+
+		<property name="appName" value="{appCode}" />
+		<jmxConfigurator contextName="{appCode}" />
+
+		Global
+		<include resource="r01f/r01fLogbackGlobal.xml"/>
+		<include resource="${r01Env}/r01f/r01fLogback.xml"/>
+
+		Specific
+		<include resource="${r01Env}/{appCode}/{appCode}Logback.xml"/>
+	</configuration>
+
+IMPORTANT: LOG LOCATION
+=====================================================
+Logs location is determined using an ENVIRONMENT variable named R01_HOME
+This environment variable can be set:
+
+[1] - At a JVM env property like:
+		-DR01_HOME=/data/r01
+
+[2] - Using an environment-dependent file named {appCode}LogEnvironment.xml
+	  included in the main logback.xml file that contain env-dependent config
+			<included>
+				<property name="R01_HOME" value="c:/develop/log" />
+			</included>
+
+If the R01_HOME environment var is NOT found, logs are located at /log folder
+
+This GLOBAL logback.xml is NOT ENVIRONMENT DEPENDENT
+-->
+<included>
+	<!-- To indicate that any configuration changes to occur is displayed on console -->
+	<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+
+	<!-- <property name="USER_HOME" value="${user.home}" />  -->
+
+	<!--
+		local (see [Conditional processing of configuration files at http://logback.qos.ch/manual/configuration.html)
+		-requires Janino dependency-
+	 -->
+	<!--
+	<if condition='isNull("LOG_HOME")'>
+		<then>
+			<if condition='property("os.name").contains("win")'>
+				<then>
+					<property name="LOG_HOME" value="${HOME}/log" />
+				</then>
+			</if>
+		</then>
+	</if>
+	-->
+	<property name="logPath" value="${R01_Home:-/develop/temp_dev}/logs/${appName}" />	
+
+	<!-- 1 por día. Nivel DEBUG. 10 días de historia
+		 logger{10} líneas de stacktrace para las excepciones
+	-->
+	<appender name="app_log" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<!-- filters events below the specified threshold:
+					- if set to a high level (TRACE) the level is determined by the package config
+				 	- if set to a low level (ERROR) no log will be logged below this, no matter the package config.
+			-->
+			<level>WARN</level>
+		</filter>
+		<!-- When in a weblogic cluster and logs located in a NAS, if the log file name does NOT include something
+			 for each cluster node (like the server's name), N JVMs will be writing at the same file; this is a performance botlenect.
+			 To avoid this problem, the log file name includes an environmental variable that each weblogic server sets with it's own name: weblogic.Name
+			 When in a NOT-weblogic environmente (ie Tomcat), the default value is used $(weblogic.Name:-[defaultValue])
+			 see http://logback.qos.ch/manual/configuration.html#variableSubstitution
+			 <file>${logPath}/${appName}_${weblogic.Name:-default}.log</file>
+		-->
+		<file>${logPath}/${appName}_${weblogic.Name:-default}.log</file>
+		<encoder>
+			<pattern>%date %-5level %logger{0} [%method - %line] - %message%n %exception{30}</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>${logPath}/rolled/${appName}_${weblogic.Name:-default}_%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+			<!-- keep 10 days' worth of history -->
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<!-- sends logs to logback-beagle -->
+	<!-- <consolePlugin /> -->
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<!-- filters events below the specified threshold:
+					- if set to a high level (TRACE) the level is determined by the package config
+				 	- if set to a low level (ERROR) no log will be logged below this, no matter the package config.
+			-->
+			<level>INFO</level>
+		</filter>
+		<!-- encoders are assigned the type
+		     ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+		<encoder>
+			<pattern>%highlight(%date [%thread] %-5level %logger{0} [%method - %line] - %message%n %exception{30})</pattern>
+		</encoder>
+	</appender>
+	<!-- Root Logger -->
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+	</root>
+</included>

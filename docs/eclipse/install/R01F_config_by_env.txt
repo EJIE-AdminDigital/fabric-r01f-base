@@ -1,0 +1,67 @@
+Si os haceis PULL de develop.jakarta os cambiará la forma en que veis las trazas en tomcat (en default y resto de entornos).
+
+Se saca mas informacion, ya que nos indica el nivel de traza, la clase, metodo y linea de la traza.
+
+Es posible que en entornos de testeo (como default y canary) el nivel de traza sea bastante infierno, pero podeis modificarlas en vuestro local, sin subir a GIT dichos cambios.
+ 
+Se ha modificado el fichero
+r01fConfig/src/main/config/r01f/r01fLogbackGlobal.xml
+
+Los proyectos de configuracion modificados son:
+r01plateawebconfig/
+r01plateawebconfigbyenv/
+r01plateawebcorecommon/
+
+Ademas, de los proyectos de aplicaciones:
+r01plateawebcoredirectory/
+r01plateawebuicommonwebapps/
+
+Estos tienen ademas ficheros propios del formulario en sí, que sería conveniente configurar por entorno de la misma forma que se ha realizado de forma general.
+
+Ejemplo de fichero logback.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+IMPORTANT!!!!!
+=====================================================
+Do NOT forget to set a JVM env property like
+	-DR01_HOME=/data/r01 -DR01_ENV=default
+-->
+
+<configuration scan="true" scanPeriod="300 seconds">
+
+	<property name="appName" value="r01t" />
+	<jmxConfigurator contextName="r01t" />
+	
+	<!-- Global -->
+	<include resource="r01f/r01fLogbackGlobal.xml"/>
+	<include resource="${R01Env:-default}/r01f/r01fLogback.xml"/>
+
+	<!-- Specific -->
+	<include resource="${R01Env:-default}/r01t/r01tLogback.xml"/>
+	<include resource="${R01Env:-default}/r01p/r01pLogback.xml"/>
+
+</configuration>
+
+Para incluir los proyectos de ficheros de configuración se debe especificar en el archivo pom.xml de l proyecto el perfilado necesario:
+<profiles>
+		<!-- Used when a profile is NOT set [mvn clean install] (public) -->
+		<profile>
+			<id>default_profile</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+		<!-- Used when setting a profile like [mvn clean install -Penv_profile] (ejie internal) -->
+		<profile>
+			<id>env_profile</id>
+			<dependencies>
+				<dependency>
+					<groupId>r01.r01f.config</groupId>
+					<artifactId>r01fBaseConfigByEnv</artifactId>
+					<version>${r01f.config.version}</version>
+				</dependency>
+				.......................
+			</dependencies>
+		</profile>
+	</profiles>
