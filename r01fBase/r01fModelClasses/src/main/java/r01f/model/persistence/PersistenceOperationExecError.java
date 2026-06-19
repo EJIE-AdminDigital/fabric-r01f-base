@@ -1,0 +1,133 @@
+package r01f.model.persistence;
+
+import lombok.experimental.Accessors;
+import r01f.model.services.COREServiceErrorType;
+import r01f.model.services.COREServiceErrorTypes;
+import r01f.model.services.COREServiceMethod;
+import r01f.model.services.COREServiceMethodExecError;
+import r01f.objectstreamer.annotations.MarshallType;
+import r01f.util.types.Strings;
+
+
+@MarshallType(as="persistenceOperationResult",typeId="error")
+@Accessors(prefix="_")
+public class PersistenceOperationExecError<T>
+	 extends COREServiceMethodExecError<T> 
+  implements PersistenceOperationResult<T> {
+/////////////////////////////////////////////////////////////////////////////////////////
+//  CONSTRUCTOR & BUILDER
+/////////////////////////////////////////////////////////////////////////////////////////
+	public PersistenceOperationExecError() {
+		// default no-args constructor
+	}
+	public PersistenceOperationExecError(final COREServiceMethod reqOp) {
+		super(reqOp);
+	}
+	public <E extends PersistenceOperationExecError<?>> PersistenceOperationExecError(final COREServiceMethod reqOp,
+																					  final E otherError) {
+		this(reqOp);
+		this.setCalledMethod(otherError.getCalledMethod());
+		this.setError(otherError.getError());
+		this.setErrorDebug(otherError.getErrorDebug());
+		this.setErrorMessage(otherError.getErrorMessage());
+		this.setErrorType(otherError.getErrorType());
+		this.setRequestedOperation(otherError.getRequestedOperation());
+	}
+	public PersistenceOperationExecError(final PersistenceRequestedOperation reqOp) {
+		this(reqOp.getCOREServiceMethod());
+	}
+	public PersistenceOperationExecError(final COREServiceMethod reqOp,
+								  		 final Throwable th) {
+		super(reqOp,
+			  th);
+	}
+	public PersistenceOperationExecError(final PersistenceRequestedOperation reqOp,
+								  		 final Throwable th) {
+		super(reqOp.getCOREServiceMethod(),
+			  th);
+	}
+	public PersistenceOperationExecError(final COREServiceMethod reqOp,
+								  		 final COREServiceErrorType errType,
+								  		 final Throwable th) {
+		super(reqOp,
+			  errType,
+			  th);
+	}
+	public PersistenceOperationExecError(final PersistenceRequestedOperation reqOp,
+								  		 final COREServiceErrorType errType,
+								  		 final Throwable th) {
+		super(reqOp.getCOREServiceMethod(),
+			  errType,
+			  th);
+	}
+	public PersistenceOperationExecError(final COREServiceMethod reqOp,
+								  	     final String msg) {
+		super(reqOp,
+			  msg);
+	}
+	public PersistenceOperationExecError(final PersistenceRequestedOperation reqOp,
+								  		 final String msg) {
+		super(reqOp.getCOREServiceMethod(),
+			  msg);
+	}
+	public PersistenceOperationExecError(final COREServiceMethod reqOp,
+								  		 final COREServiceErrorType errType,
+								  		 final String errMsg) {
+		super(reqOp,
+			  errType,
+			  errMsg);
+	}
+	public PersistenceOperationExecError(final PersistenceRequestedOperation reqOp,
+								  		 final COREServiceErrorType errType,
+								  		 final String errMsg) {
+		super(reqOp.getCOREServiceMethod(),
+			  errType,
+			  errMsg);
+	}
+	public <E extends PersistenceOperationExecError<?>> PersistenceOperationExecError(final PersistenceRequestedOperation reqOp,
+										 											  final E otherError) {
+		this(reqOp);
+		this.setCalledMethod(otherError.getCalledMethod());
+		this.setError(otherError.getError());
+		this.setErrorDebug(otherError.getErrorDebug());
+		this.setErrorMessage(otherError.getErrorMessage());
+		this.setErrorType(otherError.getErrorType());
+		this.setRequestedOperation(otherError.getRequestedOperation());
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	                                                                          
+/////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public PersistenceRequestedOperation getRequestedOperation() {
+		return PersistenceRequestedOperation.from(_calledMethod);
+	}
+	public void setRequestedOperation(final PersistenceRequestedOperation calledOp) {
+		_calledMethod = calledOp != null ? calledOp.getCOREServiceMethod() : null;
+	}	
+/////////////////////////////////////////////////////////////////////////////////////////
+//  
+/////////////////////////////////////////////////////////////////////////////////////////
+	public void throwAsPersistenceException() throws PersistenceException {
+		throw this.getPersistenceException();
+	}
+	public PersistenceException getPersistenceException() {
+		String errorMsg = Strings.isNOTNullOrEmpty(_errorMessage) ? _errorMessage
+																  : this.getDetailedMessage();
+		COREServiceErrorType errorType = _errorType != null ? _errorType : COREServiceErrorTypes.UNKNOWN;
+		PersistenceRequestedOperation reqOp = this.getRequestedOperation();
+		return reqOp != null ? new PersistenceException(reqOp,
+														errorType,
+														errorMsg)
+							 : new PersistenceException(_calledMethod,
+														errorType,
+														errorMsg);
+	} 
+/////////////////////////////////////////////////////////////////////////////////////////
+//  REASON
+/////////////////////////////////////////////////////////////////////////////////////////
+	public boolean wasBecauseClientCouldNotConnectToServer() {
+		if (_errorType == null) throw new IllegalStateException(Strings.customized("The {} object instance does NOT have error info!",
+																				   this.getClass().getSimpleName()));
+		return _errorType.is(PersistenceServiceErrorTypes.CLIENT_CANNOT_CONNECT_SERVER);
+	}
+}

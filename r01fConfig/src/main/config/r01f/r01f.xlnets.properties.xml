@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xlnets token='mockFile' 
+		login='app'
+		loginAppCode='r01f'>	
+	<!--
+	 see [[[[[[ XLNetsAPIBuilder ]]]]]]]
+	 see https://xlnets.servicios.jakina.ejiedes.net/xlnets/servicios.htm
+	 ====================================================================
+		token = n38api > use the XLNets API to get the [xlnets session]
+			- login = user > NOT supported to create an XLNetsAPI since it requires the user requestto create an [xlnets session]
+			- login = app > App login
+			
+								<xlnets token="n38api"
+										login="user"
+										loginAppCode="appCode">    <<<  the [appCode] used to create the [XLNetsAPI]
+								</xlnets>
+									
+		token = httpProvided > use an http service that provides an [app] [xlnets session token] which in turn is used to create the [XLNetsAPI]
+		
+								<xlnets token="httpProvided"
+										loginAppCode="appCode">    <<<  the [appCode] used to create the [XLNetsAPI]
+									<httpSessionTokenProviderService>
+										<url>http://svc.intra.integracion.jakina.ejiedes.net/ctxapp/Y31JanoServiceXlnetsTokenCreatorServlet</url>
+									</httpSessionTokenProviderService>
+								</xlnets>
+
+		mockFile > use a bunch of xlnets classpath-stored files with mock [xlnets session], [user data], etc 
+									> the [sessionToken] element contains the session token's path (use https://xlnets.servicios.jakina.ejiedes.net/xlnets/servicios.htm to generate a token)
+									> the [userDataToken] element contains the user info token's path (use https://xlnets.servicios.jakina.ejiedes.net/xlnets/servicios.htm to generate a token)
+									> the [authToken] element contains the auth token's path (use https://xlnets.servicios.jakina.ejiedes.net/xlnets/servicios.htm to generate a token)
+									> the [workplaceDataToken] element contains the workplace (puesto) token's path (use https://xlnets.servicios.jakina.ejiedes.net/xlnets/servicios.htm to generate a token)
+									
+								<xlnets token="mockFile">
+									<mockFiles>
+										<userSessionToken for='theUserCode'>r01ui/mock/xlnets/r01t-xlnetsSession.xml</userSessionToken>
+										<userDataToken for='theUserCode'>r01f/mock/xlnets/r01f-xlnetsItemObtenerPersonas.xml</userDataToken>
+										<authToken for='R01UI-FN-0001'>r01ui/mock/xlnets/r01t-xlnetsItemAutorizacion.xml</authToken>
+										<workplaceDataToken for='thePuestoUID'>r01f/mock/xlnets/r01t-xlnetsItemObtenerPuestos.xml</workplaceDataToken>
+										<orgDataToken for='org_01'>r01f/mock/xlnets/r01t-mock-xlnetsItemObtenerOrganizacion.xml</orgDataToken>
+										<ldapFilterTestDataToken for='r01ui'>r01f/mock/xlnets/r01f-xlnetsLDAPObtenerPersonas.xml</ldapFilterTestDataToken>
+									</mockFiles>
+								</xlnets>									
+	-->
+	
+	<!-- The XLNets login URL -->
+	<loginUrl>https://xlnets.servicios.jakina.ejiedes.net/n38a/N38LoginInicioServlet</loginUrl>
+	
+	<!--
+	TOKEN = httpProvided 
+	-->
+	<httpSessionTokenProviderService>
+		<url>http://svc.intra.integracion.jakina.ejiedes.net/ctxapp/Y31JanoServiceXlnetsTokenCreatorServlet</url>
+	</httpSessionTokenProviderService>
+	
+	<!--
+	TOKEN = mockFile 
+	-->
+	<mockFiles>
+		<userSessionToken for='theUserCode'>r01f/mock/xlnets/r01f-xlnetsSession.xml</userSessionToken>
+		<appSessionToken for='r01f'>r01f/mock/xlnets/r01f-mock-app-xlnetsSession.xml</appSessionToken>
+		<userDataToken for='theUserCode'>r01f/mock/xlnets/r01f-xlnetsItemObtenerPersonas.xml</userDataToken>
+		<authToken for='R01UI-FN-0001'>r01f/mock/xlnets/r01f-xlnetsItemAutorizacion.xml</authToken>
+		<workplaceDataToken for='thePuestoUID'>r01f/mock/xlnets/r01t-xlnetsItemObtenerPuestos.xml</workplaceDataToken>
+		<orgDataToken for='org_01'>r01f/mock/xlnets/r01f-mock-xlnetsItemObtenerOrganizacion.xml</orgDataToken>
+		<ldapFilterTestDataToken for='r01ui'>r01f/mock/xlnets/r01f-xlnetsLDAPObtenerPersonas.xml</ldapFilterTestDataToken>
+	</mockFiles>
+</xlnets>

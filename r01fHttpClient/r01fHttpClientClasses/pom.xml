@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+<!-- ====================================================================== -->
+<!-- PROPERTIES                                                             -->
+<!-- ====================================================================== -->
+	<properties>
+		<!-- Last  version (5.2): -->
+		<!--
+		    WARN! >> Within the last migration to JAKARTA "apache-http-client"" is JUST used a this class:
+		    	[ r01fWebProfileClasses ] :  r01f.servlet.proxy.HttpProxyServletDelegate
+		-->
+		<!--  Version 4: -->
+	    <apache-http-client.version>5.6.1</apache-http-client.version>
+	    <apache-http-core.version>5.4.2</apache-http-core.version>
+	    <apache-http-mime.version>4.5.14</apache-http-mime.version>
+	</properties>
+<!-- ====================================================================== -->
+<!-- PARENT                                                                 -->
+<!-- ====================================================================== -->
+	<parent>
+		<groupId>r01.fabric.base.httpclient</groupId>
+		<artifactId>r01fHttpClient</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+<!-- ====================================================================== -->
+<!-- ARTIFACT                                                               -->
+<!-- ====================================================================== -->
+	<name>r01fHttpClientClasses</name>
+	<artifactId>r01fHttpClientClasses</artifactId>
+
+<!-- ====================================================================== -->
+<!-- DEPENDENCIES                                                           -->
+<!-- ====================================================================== -->
+	<dependencies>
+		<!-- ///////////////////////////////////////// -->
+		<!-- Base                                      -->
+		<!-- ///////////////////////////////////////// -->
+		<dependency>
+			<groupId>r01.fabric.base</groupId>
+			<artifactId>r01fBaseClasses</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>r01.fabric.base</groupId>
+			<artifactId>r01fIOClasses</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		<dependency>
+			<groupId>r01.fabric.base</groupId>
+			<artifactId>r01fMimeClasses</artifactId>
+			<version>${revision}</version>
+		</dependency>
+
+		<!-- ///////////////////////////////////////// -->
+		<!-- Apache http client                        -->
+		<!-- ///////////////////////////////////////// -->
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+			<version>${apache-http-client.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents.core5</groupId>
+			<artifactId>httpcore5</artifactId>
+			<version>${apache-http-core.version}</version>
+		</dependency>
+		<!-- Latest version of httpmime is 4.5.14 attached to httpclient5 5.3.1 -->
+		<!--
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>${apache-http-mime.version}</version>
+		</dependency>
+		-->
+	</dependencies>
+
+<!-- ====================================================================== -->
+<!-- BUILD                                                                  -->
+<!-- ====================================================================== -->
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!--
+				ECLIPSE (see main pom.xml for further info) ===================
+				This plugin has NO effects in maven build:
+					m2e ONLY runs some 'standard' goals of the maven pom.xml since the aim of m2e is NOT to be a complete CI tool
+					... in order to include 'non-standard' goals in m2e execution and avoid [plugin execution not covered by the eclipse m2e plugin project build lifecycle mapping]
+						the 'non-standard' plugin MUST be explicitly included in m2e execution
+				-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<!-- flatten plugin -->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>flatten-maven-plugin</artifactId>
+										<versionRange>[1.1.0,)</versionRange>
+										<goals>
+											<goal>flatten</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

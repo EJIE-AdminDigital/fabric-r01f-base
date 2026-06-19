@@ -1,0 +1,10 @@
+Create user and database
+===============================================================	
+
+Conect to mysql console and execute the following sentences
+
+$ mysql -u root -p
+   
+	CREATE USER 'pci'@'localhost' IDENTIFIED BY 'pci';
+	CREATE DATABASE pci;
+	GRANT ALL ON pci.* TO 'pci'@'localhost';

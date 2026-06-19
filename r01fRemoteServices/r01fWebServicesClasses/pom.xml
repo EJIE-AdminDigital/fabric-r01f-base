@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+<!-- ====================================================================== -->
+<!-- PARENT                                                                 -->
+<!-- ====================================================================== -->
+	<parent>
+		<groupId>r01.fabric.base.remoteservices</groupId>
+		<artifactId>r01fRemoteServices</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+<!-- ====================================================================== -->
+<!-- ARTIFACT                                                               -->
+<!-- ====================================================================== -->
+	<name>r01fWebServicesClasses</name>
+	<artifactId>r01fWebServicesClasses</artifactId>
+
+<!-- ====================================================================== -->
+<!-- DEPENDENCIES                                                           -->
+<!-- ====================================================================== -->
+	<dependencies>		
+		<!-- ///////////////////////////////////////// -->
+		<!-- JAXB                                      -->
+		<!-- ///////////////////////////////////////// -->
+		<dependency>
+			<groupId>r01.fabric.base.remoteservices</groupId>
+			<artifactId>r01fWebServicesModelClasses</artifactId>
+			<version>${revision}</version>
+		</dependency>
+		
+		<!-- ///////////////////////////////////////// -->
+		<!-- XML RPC & SOAP                            -->
+		<!-- ///////////////////////////////////////// -->
+		<!--
+			BEWARE!!! 	
+			Xerces / Xalan / xml-apis dependencies are a nightmare in weblogic
+			EXCLUDE these deps when deploying in weblogic server
+			(see: https://stackoverflow.com/questions/11677572/dealing-with-xerces-hell-in-java-maven)
+		-->
+		<dependency>
+			<groupId>ejie.xml.rpc.pci</groupId>
+			<artifactId>jakarta.xml.rpc-api</artifactId>
+			<version>1.1.4-jakarta</version>
+		</dependency>
+		<!-- Soap API. Is the same as saaj-api so this last is removed. -->
+		<dependency>
+			<groupId>jakarta.xml.soap</groupId>
+			<artifactId>jakarta.xml.soap-api</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<!-- JDK 11 has REMOVED SAAJ impl from the JDK distribution -->
+		<dependency>
+			<groupId>com.sun.xml.messaging.saaj</groupId>
+			<artifactId>saaj-impl</artifactId>
+			<version>3.0.3</version>
+		</dependency>
+		
+		<!-- ///////////////////////////////////////// -->
+		<!-- SOAP                                      -->
+		<!-- ///////////////////////////////////////// -->
+		<!-- see: https://stackoverflow.com/questions/54573998/java-11-package-javax-xml-soap-does-not-exist -->
+		<!-- Jakarta EE 10 (Jun 2022) -->
+		<dependency>
+			<groupId>jakarta.xml.ws</groupId>
+			<artifactId>jakarta.xml.ws-api</artifactId>
+			<version>4.0.1</version>
+			</dependency>
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>4.0.2</version>
+		</dependency>
+		
+		<!-- ///////////////////////////////////////// -->
+		<!-- WebServicesClient                         -->
+		<!-- ///////////////////////////////////////// -->
+		<dependency>
+			<groupId>ejie.weblogic</groupId>
+		 	<artifactId>webserviceclient</artifactId>
+		  	<version>${weblogic.webservicesclient.version}</version>
+		</dependency>
+		<!--
+		<dependency>
+			<groupId>org.glassfish.metro</groupId>
+			<artifactId>webservices-api</artifactId>
+			<version>2.4.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.metro</groupId>
+			<artifactId>webservices-rt</artifactId>
+			<version>2.4.8</version>
+		</dependency>
+		-->
+	</dependencies>
+
+<!-- ====================================================================== -->
+<!-- BUILD                                                                  -->
+<!-- ====================================================================== -->
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!--
+				ECLIPSE (see main pom.xml for further info) ===================
+				This plugin has NO effects in maven build:
+					m2e ONLY runs some 'standard' goals of the maven pom.xml since the aim of m2e is NOT to be a complete CI tool
+					... in order to include 'non-standard' goals in m2e execution and avoid [plugin execution not covered by the eclipse m2e plugin project build lifecycle mapping]
+						the 'non-standard' plugin MUST be explicitly included in m2e execution
+				-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<!-- flatten plugin -->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.codehaus.mojo</groupId>
+										<artifactId>flatten-maven-plugin</artifactId>
+										<versionRange>[1.1.0,)</versionRange>
+										<goals>
+											<goal>flatten</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

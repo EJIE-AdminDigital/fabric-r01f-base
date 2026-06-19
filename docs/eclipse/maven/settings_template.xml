@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+	<!-- IMPORTANT ========================================================= -->
+	<!-- =================================================================== -->
+	<!-- 
+	 | [1] - Modify the values in this file with your own values 
+	 |		 (e.g. local repository location, server credentials...)
+	 | [2] - Copy this file to the local maven settings location:
+	 |			- Windows: C:\Users\<YourUsername>\.m2\settings.xml
+	 |	    	- Linux: /home/<YourUsername>/.m2/settings.xml
+	-->
+
+  
+  	<!-- local repository location -->
+  	<!--
+   	 | Default local repository locations
+   	 |		Eclipse: {develop-root}/ide/eclipse/.eclipse-{version}/.m2/repository
+     |		Windows: {user-home}/.m2/repository (e.g. C:/Users/the-user/.m2/repository)
+     |    	  Linux: {user-home}/.m2/repository (e.g. /home/the-user/.m2/repository)
+     |      DEVELOP: {develop-root}/java/maven-libs
+  	 |-->
+  	<localRepository>___DEVELOP___</localRepository>
+
+
+  	<!-- servers
+     | This is a list of authentication profiles, keyed by the server-id used within the system.
+     | Authentication profiles can be used whenever maven must make a connection to a remote server.
+     |-->
+  	<servers>
+	    <!-- server
+	     | Specifies the authentication information to use when connecting to a particular server, identified by
+	     | a unique name within the system (referred to by the 'id' attribute below).
+	     |
+	     | NOTE: You should either specify username/password OR privateKey/passphrase
+	    -->
+		<server>
+			<id>in-house-80-app-snapshots</id>
+			<username>__username.elkarlan(no @domain)__</username>
+			<password>___password___</password>
+		</server>
+		<server>
+			<id>in-house-80-app-releases</id>
+			<username>__username.elkarlan(no @domain)__</username>
+			<password>___password___</password>
+		</server>
+		<server>
+			<id>in-house-80-app-group</id>
+			<username>__username.elkarlan(no @domain)__</username>
+			<password>___password___</password>
+		</server> 
+  	</servers>
+
+<!-- ====================================================================== -->
+<!-- PROFILES                                                               -->
+<!-- ====================================================================== -->
+	<profiles>
+		<!-- 
+		 | Disable the maven-2-eclipes (m2e) annotation processing (apt) in the Eclipse JDT Language Server (JDT LS)
+		 | so VSCode does NOT modify the .classpath files to add the m2e annotation processing (apt) entries in the .classpath files
+		 | (see https://www.lorenzobettini.it/2026/01/stop-vs-codes-java-lsp-from-rewriting-your-eclipse-classpath-with-m2e-apt-entries/)
+		 |-->
+		<profile>
+			<id>disable_m2e_apt</id>	
+			<activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            
+            <!-- 
+             | this property DISABLES the maven-2-eclipes (m2e) annotation processing (apt) 
+             | BEWARE!!! 
+             | 		If the m2e annotation processing is used there are some options:
+             |			a) use the maven-2-eclipse (m2e) annotation processing (apt) in the Eclipse IDE
+             |			b) use the maven-compiler-plugin annotation processing (apt) in the pom.xml files
+             |			c) disable this profile
+             |-->
+			<properties>
+				<m2e.apt.activation>disabled</m2e.apt.activation>
+			</properties>
+		</profile>
+		
+		<!--
+		 | R01F (fabric) - CONFIG MANAGEMENT  (env_profile)
+		 | ................................................
+		 |	R01F (fabric) config has TWO levels:
+		 |	- PUBLIC CONFIG 
+		 |		> contains default config properties usually enough for the LOCAL env 
+		 |		> anyone can see it 
+		 |		> project {appCode}Config
+		 |  - PRIVATE CONFIG
+		 |		> contains EJIE-environment dependent config properties
+		 |		> MUST NOT be distributed outside EJIE (publicily): only authorized people can access it 
+		 |		> project: {appCode}ConfigByEnv
+		 |
+		 | The application can be distributed WITHOUT the PRIVATE config project (just with the PUBLIC config project {appCode}Config) 
+		 | because usually the PUBLIC config is enough to run the app in a LOCAL env (e.g. for development or testing)
+		 |
+		 | In the case of a non-LOCAL env (EJIE env) the PUBLIC config in {appCode}Config project 
+		 | is "mixed" with the PRIVATE config in {appCode}ConfigByEnv properties so if the same
+		 | property is configured in both the PUBLIC and PRIVATE, the PRIVATE takes preference
+		 |
+		 | The R01F Properties system at runtime:  
+		 | 	- if an R01_ENV system property is set, PRIVATE config is looked after in the `[{appCode}ConfigByEnv]` project 
+		 | 	- if NO R01_ENV system property is set, PRIVATE config is loaded and just the PUBLIC config from the `[{appCode}Config]` project is used
+		 |
+		 | A Maven PROFILE is used to include or NOT include the `[{appCode}ConfigByEnv]` dependency in the app build 
+		 | ... so the ConfigByEnv project is included in the build only if the PROFILE is active (e.g. env_profile) 
+		 |	   and NOT included if the PROFILE is NOT active (e.g. default_profile)
+		 |
+		 | The [profile] is:
+		 |		- activated in the settings.xml file
+		 |		- used in the executable project (the WAR, the springboot app, the testing project...) -NOT in all projects-
+		 |		  to include or NOT include the `[{appCode}ConfigByEnv]` dependency in the build
+		 |
+		 | Usually the "executable" project (the WAR, the springboot app, the testing project...) has a section like:
+		 | 
+		 |		<profiles>
+		 |			<profile>
+		 |				<id>default_profile</id>
+		 |				<activation>
+		 |					<activeByDefault>true</activeByDefault>
+		 |				</activation>
+		 |			</profile>
+		 |			<profile>
+		 |				<id>env_profile</id> 
+		 |				<dependencies>
+		 |					<dependency>
+		 |						<groupId>r01.fabric.config</groupId>
+		 |						<artifactId>r01fBaseConfigByEnv</artifactId>
+		 |						<version>${r01f.config.version}</version>
+		 |					</dependency>
+		 |					<dependency>
+		 |						<groupId>myapp.config</groupId>
+		 |						<artifactId>myAppCOREConfigByEnv</artifactId>
+		 |						<version>${myapp.config.version}</version>
+		 |					</dependency>
+		 |					<dependency>
+		 |						<groupId>myapp.config</groupId>
+		 |						<artifactId>myAppAPIConfigByEnv</artifactId>
+		 |						<version>${myapp.config.version}</version>
+		 |					</dependency>
+		 |				</dependencies>
+		 |			</profile>
+		 |		</profiles>
+         |
+		-->
+		<profile>
+			<id>env_profile</id>
+		</profile>
+	</profiles>
+	
+	<!-- activeProfiles
+	 | List of profiles that are active for all builds. (don't use local id! )
+	 |-->
+	<activeProfiles>
+    	<activeProfile>env_profile</activeProfile>
+    	
+		<!-- 
+		 | Disable the maven-2-eclipes (m2e) annotation processing (apt) in the Eclipse JDT Language Server (JDT LS)
+		 | so VSCode does NOT modify the .classpath files to add the m2e annotation processing (apt) entries in the .classpath files
+		 | (see https://www.lorenzobettini.it/2026/01/stop-vs-codes-java-lsp-from-rewriting-your-eclipse-classpath-with-m2e-apt-entries/)
+		 |-->
+    	<activeProfile>disable_m2e_apt</activeProfile>
+  	</activeProfiles>
+</settings>

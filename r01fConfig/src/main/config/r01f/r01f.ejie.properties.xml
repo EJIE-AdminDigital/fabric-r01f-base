@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ejie>		
+
+	<geo>
+		<nora>
+			<webservice>
+				<intra>
+					<endpointUrl>http://svc.intra.integracion.jakina.{env}/ctxapp/t17iApiWS</endpointUrl>
+				</intra>
+				<inter>
+					<endpointUrl>http://svc.inter.integracion.jakina.{env}/ctxapp/t17iApiWS</endpointUrl>
+				</inter>
+				<extra>
+					<endpointUrl>http://svc.extra.integracion.jakina.{env}/ctxapp/t17iApiWS</endpointUrl>
+				</extra>
+			</webservice>
+		</nora>
+	</geo>
+
+</ejie>

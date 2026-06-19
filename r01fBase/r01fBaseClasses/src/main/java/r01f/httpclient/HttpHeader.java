@@ -1,0 +1,36 @@
+package r01f.httpclient;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
+
+/**
+ * Encapsulates an http header id and value
+ */
+@Accessors(prefix="_")
+@RequiredArgsConstructor
+public class HttpHeader {
+/////////////////////////////////////////////////////////////////////////////////////////
+// MEMBERS
+/////////////////////////////////////////////////////////////////////////////////////////
+	@Getter private final HttpHeaderID  _id;
+	@Getter private final String       _value;
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+/////////////////////////////////////////////////////////////////////////////////////////
+	public HttpHeader(final String idAsString,final String value) {
+		_id = HttpHeaderID.forId(idAsString);
+		_value = value;
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//
+/////////////////////////////////////////////////////////////////////////////////////////
+	public static HttpHeader create(final String idAsString,final String value) {
+		return new HttpHeader(HttpHeaderID.forId(idAsString),
+							  value);
+	}
+	public static HttpHeader create(final HttpHeaderID id,final String value) {
+		return new HttpHeader(id,
+							  value);
+	}
+}

@@ -1,0 +1,13 @@
+package r01f.filestore.api;
+
+/**
+ * Sanitizes a file name, maybe removing spaces or illegal characters
+ */
+public interface FileNameSanitizer {
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
+	public String sanitizeName(final String fileName);
+	
+	public String sanitizeExtension(final String extension);
+}
