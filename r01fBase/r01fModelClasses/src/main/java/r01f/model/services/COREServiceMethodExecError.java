@@ -158,7 +158,7 @@ public class COREServiceMethodExecError<T>
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
 	public String getDetailedMessage() {
-		String outMsg = Strings.customizedWith("{} could FAILED because of a code={} error{}: {}",
+		String outMsg = Strings.customizedWith("{} could FAILED because of a code={} error={}: {}",
 						       				   new StringCustomizerVarsProvider() {
 														@Override
 														public Object[] provideVars() {

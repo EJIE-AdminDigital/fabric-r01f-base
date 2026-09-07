@@ -5,17 +5,10 @@ import java.util.List;
 import com.google.common.base.Splitter;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
-import r01f.guids.CommonOIDs.AppCode;
-import r01f.guids.CommonOIDs.AppCodeBase;
-import r01f.guids.CommonOIDs.AppComponent;
-import r01f.guids.CommonOIDs.AppComponentBase;
-import r01f.objectstreamer.annotations.MarshallField;
-import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
+import r01f.guids.CommonOIDs.IsAppCode;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.objectstreamer.annotations.MarshallFrom;
 import r01f.objectstreamer.annotations.MarshallType;
 import r01f.util.types.Strings;
@@ -24,57 +17,19 @@ import r01f.util.types.collections.Lists;
 @NoArgsConstructor(access=AccessLevel.PRIVATE)
 public abstract class ServiceIDs {
 /////////////////////////////////////////////////////////////////////////////////////////
-//  BASE
-/////////////////////////////////////////////////////////////////////////////////////////
-	@Accessors(prefix="_")
-	@RequiredArgsConstructor(access=AccessLevel.PRIVATE)
-	private static abstract class AppCodeAndModuleBase<A extends AppCodeBase,M extends AppComponentBase> {
-		@MarshallField(as="appCode",whenXml=@MarshallFieldAsXml(attr=true))
-		@Getter private final A _appCode;
-
-		@MarshallField(as="module",whenXml=@MarshallFieldAsXml(attr=true))
-		@Getter private final M _module;
-
-		public String asString() {
-			return this.toString();
-		}
-		@Override
-		public String toString() {
-			return Strings.customized("{}.{}",_appCode,_module);
-		}
-		@Override
-		public int hashCode() {
-			return this.toString().hashCode();
-		}
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) return false;
-			if (obj == this) return true;
-			if (obj instanceof AppCodeAndModuleBase) {
-				AppCodeAndModuleBase<?,?> otherAppCodeAndModule = (AppCodeAndModuleBase<?,?>)obj;
-				AppCodeBase appCode = otherAppCodeAndModule.getAppCode();
-				AppComponentBase module = otherAppCodeAndModule.getModule();
-				return appCode.equals(_appCode)
-					&& module.equals(_module);
-			} else if (obj instanceof String) {
-				return obj.toString().equals(this.toString());
-			}
-			return super.equals(obj);
-		}
-	}
-/////////////////////////////////////////////////////////////////////////////////////////
 //  CLIENT
 /////////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * AppCode
 	 */
 	@MarshallType(as="clientApiAppCode")
-	@NoArgsConstructor
-	public static final class ClientApiAppCode
-	                  extends AppCode {
-		private static final long serialVersionUID = 7093516452073951301L;
-		public ClientApiAppCode(final String oid) {
-			super(oid);
+	public record ClientApiAppCode(@Getter String id)
+	   implements IsAppCode {
+		public static ClientApiAppCode of(final IsAppCode appCode) {
+			return new ClientApiAppCode(appCode.asString());
+		}
+		public static ClientApiAppCode from(final String id) {
+			return new ClientApiAppCode(id);
 		}
 		public static ClientApiAppCode forId(final String id) {
 			return new ClientApiAppCode(id);
@@ -82,31 +37,32 @@ public abstract class ServiceIDs {
 		public static ClientApiAppCode valueOf(final String id) {
 			return ClientApiAppCode.forId(id);
 		}
+		public static ClientApiAppCode fromString(final String id) {
+			return ClientApiAppCode.forId(id);
+		}
 		public static ClientApiAppCode named(final String id) {
 			return ClientApiAppCode.forId(id);
 		}
-		public AppCode asAppCode() {
-			return AppCode.forId(this.getId());
+		@Override
+		public String asString() {
+			return this.id;
 		}
 		@Override
-		public int hashCode() {
-			return super.hashCode();
-		}
-		@Override
-		public boolean equals(final Object obj) {
-			return super.equals(obj);
+		public String toString() {
+			return this.id;
 		}
 	}
 	/**
 	 * AppCode
 	 */
 	@MarshallType(as="clientApiComponent")
-	@NoArgsConstructor
-	public static final class ClientApiComponent
-	                  extends AppComponent {
-		private static final long serialVersionUID = 7093516452073951301L;
-		public ClientApiComponent(final String oid) {
-			super(oid);
+	public record ClientApiComponent(@Getter String id)
+	   implements IsAppComponent {
+		public static ClientApiComponent fo(final IsAppComponent appComponent) {
+			return new ClientApiComponent(appComponent.asString());
+		}
+		public static ClientApiComponent from(final String id) {
+			return new ClientApiComponent(id);
 		}
 		public static ClientApiComponent forId(final String id) {
 			return new ClientApiComponent(id);
@@ -114,19 +70,20 @@ public abstract class ServiceIDs {
 		public static ClientApiComponent valueOf(final String id) {
 			return ClientApiComponent.forId(id);
 		}
+		public static ClientApiComponent fromString(final String id) {
+			return new ClientApiComponent(id);
+		}
 		public static ClientApiComponent named(final String id) {
 			return ClientApiComponent.forId(id);
 		}
-		public AppCode asAppCode() {
-			return AppCode.forId(this.getId());
+		
+		@Override
+		public String asString() {
+			return this.id;
 		}
 		@Override
-		public int hashCode() {
-			return super.hashCode();
-		}
-		@Override
-		public boolean equals(final Object obj) {
-			return super.equals(obj);
+		public String toString() {
+			return this.id;
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -136,15 +93,13 @@ public abstract class ServiceIDs {
 	 * AppCode
 	 */
 	@MarshallType(as="coreAppCode")
-	@NoArgsConstructor
-	public static final class CoreAppCode
-	                  extends AppCode {
-		private static final long serialVersionUID = 7498970290219115981L;
-		public CoreAppCode(final String oid) {
-			super(oid);
-		}
-		public static CoreAppCode of(final AppCode appCode) {
+	public record CoreAppCode(@Getter String id)
+	   implements IsAppCode {
+		public static CoreAppCode of(final IsAppCode appCode) {
 			return new CoreAppCode(appCode.asString());
+		}
+		public static CoreAppCode from(final String id) {
+			return new CoreAppCode(id);
 		}
 		public static CoreAppCode forId(final String id) {
 			return new CoreAppCode(id);
@@ -152,34 +107,34 @@ public abstract class ServiceIDs {
 		public static CoreAppCode valueOf(final String id) {
 			return CoreAppCode.forId(id);
 		}
+		public static CoreAppCode fromString(final String id) {
+			return new CoreAppCode(id);
+		}
 		public static CoreAppCode named(final String id) {
 			return CoreAppCode.forId(id);
 		}
-		public AppCode asAppCode() {
-			return AppCode.forId(this.getId());
+		
+		@Override
+		public String asString() {
+			return this.id;
 		}
 		@Override
-		public int hashCode() {
-			return super.hashCode();
-		}
-		@Override
-		public boolean equals(final Object obj) {
-			return super.equals(obj);
+		public String toString() {
+			return this.id;
 		}
 	}
 	/**
 	 * Core module
 	 */
 	@MarshallType(as="coreModule")
-	@NoArgsConstructor
-	public static final class CoreModule
-	                  extends AppComponent {
-		private static final long serialVersionUID = -8935025566081906908L;
-		public CoreModule(final String oid) {
-			super(oid);
-		}
-		public static CoreModule of(final AppComponent comp) {
+	public record CoreModule(@Getter String id)
+	   implements IsAppComponent {
+		
+		public static CoreModule of(final IsAppComponent comp) {
 			return new CoreModule(comp.asString());
+		}
+		public static CoreModule from(final String id) {
+			return new CoreModule(id);
 		}
 		public static CoreModule forId(final String id) {
 			return new CoreModule(id);
@@ -187,13 +142,13 @@ public abstract class ServiceIDs {
 		public static CoreModule valueOf(final String id) {
 			return CoreModule.forId(id);
 		}
+		public static CoreModule fromString(final String id) {
+			return new CoreModule(id);
+		}
 		public static CoreModule named(final String id) {
 			return CoreModule.forId(id);
 		}
-		@Override
-		public AppComponent asAppComponent() {
-			return AppComponent.forId(this.getId());
-		}
+		
 		public static final CoreModule SERVICES = CoreModule.forId("services");
 		public static final CoreModule PUBLISHER = CoreModule.forId("publisher");
 		public static final CoreModule OTP = CoreModule.forId("otp");
@@ -206,28 +161,26 @@ public abstract class ServiceIDs {
 		public static final CoreModule REPORTING = CoreModule.forId("reporting");
 		
 		@Override
-		public int hashCode() {
-			return super.hashCode();
+		public String asString() {
+			return this.id;
 		}
 		@Override
-		public boolean equals(final Object obj) {
-			return super.equals(obj);
+		public String toString() {
+			return this.id;
 		}
 	}
 	/**
 	 * Core sub-module (ie db, search)
 	 */
 	@MarshallType(as="coreSubModule")
-	@NoArgsConstructor
-	public static final class CoreSubModule
-	                  extends AppComponent {
-		private static final long serialVersionUID = 7619551925207677429L;
-
-		public CoreSubModule(final String oid) {
-			super(oid);
-		}
-		public static CoreSubModule of(final AppComponent comp) {
+	public record CoreSubModule(@Getter String id)
+	   implements IsAppComponent {
+		
+		public static CoreSubModule of(final IsAppComponent comp) {
 			return new CoreSubModule(comp.asString());
+		}
+		public static CoreSubModule from(final String id) {
+			return new CoreSubModule(id);
 		}
 		public static CoreSubModule forId(final String id) {
 			return new CoreSubModule(id);
@@ -235,12 +188,11 @@ public abstract class ServiceIDs {
 		public static CoreSubModule valueOf(final String id) {
 			return CoreSubModule.forId(id);
 		}
+		public static CoreSubModule fromString(final String id) {
+			return new CoreSubModule(id);
+		}
 		public static CoreSubModule named(final String id) {
 			return CoreSubModule.forId(id);
-		}
-		@Override
-		public AppComponent asAppComponent() {
-			return AppComponent.forId(this.getId());
 		}
 		public static final CoreSubModule DBPERSISTENCE = CoreSubModule.forId("dbpersistence");
 		public static final CoreSubModule FSPERSISTENCE = CoreSubModule.forId("fspersistence");
@@ -251,22 +203,22 @@ public abstract class ServiceIDs {
 		public static final CoreSubModule BUSINESS = CoreSubModule.forId("business");
 
 		@Override
-		public int hashCode() {
-			return super.hashCode();
+		public String asString() {
+			return this.id;
 		}
 		@Override
-		public boolean equals(final Object obj) {
-			return super.equals(obj);
+		public String toString() {
+			return this.id;
 		}
 	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
 	@MarshallType(as="coreAppAndModule")
-	@EqualsAndHashCode(callSuper=true)
-	@Accessors(prefix="_")
-	public static final class CoreAppAndModule
-				      extends AppCodeAndModuleBase<CoreAppCode,CoreModule> {
-		public CoreAppAndModule(@MarshallFrom("appCode") final CoreAppCode api,@MarshallFrom("module") final CoreModule module) {
-			super(api,module);
-		}
+	public record CoreAppAndModule(@MarshallFrom("appCode") 
+								   @Getter CoreAppCode appCode,
+								   @MarshallFrom("module") 
+								   @Getter CoreModule module) {
 		public static CoreAppAndModule of(final CoreAppCode appCode,final CoreModule module) {
 			return new CoreAppAndModule(appCode,module);
 		}
@@ -287,23 +239,29 @@ public abstract class ServiceIDs {
 				throw new IllegalStateException();
 			}
 		}
+		public String asString() {
+			return this.toString();
+		}
+		@Override
+		public String toString() {
+			return Strings.customized("{}.{}",this.appCode,this.module);
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
-//  CORE
+//  UI
 /////////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * AppCode
 	 */
 	@MarshallType(as="uiAppCode")
-	@NoArgsConstructor
-	public static final class UIAppCode
-	                  extends AppCode {
-		private static final long serialVersionUID = -2688898956072883546L;
-		public UIAppCode(final String oid) {
-			super(oid);
-		}
-		public static UIAppCode of(final AppCode appCode) {
+	public record UIAppCode(@Getter String id)
+	   implements IsAppCode {
+		
+		public static UIAppCode of(final IsAppCode appCode) {
 			return new UIAppCode(appCode.asString());
+		}
+		public static UIAppCode from(final String id) {
+			return new UIAppCode(id);
 		}
 		public static UIAppCode forId(final String id) {
 			return new UIAppCode(id);
@@ -311,19 +269,19 @@ public abstract class ServiceIDs {
 		public static UIAppCode valueOf(final String id) {
 			return UIAppCode.forId(id);
 		}
+		public static UIAppCode fromString(final String id) {
+			return new UIAppCode(id);
+		}
 		public static UIAppCode named(final String id) {
 			return UIAppCode.forId(id);
-		}
-		public AppCode asAppCode() {
-			return AppCode.forId(this.getId());
+		} 
+		@Override
+		public String asString() {
+			return this.id;
 		}
 		@Override
-		public int hashCode() {
-			return super.hashCode();
-		}
-		@Override
-		public boolean equals(final Object obj) {
-			return super.equals(obj);
+		public String toString() {
+			return this.id;
 		}
 	}
 }

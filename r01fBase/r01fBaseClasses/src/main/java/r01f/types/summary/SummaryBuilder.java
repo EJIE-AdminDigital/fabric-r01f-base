@@ -3,8 +3,8 @@ package r01f.types.summary;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import r01f.facets.FullTextSummarizable;
-import r01f.facets.LangDependentNamed.HasLangDependentNamedFacet;
-import r01f.facets.LangInDependentNamed.HasLangInDependentNamedFacet;
+import r01f.facets.HasLangDependentName;
+import r01f.facets.HasLangInDependentName;
 import r01f.facets.LangNamed.HasLangNamedFacet;
 import r01f.facets.Summarizable;
 import r01f.facets.Summarizable.HasSummaryFacet;
@@ -114,10 +114,10 @@ public abstract class SummaryBuilder
 		public LangDependentSummary createFullText(final LanguageTexts langTexts) {
 			return SummaryLanguageTextsBacked.fullTextOf(langTexts);
 		}
-		public LangDependentSummary create(final HasLangDependentNamedFacet hasName) {
+		public LangDependentSummary create(final HasLangDependentName hasName) {
 			return SummaryHasLanguageDependentNameBacked.of(hasName);
 		}
-		public LangDependentSummary createFullText(final HasLangDependentNamedFacet hasName) {
+		public LangDependentSummary createFullText(final HasLangDependentName hasName) {
 			return SummaryHasLanguageDependentNameBacked.fullTextOf(hasName);
 		}
 		public LangDependentSummary createFullText(final HasSummaryFacet hasSummary) {
@@ -152,10 +152,10 @@ public abstract class SummaryBuilder
 		public LangIndependentSummary createFullText(final String summary,final Object... vars) {
 			return SummaryStringBacked.fullTextOf(summary,vars);
 		}
-		public LangIndependentSummary create(final HasLangInDependentNamedFacet hasName) {
+		public LangIndependentSummary create(final HasLangInDependentName hasName) {
 			return SummaryHasLanguageIndependentNameBacked.of(hasName);
 		}
-		public LangIndependentSummary createFullText(final HasLangInDependentNamedFacet hasName) {
+		public LangIndependentSummary createFullText(final HasLangInDependentName hasName) {
 			return SummaryHasLanguageIndependentNameBacked.fullTextOf(hasName);
 		}
 		public LangIndependentSummary createFullText(final HasSummaryFacet hasSummary) {

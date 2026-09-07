@@ -8,8 +8,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import r01f.objectstreamer.annotations.MarshallPolymorphicTypeInfo;
 import r01f.reflection.scanner.ClassgraphScanHandler;
@@ -19,7 +17,6 @@ import r01f.util.types.collections.CollectionUtils;
 import tools.jackson.databind.jsontype.NamedType;
 
 @Slf4j
-@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class MarshallerPolymorphicTypesCache {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	FIELDS
@@ -28,6 +25,12 @@ class MarshallerPolymorphicTypesCache {
 	private final ClassgraphScanHandler _typeScan;
 
 	private final boolean _log = log.isTraceEnabled();
+/////////////////////////////////////////////////////////////////////////////////////////
+//	CONSTRUCTOR
+/////////////////////////////////////////////////////////////////////////////////////////
+	MarshallerPolymorphicTypesCache(final ClassgraphScanHandler typeScan) {
+		_typeScan = typeScan;
+	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	CACHE
 /////////////////////////////////////////////////////////////////////////////////////////

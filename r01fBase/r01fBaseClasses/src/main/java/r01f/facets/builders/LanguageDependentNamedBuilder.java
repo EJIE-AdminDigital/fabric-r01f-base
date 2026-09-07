@@ -2,14 +2,14 @@ package r01f.facets.builders;
 
 import java.util.Map;
 
-import r01f.facets.LangDependentNamed.HasLangDependentNamedFacet;
+import r01f.facets.HasLangDependentName;
 import r01f.locale.Language;
 import r01f.locale.LanguageTexts;
 import r01f.patterns.FactoryFrom;
 
 
 public class LanguageDependentNamedBuilder<NEXT_BUILDER,
-										   T extends HasLangDependentNamedFacet> 
+										   T extends HasLangDependentName> 
   	 extends FacetBuilderBase<NEXT_BUILDER,T> {
 /////////////////////////////////////////////////////////////////////////////////////////
 //  CONSTRUCTOR

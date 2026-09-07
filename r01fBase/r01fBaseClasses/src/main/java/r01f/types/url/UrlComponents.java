@@ -1,45 +1,39 @@
 package r01f.types.url;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import r01f.debug.Debuggable;
 import r01f.util.types.Strings;
 
-@Accessors(prefix="_")
-@RequiredArgsConstructor(access=AccessLevel.PACKAGE)
-public class UrlComponents
-  implements Debuggable {
-	@Getter private final UrlProtocol _protocol;
-	@Getter private final Host _host;
-	@Getter private final int _port;
-	@Getter private final UrlPath _urlPath;
-	@Getter private final UrlQueryString _queryString;
-	@Getter private final String _urlPathFragment;
+public record UrlComponents(@Getter UrlProtocol protocol,
+							@Getter Host host,
+							@Getter int port,
+							@Getter UrlPath urlPath,
+							@Getter UrlQueryString queryString,
+							@Getter String urlPathFragment)
+    implements Debuggable {
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 	public UrlProtocol getProtocolOrDefault(final UrlProtocol def) {
-		return _protocol != null ? _protocol : def;
+		return this.protocol != null ? this.protocol : def;
 	}
 	public Host getHostOrDefault(final Host def) {
-		return _host != null ? _host : def;
+		return this.host != null ? this.host : def;
 	}
 	public int getPortOrDefault(final int def) {
-		return _port > 0 ? _port : def;
+		return this.port > 0 ? this.port : def;
 	}
 	public UrlPath getUrlPathOrDefault(final UrlPath def) {
-		return _urlPath != null ? _urlPath : def;
+		return this.urlPath != null ? this.urlPath : def;
 	}
 	public UrlQueryString getQueryStringOrDefault(final UrlQueryString def) {
-		return _queryString != null ? _queryString : def;
+		return this.queryString != null ? this.queryString : def;
 	}
 	public String getUrlPathFragmentOrDefault(final String def) {
-		return Strings.isNOTNullOrEmpty(_urlPathFragment) ? _urlPathFragment : def;
+		return Strings.isNOTNullOrEmpty(this.urlPathFragment) ? this.urlPathFragment : def;
 	}
 	public boolean hasPort() {
-		return _port > 0;
+		return this.port > 0;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	BUILDER

@@ -22,7 +22,6 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.DateFormat;
 import r01f.objectstreamer.annotations.MarshallField.MarshallDateFormat;
@@ -44,7 +43,6 @@ import tools.jackson.databind.introspect.AnnotatedParameter;
 import tools.jackson.databind.introspect.JacksonAnnotationIntrospector;
 
 @NoArgsConstructor(access=AccessLevel.PRIVATE)
-@Slf4j
 abstract class MarshallerAnnotationIntrospectorUtil {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	NAMIMG

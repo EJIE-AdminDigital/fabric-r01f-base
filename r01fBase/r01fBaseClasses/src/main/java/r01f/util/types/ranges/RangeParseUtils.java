@@ -18,6 +18,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import r01f.types.Range;
+import r01f.types.datetime.HourOfDay;
+import r01f.types.datetime.MinuteOfHour;
+import r01f.types.datetime.MonthOfYear;
+import r01f.types.datetime.Year;
 
 @NoArgsConstructor(access=AccessLevel.PRIVATE)
 public abstract class RangeParseUtils {
@@ -58,12 +62,18 @@ public abstract class RangeParseUtils {
 		Class<?> java_lang_Float_class = Float.class;
 
 		// date-time
-		Class<?> java_time_Instant = Instant.class;
-		Class<?> java_time_LocalDate = LocalDate.class;
-		Class<?> java_time_LocalDateTime = LocalDateTime.class;
-		Class<?> java_time_LocalTime = LocalTime.class;
-		Class<?> java_time_OffsetDateTime = OffsetDateTime.class;
-		Class<?> java_time_ZonedDateTime = ZonedDateTime.class;
+		Class<?> java_time_Instant_class = Instant.class;
+		Class<?> java_time_LocalDate_class = LocalDate.class;
+		Class<?> java_time_LocalDateTime_class = LocalDateTime.class;
+		Class<?> java_time_LocalTime_class = LocalTime.class;
+		Class<?> java_time_OffsetDateTime_class = OffsetDateTime.class;
+		Class<?> java_time_ZonedDateTime_class = ZonedDateTime.class;
+		
+		Class<?> Year_class = r01f.types.datetime.Year.class;
+		Class<?> MonthOfYear_class = r01f.types.datetime.MonthOfYear.class;
+		Class<?> HourOfDay_class = r01f.types.datetime.HourOfDay.class;
+		Class<?> MinuteOfHour_class = r01f.types.datetime.MinuteOfHour.class;
+		Class<?> SecondOfMinute_class = r01f.types.datetime.SecondOfMinute.class;
 
 		RangeDef bounds = RangeParseUtils.parseBounds(rangeStr);
 		// numbers
@@ -90,24 +100,46 @@ public abstract class RangeParseUtils {
 				|| dataType == java.sql.Date.class) {
 			outRange = RangeParseUtilsForJavaTime.createDateRangeFromStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
 																 				  bounds.getUpperBound(),bounds.getUpperBoundType());
-		} else if (dataType == java_time_Instant) {
+		} else if (dataType == java_time_Instant_class) {
 			outRange = RangeParseUtilsForJavaTime.createInstantRangeFromStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
 																					 bounds.getUpperBound(),bounds.getUpperBoundType());
-		} else if (dataType == java_time_LocalDate) {
+		} else if (dataType == java_time_LocalDate_class) {
 			outRange = RangeParseUtilsForJavaTime.createLocalDateRangeFromStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
 															  		  				   bounds.getUpperBound(),bounds.getUpperBoundType());
-		} else if (dataType == java_time_LocalDateTime) {
+		} else if (dataType == java_time_LocalDateTime_class) {
 			outRange = RangeParseUtilsForJavaTime.createLocalDateTimeRangeFromStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
 															  	  		  			  	   bounds.getUpperBound(),bounds.getUpperBoundType());
-		} else if (dataType == java_time_LocalTime) {
+		} else if (dataType == java_time_LocalTime_class) {
 			outRange = RangeParseUtilsForJavaTime.createLocalTimeRangeFromISO8601AsStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
 															  		  				   			bounds.getUpperBound(),bounds.getUpperBoundType());
-		} else if (dataType == java_time_OffsetDateTime) {
+		} else if (dataType == java_time_OffsetDateTime_class) {
 			outRange = RangeParseUtilsForJavaTime.createOffsetDateTimeRangeFromISO8601AsStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
 															  	   		   						      bounds.getUpperBound(),bounds.getUpperBoundType());
-		} else if (dataType == java_time_ZonedDateTime) {
+		} else if (dataType == java_time_ZonedDateTime_class) {
 			outRange = RangeParseUtilsForJavaTime.createZonedDateTimeRangeFromISO8601AsStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
 															  	  		  							bounds.getUpperBound(),bounds.getUpperBoundType());
+			
+		// r01f date-time
+		} else if (dataType == Year_class) {
+			Range<Integer> iRange = RangeParseUtilsForNumbers.createIntegerRangeFromStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
+															  	  		  						 bounds.getUpperBound(),bounds.getUpperBoundType());
+			outRange = iRange.map(Year::of);
+		} else if (dataType == MonthOfYear_class) {
+			Range<Integer> iRange = RangeParseUtilsForNumbers.createIntegerRangeFromStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
+															  	  		  						 bounds.getUpperBound(),bounds.getUpperBoundType());
+			outRange = iRange.map(MonthOfYear::of);
+		} else if (dataType == HourOfDay_class) {
+			Range<Integer> iRange = RangeParseUtilsForNumbers.createIntegerRangeFromStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
+															  	  		  						 bounds.getUpperBound(),bounds.getUpperBoundType());
+			outRange = iRange.map(HourOfDay::of);
+		} else if (dataType == MinuteOfHour_class) {
+			Range<Integer> iRange = RangeParseUtilsForNumbers.createIntegerRangeFromStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
+															  	  		  						 bounds.getUpperBound(),bounds.getUpperBoundType());
+			outRange = iRange.map(MinuteOfHour::of);
+		} else if (dataType == SecondOfMinute_class) {
+			Range<Integer> iRange = RangeParseUtilsForNumbers.createIntegerRangeFromStringBounds(bounds.getLowerBound(),bounds.getLowerBoundType(),
+															  	  		  						 bounds.getUpperBound(),bounds.getUpperBoundType());
+			outRange = iRange.map(r01f.types.datetime.SecondOfMinute::of);
 		} else {
 			throw new IllegalArgumentException("Type " + dataType + " is NOT supported in Range");
 		}

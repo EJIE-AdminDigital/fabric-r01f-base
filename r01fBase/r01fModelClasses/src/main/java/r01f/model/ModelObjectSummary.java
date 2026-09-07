@@ -3,10 +3,10 @@ package r01f.model;
 import java.io.Serializable;
 
 import lombok.RequiredArgsConstructor;
+import r01f.facets.HasLangDependentName;
+import r01f.facets.HasLangInDependentName;
 import r01f.facets.HasOID;
 import r01f.facets.LangDependentNamed;
-import r01f.facets.LangDependentNamed.HasLangDependentNamedFacet;
-import r01f.facets.LangInDependentNamed.HasLangInDependentNamedFacet;
 import r01f.guids.OID;
 import r01f.locale.LanguageTexts;
 import r01f.types.summary.Summary;
@@ -82,7 +82,7 @@ public class ModelObjectSummary
 	 * @param hasNames
 	 * @return
 	 */
-	public static <O extends OID,M extends HasOID<O> & HasLangDependentNamedFacet> ModelObjectSummary createForLangDependantNamedModelObj(final M hasNames) {
+	public static <O extends OID,M extends HasOID<O> & HasLangDependentName> ModelObjectSummary createForLangDependantNamedModelObj(final M hasNames) {
 		return new ModelObjectSummary(hasNames.getOid(),
 									  SummaryHasLanguageDependentNameBacked.of(hasNames));
 	}
@@ -92,7 +92,7 @@ public class ModelObjectSummary
 	 * @param hasNames
 	 * @return
 	 */
-	public static <O extends OID,M extends HasOID<O> & HasLangInDependentNamedFacet> ModelObjectSummary createForLangIndependantNamedModelObj(final M hasNames) {
+	public static <O extends OID,M extends HasOID<O> & HasLangInDependentName> ModelObjectSummary createForLangIndependantNamedModelObj(final M hasNames) {
 		return new ModelObjectSummary(hasNames.getOid(),
 									  SummaryHasLanguageIndependentNameBacked.of(hasNames));
 	}

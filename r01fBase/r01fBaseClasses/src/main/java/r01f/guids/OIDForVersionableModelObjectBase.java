@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import r01f.util.types.Strings;
 
+@Deprecated	// use records instead of this class
 @Accessors(prefix="_")
 @RequiredArgsConstructor
 public abstract class OIDForVersionableModelObjectBase
@@ -19,18 +20,20 @@ public abstract class OIDForVersionableModelObjectBase
 /////////////////////////////////////////////////////////////////////////////////////////
 //  
 /////////////////////////////////////////////////////////////////////////////////////////
+	@Deprecated
 	@Override 
 	protected Object clone() throws CloneNotSupportedException {
 		if (this.getVersionIndependentOid() == null || this.getVersion() == null) throw new IllegalStateException(Strings.customized("The oid of type {} has NO state",this.getClass()));
 		VersionIndependentOID clonedVersionIndependentOid = ObjectUtils.clone(this.getVersionIndependentOid());
 		VersionOID clonedVersionOid = ObjectUtils.clone(this.getVersion());
-		Object outOid = _createVersionableOIDFromString((Class<? extends VersionIndependentOID>)clonedVersionIndependentOid.getClass(),(Class<? extends VersionOID>)clonedVersionOid.getClass(),
+		Object outOid = _createVersionableOIDFromString(clonedVersionIndependentOid.getClass(),clonedVersionOid.getClass(),
 														clonedVersionIndependentOid,clonedVersionOid);
 		return outOid;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	
 /////////////////////////////////////////////////////////////////////////////////////////	
+	@Deprecated
 	@Override
 	public int compareTo(final OID o) {
 		if (o == null) return -1;
@@ -40,6 +43,7 @@ public abstract class OIDForVersionableModelObjectBase
 /////////////////////////////////////////////////////////////////////////////////////////
 //	
 /////////////////////////////////////////////////////////////////////////////////////////	
+	@Deprecated
 	@Override
 	public int hashCode() {
 		return Objects.hash(this.getVersionIndependentOid(),this.getVersion());
@@ -47,6 +51,7 @@ public abstract class OIDForVersionableModelObjectBase
 /////////////////////////////////////////////////////////////////////////////////////////
 //	
 /////////////////////////////////////////////////////////////////////////////////////////	
+	@Deprecated
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj == null) return false;
@@ -58,14 +63,17 @@ public abstract class OIDForVersionableModelObjectBase
 		} 
 		return false;
 	}
+	@Deprecated
 	@Override
 	public <O extends OID> boolean is(final O other) {
 		return this.equals(other);
 	}
+	@Deprecated
 	@Override
 	public <O extends OID> boolean isNOT(final O other) {
 		return !this.is(other);
 	}
+	@Deprecated
 	@Override
 	public <O extends OID> boolean isIgnoringCase(final O other) {
 		if (this == other) return true;
@@ -77,15 +85,18 @@ public abstract class OIDForVersionableModelObjectBase
 		} 
 		return false;
 	}
+	@Deprecated
 	@Override @SuppressWarnings("unchecked")
 	public <O extends OID> boolean isContainedIn(final O... oids) {
 		return oids != null ? this.isContainedIn(Arrays.asList(oids))
 							: false;
 	}
+	@Deprecated
 	@Override @SuppressWarnings("unchecked")
 	public <O extends OID> boolean isNOTContainedIn(final O... oids) {
 		return !this.isContainedIn(oids);
 	}
+	@Deprecated
 	@Override
 	public <O extends OID> boolean isContainedIn(final Iterable<O> oids) {
 		boolean outIsContained = false;
@@ -99,6 +110,7 @@ public abstract class OIDForVersionableModelObjectBase
 		}
 		return outIsContained;
 	}
+	@Deprecated
 	@Override
 	public <O extends OID> boolean isNOTContainedIn(final Iterable<O> oids) {
 		return !this.isContainedIn(oids);
@@ -106,6 +118,7 @@ public abstract class OIDForVersionableModelObjectBase
 /////////////////////////////////////////////////////////////////////////////////////////
 //  
 /////////////////////////////////////////////////////////////////////////////////////////
+	@Deprecated
 	@Override @SuppressWarnings("unchecked")
 	public <O extends OID> O cast() {
 		return (O)this;
@@ -113,6 +126,7 @@ public abstract class OIDForVersionableModelObjectBase
 /////////////////////////////////////////////////////////////////////////////////////////
 //  
 /////////////////////////////////////////////////////////////////////////////////////////
+	@Deprecated
 	@Override
 	public String toString() {
 		String outStr = null;
@@ -122,16 +136,19 @@ public abstract class OIDForVersionableModelObjectBase
 		outStr = Strings.customized("{}/{}",this.getVersionIndependentOid(),this.getVersion()); 
 		return outStr;
 	}
+	@Deprecated
 	@Override
 	public String asString() {
 		return this.toString();
 	}
+	@Deprecated
 	public String memoCode() {
 		return this.toString();
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	
 /////////////////////////////////////////////////////////////////////////////////////////	
+	@Deprecated
 	@Override
 	public boolean isValid() {
 		return this.getVersionIndependentOid() != null && this.getVersionIndependentOid().isValid() 

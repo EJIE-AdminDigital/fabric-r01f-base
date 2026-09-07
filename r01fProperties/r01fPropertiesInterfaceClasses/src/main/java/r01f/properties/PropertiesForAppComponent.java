@@ -2,8 +2,8 @@ package r01f.properties;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import r01f.guids.CommonOIDs.AppCode;
-import r01f.guids.CommonOIDs.AppComponent;
+import r01f.guids.CommonOIDs.IsAppCode;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.patterns.FactoryFrom;
 import r01f.types.Path;
 import r01f.util.types.Strings;
@@ -39,15 +39,15 @@ public abstract class PropertiesForAppComponent<W extends PropertyWrapper<?>> {
 /////////////////////////////////////////////////////////////////////////////////////////
 //  FIELDS
 /////////////////////////////////////////////////////////////////////////////////////////
-	@Getter protected final AppCode _appCode;
-	@Getter protected final AppComponent _appComponent;
+	@Getter protected final IsAppCode _appCode;
+	@Getter protected final IsAppComponent _appComponent;
 
 	protected final FactoryFrom<Path,W> _properyWrapperFactory;
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
-	protected PropertiesForAppComponent(final AppCode appCode,final AppComponent appComp,
+	protected PropertiesForAppComponent(final IsAppCode appCode,final IsAppComponent appComp,
 									 	final FactoryFrom<Path,W> propertiesWrapperFactory) {
 		_appCode = appCode;
 		_appComponent = appComp;

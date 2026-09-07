@@ -19,4 +19,5 @@ import java.lang.annotation.*;
 @Documented
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) 
 public @interface Prototype {
+	//
 }

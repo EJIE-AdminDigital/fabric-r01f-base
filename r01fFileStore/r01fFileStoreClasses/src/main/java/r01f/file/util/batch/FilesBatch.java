@@ -47,7 +47,7 @@ public class FilesBatch {
 																	? _delete.flowableDelete(deletedRelPaths)
 																	: Flowable.empty();
 		// iii) merge both
-		return Flowable.merge(newOrUpdatedFlow,
-							  deletedFlow);
+		return newOrUpdatedFlow.mergeWith(deletedFlow);		// return Flowable.mergeArray(newOrUpdatedFlow,
+							  								//						     deletedFlow);
 	}
 }

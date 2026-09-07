@@ -1,5 +1,6 @@
 package r01f.types;
 
+import java.time.Duration;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -40,6 +41,9 @@ public record TimeLapse(long lapse,TimeUnit unit)
 	}
 	public TimeLapse(final String timeLapseSpec) {
 		this(_lapseFromTimeLapseAsString(timeLapseSpec),_timeUnitFromTimeLapseAsString(timeLapseSpec));
+	}
+	public TimeLapse(final Duration duration) {
+		this(duration.toMillis(),TimeUnit.MILLISECONDS);
 	}
 	private static long _lapseFromTimeLapseAsString(final String timeLapseSpec) {
 		long theLapse = -1;
@@ -129,6 +133,9 @@ public record TimeLapse(long lapse,TimeUnit unit)
 	public static TimeLapse of(final long lapse,final TimeUnit unit) {
 		return new TimeLapse(lapse,unit);
 	}
+	public static TimeLapse of(final Duration duration) {
+		return new TimeLapse(duration);
+	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -149,6 +156,9 @@ public record TimeLapse(long lapse,TimeUnit unit)
 	}
 	public long asMinutes() {
 		return this.unit.toMinutes(this.lapse);
+	}
+	public Duration asDuration() {
+		return Duration.ofMillis(this.asMillis());
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	TO STRING

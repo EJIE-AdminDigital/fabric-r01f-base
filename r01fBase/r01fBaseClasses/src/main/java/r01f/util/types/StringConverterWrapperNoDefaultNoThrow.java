@@ -468,6 +468,7 @@ public class StringConverterWrapperNoDefaultNoThrow {
 	 * @param defValue
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private static <O extends OID> O _asOid(final CharSequence value,
 										    final Function<CharSequence,O> fromStringTransform,
 										    final Class<O> oidType) {

@@ -6,6 +6,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 
+import com.google.common.reflect.TypeToken;
+
 
 /**
  * Reference to a generic type.
@@ -33,13 +35,13 @@ public abstract class TypeRef<T> {
 	public TypeRef() {
 		Type superclass = this.getClass().getGenericSuperclass();
 		if (superclass instanceof Class<?>) throw new IllegalArgumentException("Missing type parameter. Maybe you have used the generics 'mode' but the type is not generics");
-		Type type = ((ParameterizedType)superclass).getActualTypeArguments()[0];
+		if (!(superclass instanceof ParameterizedType)) throw new IllegalArgumentException("Superclass is not a parameterized type: " + superclass);
+		_runtimeType = ((ParameterizedType)superclass).getActualTypeArguments()[0];
 		
-		_runtimeType = type;
-		if (!(_runtimeType instanceof TypeVariable)) throw new IllegalArgumentException("Cannot construct a TypeToken for a type variable");
+//		if (!(_runtimeType instanceof TypeVariable)) throw new IllegalArgumentException("Cannot construct a TypeRef for a type variable");
 		
-		_rawType = TypeRef.typeOf(type);		
-		if (_rawType == null) throw new IllegalArgumentException("The rawType of type=" + type + " cannot be known!");
+		_rawType = TypeRef.typeOf(_runtimeType);		
+		if (_rawType == null) throw new IllegalArgumentException("The rawType of type=" + _runtimeType + " cannot be known!");
 	
 	}
 /////////////////////////////////////////////////////////////////////////////////////////

@@ -5,28 +5,11 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.stream.Streams;
 
-import r01f.objectstreamer.annotations.MarshallField;
-
-public class KeyAndValue<K,V>
-  implements Map.Entry<K,V> {
-/////////////////////////////////////////////////////////////////////////////////////////
-//	FIELDS
-/////////////////////////////////////////////////////////////////////////////////////////
-	@MarshallField(as="key")
-	private K _key;
-
-	@MarshallField(as="value")
-	private V _value;
+public record KeyAndValue<K,V>(K key, V value)
+   implements Map.Entry<K,V> {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	CONSTRUCTOR & BUILDER
 /////////////////////////////////////////////////////////////////////////////////////////
-	public KeyAndValue() {
-		// default no-args constructor
-	}
-	public KeyAndValue(final K key,final V value) {
-		_key = key;
-		_value = value;
-	}
 	public static <K,V> KeyAndValue<K,V> of(final K key,final V value) {
 		return new KeyAndValue<>(key,value);
 	}
@@ -35,21 +18,15 @@ public class KeyAndValue<K,V>
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
 	public K getKey() {
-		return _key;
-	}
-	public void setKey(final K key) {
-		// this method is NOT in the Map.Entry interface :-)
-		_key = key;
+		return this.key;
 	}
 	@Override
 	public V getValue() {
-		return _value;
+		return this.value;
 	}
 	@Override
 	public V setValue(final V value) {
-		V prevValue = _value;
-		_value = value;
-		return prevValue;
+		throw new UnsupportedOperationException("KeyAndValue is immutable");
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	UTILS

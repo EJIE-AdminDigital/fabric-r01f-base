@@ -3,8 +3,7 @@ package r01f.guids;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import r01f.guids.CommonOIDs.AppCode;
 import r01f.guids.CommonOIDs.AppComponent;
 import r01f.objectstreamer.annotations.MarshallType;
@@ -22,19 +21,11 @@ import r01f.objectstreamer.annotations.MarshallType;
  * </pre>
  */
 @MarshallType(as="appAndComponent")
-@EqualsAndHashCode(callSuper=true)
-@NoArgsConstructor
-public final class AppAndComponent
-           extends OIDBaseMutable<String> {
-
-	private static final long serialVersionUID = -1130290632493385784L;
-
+public record AppAndComponent(@Getter String id)
+   implements OIDTyped<String> {
 /////////////////////////////////////////////////////////////////////////////////////////
-//  CONSTRUCTOR
+//	CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
-	public AppAndComponent(final String oid) {
-		super(oid);
-	}
 	public AppAndComponent(final AppCode appCode,final AppComponent appComponent) {
 		this(appCode.asString(),appComponent.asString());
 	}
@@ -77,6 +68,17 @@ public final class AppAndComponent
 		} else {
 			throw new IllegalStateException();
 		}
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
+	@Override
+	public String asString() {
+		return this.id;
+	}
+	@Override
+	public String toString() {
+		return this.asString();
 	}
 
 }

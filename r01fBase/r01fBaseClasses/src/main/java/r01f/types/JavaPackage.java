@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Function;
 
-import r01f.guids.CommonOIDs.AppCode;
+import r01f.guids.CommonOIDs.IsAppCode;
 import r01f.guids.OID;
 
 /**
@@ -29,13 +29,13 @@ public record JavaPackage(String pckg)
 	public JavaPackage(final Class<?> type) {
 		this(type.getPackage());
 	}
-	public static JavaPackage named(final AppCode appCode) {
+	public static JavaPackage named(final IsAppCode appCode) {
 		return new JavaPackage(appCode.asString());
 	}
 	public static JavaPackage named(final String pckg) {
 		return new JavaPackage(pckg);
 	}
-	public static JavaPackage of(final AppCode appCode) {
+	public static JavaPackage of(final IsAppCode appCode) {
 		return new JavaPackage(appCode.asString());
 	}
 	public static JavaPackage of(final String pckg) {
@@ -83,5 +83,5 @@ public record JavaPackage(String pckg)
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-	public static final Function<AppCode,JavaPackage> APP_CODE_TO_JAVA_PACKAGE = JavaPackage::of;
+	public static final Function<IsAppCode,JavaPackage> APP_CODE_TO_JAVA_PACKAGE = JavaPackage::of;
 }

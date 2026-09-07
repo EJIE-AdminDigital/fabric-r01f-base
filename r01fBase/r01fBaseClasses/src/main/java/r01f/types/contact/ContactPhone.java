@@ -63,11 +63,12 @@ public class ContactPhone
 	@MarshallField(as="availability",
 				   whenXml=@MarshallFieldAsXml(attr=true))
 	@Getter(AccessLevel.PROTECTED) @Setter(AccessLevel.PROTECTED) private String _availableRangeForCallingStr = null;
-	public r01f.types.Range<Integer> getAvailableRangeForCalling() {
+	
+	public r01f.types.Range<HourOfDay> getAvailableRangeForCalling() {
 		if (Strings.isNullOrEmpty(_availableRangeForCallingStr)) return null;
-		return r01f.types.Range.parse(_availableRangeForCallingStr,Integer.class);
+		return r01f.types.Range.parse(_availableRangeForCallingStr,HourOfDay.class);
 	}
-	public void setAvailableRangeForCalling(final r01f.types.Range<Integer> availableRangeForCalling) {
+	public void setAvailableRangeForCalling(final r01f.types.Range<HourOfDay> availableRangeForCalling) {
 		if (availableRangeForCalling == null) {
 			_availableRangeForCallingStr = null;
 		} else {
@@ -105,7 +106,7 @@ public class ContactPhone
 		_extension = PhoneExtension.create(extension);
 		return this;
 	}
-	public ContactPhone availableRangeForCalling(final r01f.types.Range<Integer> range) {
+	public ContactPhone availableRangeForCalling(final r01f.types.Range<HourOfDay> range) {
 		_availableRangeForCallingStr = range.asString();
 		return this;
 	}
@@ -130,9 +131,9 @@ public class ContactPhone
 		return this.isAvailable(HourOfDay.nowAt(zoneId));
 	}
 	public boolean isAvailable(final HourOfDay hourOfDay) {
-		r01f.types.Range<Integer> availableRange = this.getAvailableRangeForCalling();
-		int hour = hourOfDay.asInteger();
-		return availableRange.getLowerBound() <= hour && availableRange.getUpperBound() > hour;
+		r01f.types.Range<HourOfDay> availableRange = this.getAvailableRangeForCalling();
+		return availableRange.getLowerBound().isBeforeOrEqual(hourOfDay) 
+			&& availableRange.getUpperBound().isAfterOrEqual(hourOfDay);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	EQUALS & HASHCODE

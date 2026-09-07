@@ -18,8 +18,6 @@ import r01f.objectstreamer.annotations.MarshallField.DateFormat;
 import r01f.objectstreamer.annotations.MarshallField.MarshallDateFormat;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
 import r01f.objectstreamer.annotations.MarshallType;
-import r01f.types.summary.Summary;
-import r01f.types.summary.SummaryStringBacked;
 import r01f.util.types.Objects;
 import r01f.util.types.Strings;
 
@@ -54,18 +52,8 @@ public class PersonalData
 	/**
 	 * Name
 	 */
-	@MarshallField(as="name",escape=true)
-	@Getter @Setter protected String _name;
-	/**
-	 * Surname or first name
-	 */
-	@MarshallField(as="firstName",escape=true)
-	@Getter @Setter protected String _surname1;
-	/**
-	 * Second name
-	 */
-	@MarshallField(as="secondName",escape=true)
-	@Getter @Setter protected String _surname2;
+	@MarshallField(as="fullName",escape=true)
+	@Getter @Setter protected PersonFullName _fullName;
 	/**
 	 * Mr, Ms, Doc, etc
 	 */
@@ -100,11 +88,48 @@ public class PersonalData
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
 	public Summarizable asSummarizable() {
-		return SummarizableBuilder.summarizableFrom(_composeSummary());
+		return _fullName != null ? _fullName.asSummarizable()
+								 : null;
 	}
 	@Override
 	public FullTextSummarizable asFullTextSummarizable() {
 		return SummarizableBuilder.fullTextSummarizableFrom(this.asSummarizable());
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
+	public String getName() {
+		return _fullName != null ? _fullName.getName() : null;
+	}
+	public void setName(final String name) {
+		_fullName = _fullName != null ? _fullName.withName(name)
+									  : new PersonFullName(name,null,null);
+	}
+	public String getSurname1() {
+		return _fullName != null ? _fullName.getSurname() : null;
+	}
+	public void setSurname1(final String surname1) {
+		_fullName = _fullName != null ? _fullName.withSurname(surname1)
+									  : new PersonFullName(null,surname1,null);
+	}
+	public String getLastName() {
+		return this.getSurname1();
+	}
+	public String getFamilyName() {
+		return this.getSurname1();
+	}
+	public String getSurname2() {
+		return _fullName != null ? _fullName.getSurname2() : null;
+	}
+	public void setSurname2(final String surname2) {
+		_fullName = _fullName != null ? _fullName.withSurname2(surname2)
+									  : new PersonFullName(null,null,surname2);
+	}
+	public String getLastName2() {
+		return this.getSurname2();
+	}
+	public String getFamilyName2() {
+		return this.getSurname2();
 	}
 	/**
 	 * Returns the surname composing the surname1 and surname2
@@ -112,60 +137,30 @@ public class PersonalData
 	 */
 	public String getSurname() {
 		String outSurname = null;
-		if (Strings.isNOTNullOrEmpty(_surname1) && Strings.isNOTNullOrEmpty(_surname2)) {
-			outSurname = Strings.customized("{} {}",_surname1,_surname2);
+		if (Strings.isNOTNullOrEmpty(this.getSurname1()) && Strings.isNOTNullOrEmpty(this.getSurname2())) {
+			outSurname = Strings.customized("{} {}",this.getSurname1(),this.getSurname2());
 		}
-		else if (Strings.isNOTNullOrEmpty(_surname1)) {
-			outSurname = _surname1;
+		else if (Strings.isNOTNullOrEmpty(this.getSurname1())) {
+			outSurname = this.getSurname1();
 		}
-		else if (Strings.isNOTNullOrEmpty(_surname2)) {
-			outSurname = _surname2;
+		else if (Strings.isNOTNullOrEmpty(this.getSurname2())) {
+			outSurname = this.getSurname2();
 		}
 		return outSurname;
-	}
-	private Summary _composeSummary() {
-		SummaryStringBacked outSummary = null;
-
-		String surname = this.getSurname();
-
-		if (Strings.isNOTNullOrEmpty(surname) && Strings.isNOTNullOrEmpty(_name)) {
-			outSummary = SummaryStringBacked.of(Strings.customized("{}, {}",
-																   surname,_name));
-		}
-		else if (Strings.isNOTNullOrEmpty(surname)) {
-			outSummary = SummaryStringBacked.of(surname);
-		}
-		else if (Strings.isNOTNullOrEmpty(_name)) {
-			outSummary = SummaryStringBacked.of(_name);
-		}
-		else {
-			outSummary = SummaryStringBacked.of(Strings.customized("--NO summary for {}--",PersonalData.class));
-		}
-		return outSummary;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	EQUALS & HASHCODE
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
 	public boolean equals(final Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (!(obj instanceof PersonalData)) {
-			return false;
-		}
+		if (obj == null) return false;
+		if (obj == this) return true;
+		if (!(obj instanceof PersonalData)) return false;
 
 		PersonalData otherPerson = (PersonalData)obj;
 
-		boolean nameEq = _name != null ? _name.equals(otherPerson.getName()) ? true : false
-									   : true;	// both null
-		boolean surname1Eq = _surname1 != null ? _surname1.equals(otherPerson.getSurname1()) ? true : false
-											   : true;	// both null
-		boolean surname2Eq = _surname2 != null ? _surname2.equals(otherPerson.getSurname1()) ? true : false
-											   : true;	// both null
+		boolean nameEq = _fullName != null ? _fullName.equals(otherPerson.getFullName()) ? true : false
+									   	   : true;	// both null
 		boolean salutEq = _salutation != null ? _salutation.equals(otherPerson.getSalutation()) ? true : false
 											   : true;	// both null
 		boolean langEq = _preferredLang != null ? _preferredLang.equals(otherPerson.getPreferredLang()) ? true : false
@@ -174,14 +169,14 @@ public class PersonalData
 										   : true;	// both null
 		boolean detailsEq = _details != null ? _details.equals(otherPerson.getDetails()) ? true : false
 										     : true;	// both null
-		return  nameEq &&  surname1Eq && surname2Eq
-						&& salutEq && langEq
-						&& genderEq
-						&& detailsEq;
+		return  nameEq 
+			 && salutEq && langEq
+			 && genderEq
+			 && detailsEq;
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(_name,_surname1,_surname2,
+		return Objects.hashCode(_fullName,
 								_salutation,_preferredLang,
 								_gender,
 								_details);

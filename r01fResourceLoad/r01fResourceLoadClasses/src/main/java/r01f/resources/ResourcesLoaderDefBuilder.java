@@ -182,7 +182,7 @@ public class ResourcesLoaderDefBuilder
 			 	     xmlPropertiesForApp.getAppCode(),component,(resLoaderDefPath != null ? resLoaderDefPath.asRelativeString() : "resLoaderDefPath NULL"));
 			resLoaderDef = ResourcesLoaderDef.DEFAULT;
 		}
-		resLoaderDef.setId(PropertyLocation.composeId(xmlPropertiesForApp.getAppCode(),
+		resLoaderDef.setId(PropertyLocation.composeId(xmlPropertiesForApp.getAppCode().asAppCode(),
 													  component,
 													  resLoaderDefPath));
 		return resLoaderDef;

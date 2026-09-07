@@ -6,8 +6,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import r01f.debug.Debuggable;
-import r01f.guids.CommonOIDs.AppCode;
 import r01f.guids.CommonOIDs.AppComponent;
+import r01f.guids.CommonOIDs.IsAppCode;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.util.types.Strings;
 import r01f.xmlproperties.XMLPropertiesForAppComponent;
 
@@ -24,7 +25,7 @@ public interface PropertiesForApp<D,N,
 	/**
 	 * @return the appcode
 	 */
-	public AppCode getAppCode();
+	public IsAppCode getAppCode();
 /////////////////////////////////////////////////////////////////////////////////////////
 //	EXISTS
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -33,7 +34,7 @@ public interface PropertiesForApp<D,N,
 	 * @param component
 	 * @return
 	 */
-	public boolean existsComponentPropertiesFile(final AppComponent component);
+	public boolean existsComponentPropertiesFile(final IsAppComponent component);
 	/**
 	 * Checks if the component properties file exists
 	 * @param componentStr
@@ -50,7 +51,7 @@ public interface PropertiesForApp<D,N,
 	 * @param component app component
 	 * @return
 	 */
-	public A of(final AppComponent component);
+	public A of(final IsAppComponent component);
 	/**
 	 * Fluent api that provides access to properties
 	 * @param componentStr app component
@@ -67,7 +68,7 @@ public interface PropertiesForApp<D,N,
 	 * @param component the component
 	 * @return the {@link XMLPropertiesForAppComponent}
 	 */
-	public C forComponent(final AppComponent component);
+	public C forComponent(final IsAppComponent component);
 	/**
 	 * For testing purposes: the XML properties are NOT loaded
 	 * <pre class='brush:java'>
@@ -84,7 +85,7 @@ public interface PropertiesForApp<D,N,
 	 * @param xmlDoc
 	 * @return
 	 */
-	public C forComponentProperties(final AppComponent component,
+	public C forComponentProperties(final IsAppComponent component,
 									final D xmlDoc);
 	/**
 	 * Encapsulates the component properties
@@ -118,7 +119,7 @@ public interface PropertiesForApp<D,N,
 	 * @param component
 	 * @return
 	 */
-	public void clearCacheOf(final AppComponent component);
+	public void clearCacheOf(final IsAppComponent component);
 /////////////////////////////////////////////////////////////////////////////////////////
 //	CACHE STATS
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -131,19 +132,19 @@ public interface PropertiesForApp<D,N,
 	 * Returns the cache usage info by app component
 	 * @return
 	 */
-	public Map<AppComponent,PropertiesAppComponentPropertyCacheStats> getCacheStatsByAppComponent();
+	public Map<IsAppComponent,PropertiesAppComponentPropertyCacheStats> getCacheStatsByAppComponent();
 	/**
 	 * Returns the cache usage info for a component
 	 * @param appComp
 	 * @return
 	 */
-	public String cacheStatsDebugInfoOf(final AppComponent appComp);
+	public String cacheStatsDebugInfoOf(final IsAppComponent appComp);
 	/**
 	 * Returns the cache usage info for a component as a string
 	 * @param appComp
 	 * @return
 	 */
-	public PropertiesAppComponentPropertyCacheStats getCacheStatsOf(final AppComponent appComp);
+	public PropertiesAppComponentPropertyCacheStats getCacheStatsOf(final IsAppComponent appComp);
 
 	@Accessors(prefix="_")
 	@RequiredArgsConstructor

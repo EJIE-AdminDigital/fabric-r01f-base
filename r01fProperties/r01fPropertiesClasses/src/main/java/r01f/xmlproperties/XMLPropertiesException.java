@@ -2,10 +2,12 @@ package r01f.xmlproperties;
 
 import java.io.IOException;
 
+import r01f.configproperties.PropertiesComponentDefLoader;
+import r01f.configproperties.PropertiesErrorType;
 import r01f.exceptions.EnrichedRuntimeException;
-import r01f.guids.CommonOIDs.AppCode;
-import r01f.guids.CommonOIDs.AppComponent;
 import r01f.guids.CommonOIDs.Environment;
+import r01f.guids.CommonOIDs.IsAppCode;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.properties.PropertiesComponentDef;
 import r01f.util.types.Strings;
 
@@ -17,17 +19,17 @@ public class XMLPropertiesException
 /////////////////////////////////////////////////////////////////////////////////////////
 //  CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
-	public XMLPropertiesException(final XMLPropertiesErrorType type,
+	public XMLPropertiesException(final PropertiesErrorType type,
 								  final String msg) {
 		super(type,
 			  msg);
 	}
-	public XMLPropertiesException(final XMLPropertiesErrorType type,
+	public XMLPropertiesException(final PropertiesErrorType type,
 								  final Throwable th) {
 		super(type,
 			  th);
 	}
-	public XMLPropertiesException(final XMLPropertiesErrorType type,
+	public XMLPropertiesException(final PropertiesErrorType type,
 								  final String msg,
 								  final Throwable cause) {
 		super(type,
@@ -38,12 +40,12 @@ public class XMLPropertiesException
 //  BUILDERS
 /////////////////////////////////////////////////////////////////////////////////////////
 	public static XMLPropertiesException componentDefLoadError(final Environment env,
-															   final AppCode appCode,final AppComponent component) {
+															   final IsAppCode appCode,final IsAppComponent component) {
 		return XMLPropertiesException.componentDefLoadError(env,appCode,component,
 							   		  						null);
 	}
 	public static XMLPropertiesException componentDefLoadError(final Environment env,
-															   final AppCode appCode,final AppComponent component,
+															   final IsAppCode appCode,final IsAppComponent component,
 															   final IOException ioEx) {
 		String err = null;
 		if (env == null) {
@@ -57,11 +59,13 @@ public class XMLPropertiesException
 						 			 PropertiesComponentDefLoader.componentDefFilePath(env,
 						 					 										   appCode, component));
 		}
-		return new XMLPropertiesException(XMLPropertiesErrorType.COMPONENTDEF_NOT_FOUND,
+		return new XMLPropertiesException(PropertiesErrorType.COMPONENTDEF_NOT_FOUND,
 										  err,
 										  ioEx);
 	}
-	public static XMLPropertiesException propertiesLoadError(final Environment env,final AppCode appCode,final PropertiesComponentDef compDef) {
+	public static XMLPropertiesException propertiesLoadError(final Environment env,
+															 final IsAppCode appCode,
+															 final PropertiesComponentDef compDef) {
 		String err = null;
 		if (env == null) {
 			err = Strings.customized("The XML properties file {} was NOT found for appCode.component={}.{}",
@@ -78,10 +82,11 @@ public class XMLPropertiesException
 											 		 : "the definition was NOT found",
 						  			 env,appCode,compDef.getName());
 		}
-		return new XMLPropertiesException(XMLPropertiesErrorType.PROPERTIES_NOT_FOUND,
+		return new XMLPropertiesException(PropertiesErrorType.PROPERTIES_NOT_FOUND,
 										  err);
 	}
-	public static XMLPropertiesException propertiesXMLError(final Environment env,final AppCode appCode,final AppComponent component) {
+	public static XMLPropertiesException propertiesXMLError(final Environment env,
+															final IsAppCode appCode,final IsAppComponent component) {
 		String err = null;
 		if (env == null) {
 			err = Strings.customized("The properties XML for appCode.component={}.{} contains some error or is malformed",
@@ -90,7 +95,7 @@ public class XMLPropertiesException
 			err = Strings.customized("The properties XML for env/appCode.component={}/{}.{} contains some error or is malformed",
 						 			 env,appCode,component);
 		}
-		return new XMLPropertiesException(XMLPropertiesErrorType.PROPERTIES_XML_MALFORMED,
+		return new XMLPropertiesException(PropertiesErrorType.PROPERTIES_XML_MALFORMED,
 										  err);
 	}
 }

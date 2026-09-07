@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import r01f.facets.HasLangDependentDescription;
 import r01f.facets.HasLangDependentDisplayName;
-import r01f.facets.LangDependentNamed.HasLangDependentNamedFacet;
+import r01f.facets.HasLangDependentName;
 import r01f.locale.LanguageTexts.LangTextNotFoundBehabior;
 
 /**
@@ -29,7 +29,7 @@ import r01f.locale.LanguageTexts.LangTextNotFoundBehabior;
  * 																					       });
  * 		}
  * </pre>
- * If <pre>MyType</pre> implements {@link HasLangDependentNamedFacet} then just:
+ * If <pre>MyType</pre> implements {@link HasLangDependentName} then just:
  * <pre class='brush:java'>
  * 		@Accessors(prefix="_")
  * 		public class MyType
@@ -79,7 +79,7 @@ public class LanguageTextsWrapper<T> {
 	public static <T> LanguageTextsWrapperBuildStep<T> at(final T langTextsContainer) {
 		return new LanguageTextsWrapperBuildStep<>(langTextsContainer);
 	}
-	public static <T extends HasLangDependentNamedFacet> LanguageTextsWrapper<T> atHasLangDependentNamedFacet(final T langTextsContainer) {
+	public static <T extends HasLangDependentName> LanguageTextsWrapper<T> atHasLangDependentNamedFacet(final T langTextsContainer) {
 		return new LanguageTextsWrapper<>(langTextsContainer,
 										  new HasLanguageTexts() {
 													@Override
@@ -174,6 +174,13 @@ public class LanguageTextsWrapper<T> {
 /////////////////////////////////////////////////////////////////////////////////////////
 	public Optional<String> getIn(final Language lang) {
 		return _accessWrapper.getIn(lang);
+	}
+	public Optional<String> getInFirstAvailableOf(final Language... langs) {
+		for (Language lang : langs) {
+			Optional<String> outText = _accessWrapper.getIn(lang);
+			if (outText.isPresent()) return outText;
+		}
+		return Optional.ofNullable(null);
 	}
 	public String getInOrNull(final Language lang) {
 		return _accessWrapper.getInOrNull(lang);

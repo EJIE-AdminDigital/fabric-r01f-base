@@ -1,4 +1,4 @@
-package r01f.xmlproperties;
+package r01f.configproperties;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileNotFoundException;
@@ -18,10 +18,10 @@ import com.google.common.collect.Maps;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.CommonOIDs.AppCode;
 import r01f.guids.CommonOIDs.AppComponent;
-import r01f.guids.CommonOIDs.AppComponentBase;
 import r01f.guids.CommonOIDs.Environment;
+import r01f.guids.CommonOIDs.IsAppCode;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.properties.PropertiesComponentDef;
 import r01f.resources.ResourcesLoader;
 import r01f.resources.ResourcesLoaderBuilder;
@@ -33,11 +33,12 @@ import r01f.types.Path;
 import r01f.types.TimeLapse;
 import r01f.util.types.Strings;
 import r01f.xml.XMLUtils;
+import r01f.xmlproperties.XMLPropertiesException;
 
 @Slf4j
 @Accessors(prefix="_")
 @NoArgsConstructor
-class PropertiesComponentDefLoader {
+public abstract class PropertiesComponentDefLoader {
 /////////////////////////////////////////////////////////////////////////////////////////
 //  LOAD METHODS
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -50,7 +51,7 @@ class PropertiesComponentDefLoader {
 	 * @throws XMLPropertiesException if the file cannot be loaded or it's malformed
 	 */
 	public static PropertiesComponentDef load(final Environment env,
-											  final AppCode appCode,final AppComponent component) throws XMLPropertiesException {
+											  final IsAppCode appCode,final IsAppComponent component) throws XMLPropertiesException {
 		PropertiesComponentDef outDef = null;
 		// Load the component definition from /config/appCode/components/appCode.component.xml
 		ResourcesLoader resourcesLoader = ResourcesLoaderBuilder.DEFAULT_RESOURCES_LOADER;
@@ -100,7 +101,7 @@ class PropertiesComponentDefLoader {
 		// d) - Return
 		try {
 			outDef = PropertiesComponentDefLoader.load(defXmlIS);
-			outDef.setName(component);		// Add the name  (it's not at the xml)
+			outDef.setName(component != null ? component.asAppComponent() : AppComponent.NO_COMPONENT);		// Add the name  (it's not at the xml)
 		} catch (final IOException ioEx) {
 			throw XMLPropertiesException.componentDefLoadError(env,appCode,component,
 															   ioEx);
@@ -124,7 +125,7 @@ class PropertiesComponentDefLoader {
 	 * @throws XMLPropertiesException
 	 */
 	public static PropertiesComponentDef loadOrDefault(final Environment env,
-												 		  final AppCode appCode,final AppComponent component) throws XMLPropertiesException {
+												 	   final IsAppCode appCode,final IsAppComponent component) throws XMLPropertiesException {
 		// Load the component definition
 		PropertiesComponentDef compDef = null;
 		try {
@@ -132,7 +133,7 @@ class PropertiesComponentDefLoader {
 														   appCode,component);
 		} catch (final XMLPropertiesException xmlPropsEx) {
 			// If the component definition was NOT found, try a default one
-			if (xmlPropsEx.is(XMLPropertiesErrorType.COMPONENTDEF_NOT_FOUND)) {
+			if (xmlPropsEx.is(PropertiesErrorType.COMPONENTDEF_NOT_FOUND)) {
 				// warn
 				if (env != null) {
 					log.warn("\t... Could NOT find the xml properties [COMPONENT DEFINITION] for appCode/component={}.{} for env={} at {} or {}: the properties file will be searched at classpath file {}",
@@ -155,7 +156,7 @@ class PropertiesComponentDefLoader {
 				}
 				// build a default component definition
 				compDef = new PropertiesComponentDef();
-				compDef.setName(component != null ? component : AppComponent.NO_COMPONENT);
+				compDef.setName(component != null ? component.asAppComponent() : AppComponent.NO_COMPONENT);
 				if (component != null && component.isNOT(AppComponent.NO_COMPONENT)) {
 					// component set (the most usual case)
 					compDef.setPropertiesFileURI(Path.from(String.format("%s/%s.%s.properties.xml",
@@ -178,8 +179,8 @@ class PropertiesComponentDefLoader {
 				  compDef.debugInfo());
 		return compDef;
 	}
-	static Path componentDefFilePath(final Environment env,
-									 final AppCode appCode,final AppComponent component) {
+	public static Path componentDefFilePath(final Environment env,
+									 		final IsAppCode appCode,final IsAppComponent component) {
 		Path filePath = null;
 		if (env == null) {
 			filePath = PropertiesComponentDefLoader.componentDefFilePath(appCode,component);
@@ -194,9 +195,9 @@ class PropertiesComponentDefLoader {
 		}
 		return filePath;
 	}
-	static Path componentDefFilePath(final AppCode appCode,final AppComponent component) {
+	public static Path componentDefFilePath(final IsAppCode appCode,final IsAppComponent component) {
 		String filePath = null;
-		if (component != null && component.isNOT(AppComponentBase.NO_COMPONENT)) {
+		if (component != null && component.isNOT(AppComponent.NO_COMPONENT)) {
 			// ... this is the most common case
 			filePath = Strings.customized("{}/components/{}.{}.xml",		// ie: /components/r01.default.xml
 							  			  appCode,appCode,component);

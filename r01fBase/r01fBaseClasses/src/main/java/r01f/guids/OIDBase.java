@@ -18,6 +18,7 @@ import r01f.util.types.Strings;
  *
  * @param <T> the type of the id
  */
+@Deprecated	// use records instead of this class
 @Immutable
 @NoArgsConstructor
 public abstract class OIDBase<T extends Comparable<? super T>>
@@ -27,6 +28,7 @@ public abstract class OIDBase<T extends Comparable<? super T>>
 /////////////////////////////////////////////////////////////////////////////////////////
 //	SERIALIZABLE / CLONEABLE
 /////////////////////////////////////////////////////////////////////////////////////////	
+	@Deprecated
 	@Override 
 	protected Object clone() throws CloneNotSupportedException {
 		if (this.getId() == null) throw new IllegalStateException(String.format("The oid of type %s has NO state",this.getClass()));
@@ -38,6 +40,7 @@ public abstract class OIDBase<T extends Comparable<? super T>>
 /////////////////////////////////////////////////////////////////////////////////////////
 //	EQUALS & HASHCODE
 /////////////////////////////////////////////////////////////////////////////////////////
+	@Deprecated
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj == null) return false;
@@ -51,6 +54,7 @@ public abstract class OIDBase<T extends Comparable<? super T>>
 			return obj.toString().equals(this.getId().toString());
 		return super.equals(obj);
 	}
+	@Deprecated
 	@Override
 	public int hashCode() {
 		return this.getId().hashCode();
@@ -58,6 +62,7 @@ public abstract class OIDBase<T extends Comparable<? super T>>
 /////////////////////////////////////////////////////////////////////////////////////////
 //	String conversion
 /////////////////////////////////////////////////////////////////////////////////////////
+	@Deprecated
 	@Override
 	public String toString() {
 		return this.getId() != null ? this.getId().toString()

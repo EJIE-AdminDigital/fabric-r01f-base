@@ -12,6 +12,12 @@ import com.google.common.collect.BoundType;
 
 import lombok.NoArgsConstructor;
 import r01f.types.Range;
+import r01f.types.datetime.DayOfMonth;
+import r01f.types.datetime.HourOfDay;
+import r01f.types.datetime.MinuteOfHour;
+import r01f.types.datetime.MonthOfYear;
+import r01f.types.datetime.SecondOfMinute;
+import r01f.types.datetime.Year;
 import r01f.util.types.Strings;
 import r01f.util.types.datetime.DateTimeFormatUtils;
 import r01f.util.types.ranges.RangeParseUtils.RangeDef;
@@ -41,32 +47,49 @@ public abstract class RangeSerializeUtils {
 		// date-time
 		Class<?> java_util_Date_class = Date.class;
 		Class<?> java_sql_Date_class = java.sql.Date.class;
-		Class<?> java_time_Instant = Instant.class;
-		Class<?> java_time_LocalDate = LocalDate.class;
-		Class<?> java_time_LocalDateTime = LocalDateTime.class;
-		Class<?> java_time_LocalTime = LocalTime.class;
-		Class<?> java_time_ZonedDateTime = ZonedDateTime.class;
-		Class<?> java_time_OffsetDateTime = OffsetDateTime.class;
+		Class<?> java_time_Instant_class = Instant.class;
+		Class<?> java_time_LocalDate_class = LocalDate.class;
+		Class<?> java_time_LocalDateTime_class = LocalDateTime.class;
+		Class<?> java_time_LocalTime_class = LocalTime.class;
+		Class<?> java_time_ZonedDateTime_class = ZonedDateTime.class;
+		Class<?> java_time_OffsetDateTime_class = OffsetDateTime.class;
+		
+		Class<?> Year_class = Year.class;
+		Class<?> MonthOfYear_class = MonthOfYear.class;
+		Class<?> HourOfDay_class = r01f.types.datetime.HourOfDay.class;
+		Class<?> MinuteOfHour_class = r01f.types.datetime.MinuteOfHour.class;
+		Class<?> SecondOfMinute_class = r01f.types.datetime.SecondOfMinute.class;
+		
 
 		// date-time
 		if (dataType == java_util_Date_class || dataType == java_sql_Date_class) {
 			rangeDef = _toInstantBoundStrings(range.map(Date.class::cast)
 											   	   .map(Date::toInstant));
-		} else if (dataType == java_time_Instant) {
+		} else if (dataType == java_time_Instant_class) {
 			rangeDef = _toInstantBoundStrings(range.map(Instant.class::cast));
-		} else if (dataType == java_time_LocalDate) {
+		} else if (dataType == java_time_LocalDate_class) {
 			rangeDef = _toLocalDateBoundStrings(range.map(LocalDate.class::cast));
-		} else if (dataType == java_time_LocalDateTime) {
+		} else if (dataType == java_time_LocalDateTime_class) {
 			rangeDef = _toLocalDateTimeBoundStrings(range.map(LocalDateTime.class::cast));
-		} else if (dataType == java_time_LocalTime) {
+		} else if (dataType == java_time_LocalTime_class) {
 			rangeDef = _toLocalTimeBoundStrings(range.map(LocalTime.class::cast));
-		} else if (dataType == java_time_ZonedDateTime) {
+		} else if (dataType == java_time_ZonedDateTime_class) {
 			rangeDef = _toZonedDateTimeBoundStrings(range.map(ZonedDateTime.class::cast));
-		} else if (dataType == java_time_OffsetDateTime) {
+		} else if (dataType == java_time_OffsetDateTime_class) {
 			rangeDef = _toOffsetDateTimeBoundStrings(range.map(OffsetDateTime.class::cast));
-		}
+		// date time components
+		} else if (dataType == Year_class) {
+			rangeDef = _toYearBoundStrings(range.map(Year.class::cast));
+		} else if (dataType == MonthOfYear_class) {
+			rangeDef = _toMonthOfYearBoundStrings(range.map(MonthOfYear.class::cast));
+		} else if (dataType == HourOfDay_class) {
+			rangeDef = _toHourOfDayBoundStrings(range.map(HourOfDay.class::cast));
+		} else if (dataType == MinuteOfHour_class) {
+			rangeDef = _toMinuteOfHourBoundStrings(range.map(MinuteOfHour.class::cast));
+		} else if (dataType == SecondOfMinute_class) {
+			rangeDef = _toSecondOfMinuteBoundStrings(range.map(SecondOfMinute.class::cast));
 		// numbers
-		else if (dataType == java_lang_Byte_class) {
+		} else if (dataType == java_lang_Byte_class) {
 			rangeDef = _toByteBoundStrings(range.map(Byte.class::cast));
 		} else if (dataType == java_lang_Integer_class) {
 			rangeDef = _toIntegerBoundStrings(range.map(Integer.class::cast));
@@ -85,6 +108,45 @@ public abstract class RangeSerializeUtils {
 							   			   (rangeDef.getLowerBoundType() == BoundType.CLOSED ? "[" : "("),(rangeDef.getLowerBound() != null ? rangeDef.getLowerBound() : ""),
 							   			   (rangeDef.getUpperBound() != null ? rangeDef.getUpperBound() : ""),(rangeDef.getUpperBoundType() == BoundType.CLOSED ? "]" : ")"));
 		return outStr;
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	NUMBERS
+/////////////////////////////////////////////////////////////////////////////////////////
+	private static RangeDef _toByteBoundStrings(final Range<Byte> range) {
+		String lower = range.getLowerBound() != null ? Byte.toString(range.getLowerBound()) : null;
+		String upper = range.getUpperBound() != null ? Byte.toString(range.getUpperBound()) : null;
+		return new RangeDef(lower,range.getLowerBoundType(),
+							upper,range.getUpperBoundType());
+	}
+	private static RangeDef _toIntegerBoundStrings(final Range<Integer> range) {
+		String lower = range.getLowerBound() != null ? Integer.toString(range.getLowerBound()) : null;
+		String upper = range.getUpperBound() != null ? Integer.toString(range.getUpperBound()) : null;
+		return new RangeDef(lower,range.getLowerBoundType(),
+							upper,range.getUpperBoundType());
+	}
+	private static RangeDef _toShortBoundStrings(final Range<Short> range) {
+		String lower = range.getLowerBound() != null ? Short.toString(range.getLowerBound()) : null;
+		String upper = range.getUpperBound() != null ? Short.toString(range.getUpperBound()) : null;
+		return new RangeDef(lower,range.getLowerBoundType(),
+							upper,range.getUpperBoundType());
+	}
+	private static RangeDef _toLongBoundStrings(final Range<Long> range) {
+		String lower = range.getLowerBound() != null ? Long.toString(range.getLowerBound()) : null;
+		String upper = range.getUpperBound() != null ? Long.toString(range.getUpperBound()) : null;
+		return new RangeDef(lower,range.getLowerBoundType(),
+							upper,range.getUpperBoundType());
+	}
+	private static RangeDef _toDoubleBoundStrings(final Range<Double> range) {
+		String lower = range.getLowerBound() != null ? Double.toString(range.getLowerBound()) : null;
+		String upper = range.getUpperBound() != null ? Double.toString(range.getUpperBound()) : null;
+		return new RangeDef(lower,range.getLowerBoundType(),
+							upper,range.getUpperBoundType());
+	}
+	private static RangeDef _toFloatBoundStrings(final Range<Float> range) {
+		String lower = range.getLowerBound() != null ? Float.toString(range.getLowerBound()) : null;
+		String upper = range.getUpperBound() != null ? Float.toString(range.getUpperBound()) : null;
+		return new RangeDef(lower,range.getLowerBoundType(),
+							upper,range.getUpperBoundType());
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	DATE-TIME
@@ -126,41 +188,41 @@ public abstract class RangeSerializeUtils {
 							upper,range.getUpperBoundType());
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
-//	NUMBERS
+//	DATE-COMPONENTS
 /////////////////////////////////////////////////////////////////////////////////////////
-	private static RangeDef _toByteBoundStrings(final Range<Byte> range) {
-		String lower = range.getLowerBound() != null ? Byte.toString(range.getLowerBound()) : null;
-		String upper = range.getUpperBound() != null ? Byte.toString(range.getUpperBound()) : null;
+	private static RangeDef _toYearBoundStrings(final Range<Year> range) {
+		String lower = range.getLowerBound() != null ? range.getLowerBound().asString() : null;
+		String upper = range.getUpperBound() != null ? range.getUpperBound().asString() : null;
 		return new RangeDef(lower,range.getLowerBoundType(),
 							upper,range.getUpperBoundType());
 	}
-	private static RangeDef _toIntegerBoundStrings(final Range<Integer> range) {
-		String lower = range.getLowerBound() != null ? Integer.toString(range.getLowerBound()) : null;
-		String upper = range.getUpperBound() != null ? Integer.toString(range.getUpperBound()) : null;
+	private static RangeDef _toMonthOfYearBoundStrings(final Range<MonthOfYear> range) {
+		String lower = range.getLowerBound() != null ? range.getLowerBound().asString() : null;
+		String upper = range.getUpperBound() != null ? range.getUpperBound().asString() : null;
 		return new RangeDef(lower,range.getLowerBoundType(),
 							upper,range.getUpperBoundType());
 	}
-	private static RangeDef _toShortBoundStrings(final Range<Short> range) {
-		String lower = range.getLowerBound() != null ? Short.toString(range.getLowerBound()) : null;
-		String upper = range.getUpperBound() != null ? Short.toString(range.getUpperBound()) : null;
+	private static RangeDef _toDayOfMonthBoundStrings(final Range<DayOfMonth> range) {
+		String lower = range.getLowerBound() != null ? range.getLowerBound().asString() : null;
+		String upper = range.getUpperBound() != null ? range.getUpperBound().asString() : null;
 		return new RangeDef(lower,range.getLowerBoundType(),
 							upper,range.getUpperBoundType());
 	}
-	private static RangeDef _toLongBoundStrings(final Range<Long> range) {
-		String lower = range.getLowerBound() != null ? Long.toString(range.getLowerBound()) : null;
-		String upper = range.getUpperBound() != null ? Long.toString(range.getUpperBound()) : null;
+	private static RangeDef _toHourOfDayBoundStrings(final Range<HourOfDay> range) {
+		String lower = range.getLowerBound() != null ? range.getLowerBound().asString() : null;
+		String upper = range.getUpperBound() != null ? range.getUpperBound().asString() : null;
 		return new RangeDef(lower,range.getLowerBoundType(),
 							upper,range.getUpperBoundType());
 	}
-	private static RangeDef _toDoubleBoundStrings(final Range<Double> range) {
-		String lower = range.getLowerBound() != null ? Double.toString(range.getLowerBound()) : null;
-		String upper = range.getUpperBound() != null ? Double.toString(range.getUpperBound()) : null;
+	private static RangeDef _toMinuteOfHourBoundStrings(final Range<MinuteOfHour> range) {
+		String lower = range.getLowerBound() != null ? range.getLowerBound().asString() : null;
+		String upper = range.getUpperBound() != null ? range.getUpperBound().asString() : null;
 		return new RangeDef(lower,range.getLowerBoundType(),
 							upper,range.getUpperBoundType());
 	}
-	private static RangeDef _toFloatBoundStrings(final Range<Float> range) {
-		String lower = range.getLowerBound() != null ? Float.toString(range.getLowerBound()) : null;
-		String upper = range.getUpperBound() != null ? Float.toString(range.getUpperBound()) : null;
+	private static RangeDef _toSecondOfMinuteBoundStrings(final Range<SecondOfMinute> range) {
+		String lower = range.getLowerBound() != null ? range.getLowerBound().asString() : null;
+		String upper = range.getUpperBound() != null ? range.getUpperBound().asString() : null;
 		return new RangeDef(lower,range.getLowerBoundType(),
 							upper,range.getUpperBoundType());
 	}

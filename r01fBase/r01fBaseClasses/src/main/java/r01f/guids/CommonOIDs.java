@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import r01f.annotations.Immutable;
@@ -24,33 +24,29 @@ public abstract class CommonOIDs {
 	 * OID of a void oid
 	 */
 	@Immutable
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static abstract class VoidOIDBase
-	                     extends OIDBaseMutable<String> {
-		private static final long serialVersionUID = -1722486435358750241L;
-
-		public VoidOIDBase(final String oid) {
-			super(oid);
-		}
-	}
-	/**
-	 * OID of a void oid
-	 */
-	@Immutable
 	@MarshallType(as="voidOid")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class VoidOID
-	                  extends VoidOIDBase {
+	public record VoidOID(@Getter String id)
+	   implements OIDTyped<String> {
 
-		private static final long serialVersionUID = 5898825736200388235L;
-
-		public VoidOID(final String oid) {
-			super(oid);
-		}
 		public static VoidOID forId(final String id) {
 			return new VoidOID(id);
+		}
+		public static VoidOID valueOf(final String str) {
+			return new VoidOID(str);
+		}
+		public static VoidOID fromString(final String s) {
+			return VoidOID.forId(s);
+		}
+		public static VoidOID supply() {
+			return VoidOID.forId(JavaOIDDispenser.generateGUID());
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -58,15 +54,11 @@ public abstract class CommonOIDs {
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="usageId")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class UsageID
-	     		      extends OIDBaseMutable<String> {
-		private static final long serialVersionUID = -4958918132166472496L;
-
-		public UsageID(final String oid) {
-			super(oid);
-		}
+	public record UsageID(@Getter String id)
+	   implements OIDTyped<String> {
+		
+		public static final UsageID DEFAULT = UsageID.forId("default");
+		
 		public static UsageID from(final String id) {
 			return new UsageID(id);
 		}
@@ -76,22 +68,25 @@ public abstract class CommonOIDs {
 		public static UsageID valueOf(final String id) {
 			return new UsageID(id);
 		}
-		public static final UsageID DEFAULT = UsageID.forId("default");
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="systemId")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class SystemID
-	     		      extends OIDBaseMutable<String> {
-		private static final long serialVersionUID = -6056892755877680637L;
-
-		public SystemID(final String oid) {
-			super(oid);
-		}
+	public record SystemID(@Getter String id)
+	   implements OIDTyped<String> {
+		
+		public static final SystemID DEFAULT = SystemID.forId("default");
+		
 		public static SystemID from(final String id) {
 			return new SystemID(id);
 		}
@@ -101,84 +96,49 @@ public abstract class CommonOIDs {
 		public static SystemID valueOf(final String id) {
 			return new SystemID(id);
 		}
-		public static final SystemID DEFAULT = SystemID.forId("default");
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-	public static interface IsAppIdentifier
-					extends OIDTyped<String> {
+	public interface IsAppIdentifier
+  		     extends OIDTyped<String> {
 		// just extend
 	}
-	/**
-	 * App Identifier
-	 */
-	@NoArgsConstructor
-	public static abstract class AppIdentifierBase
-	                     extends OIDBaseMutable<String>
-					  implements IsAppIdentifier {
-
-		private static final long serialVersionUID = -969239391418430799L;
-
-		public AppIdentifierBase(final String oid) {
-			super(oid);
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////
+	public interface IsAppCode
+  		     extends IsAppIdentifier {
+		public default AppCode asAppCode() {
+			return AppCode.forId(this.asString());
 		}
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) return false;
-			if (this == obj) return true;
-			if (!(obj instanceof AppIdentifierBase)) return false;
-
-			AppIdentifierBase other = (AppIdentifierBase)obj;
-			boolean eqs = this.getId() != null && other.getId() != null ? this.getId().equals(other.getId())
-																		: this.getId() != null && other.getId() == null ? false
-																				 										: this.getId() == null && other.getId() != null ? false
-																				 												 										: true;	// both null
-			return eqs;
-		}
-	}
-	/**
-	 * AppCode
-	 */
-	@NoArgsConstructor
-	public static abstract class AppCodeBase
-	                     extends AppIdentifierBase {
-		private static final long serialVersionUID = 4050287656751295712L;
-
-		public AppCodeBase(final String oid) {
-			super(oid);
-		}
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) return false;
-			if (this == obj) return true;
-			if (!(obj instanceof AppCodeBase)) return false;
-
-			AppCodeBase other = (AppCodeBase)obj;
-			boolean eqs = this.getId() != null && other.getId() != null ? this.getId().equals(other.getId())
-																		: this.getId() != null && other.getId() == null ? false
-																				 										: this.getId() == null && other.getId() != null ? false
-																				 												 										: true;	// both null
-			return eqs;
-		}
-	}
+	} 
 	/**
 	 * AppCode
 	 */
 	@MarshallType(as="appCode")
-	@NoArgsConstructor
-	public static class AppCode
-	            extends AppCodeBase {
-		private static final long serialVersionUID = -1130290632493385784L;
-
-		public AppCode(final String oid) {
-			super(oid);
+	public record AppCode(@Getter String id)
+	   implements IsAppCode {
+		
+		public static AppCode from(final String id) {
+			return new AppCode(id);
 		}
 		public static AppCode forId(final String id) {
 			return new AppCode(id);
 		}
 		public static AppCode valueOf(final String id) {
 			return AppCode.forId(id);
+		}
+		public static AppCode fromString(final String id) {
+			return new AppCode(id);
 		}
 		public static AppCode forIdOrNull(final String id) {
 			if (id == null) return null;
@@ -191,65 +151,41 @@ public abstract class CommonOIDs {
 			return AppCode.forId(loginId.asString());
 		}
 		@Override
-		public int hashCode() {
-			return super.hashCode();
+		public String asString() {
+			return this.id;
 		}
 		@Override
-		public boolean equals(final Object obj) {
-			return super.equals(obj);
+		public String toString() {
+			return this.id;
 		}
 	}
-	/**
-	 * AppCode component
-	 */
-	@NoArgsConstructor
-	public static abstract class AppComponentBase
-	                     extends AppIdentifierBase {
-		private static final long serialVersionUID = 2884200091000668089L;
-
-		public static final AppComponent DEFAULT = AppComponent.forId("default");
-		public static final AppComponent NO_COMPONENT = AppComponent.forId("_no_component_");
-
-		public AppComponentBase(final String oid) {
-			super(oid);
+	public interface IsAppComponent
+  		     extends IsAppIdentifier {
+		public default AppComponent asAppComponent() {
+			return AppComponent.forId(this.asString());
 		}
-		public boolean isNoComponent() {
-			return this.is(NO_COMPONENT);
-		}
-		public abstract AppComponent asAppComponent();
-
-		@Override
-		public boolean equals(final Object obj) {
-			if (obj == null) return false;
-			if (this == obj) return true;
-			if (!(obj instanceof AppComponentBase)) return false;
-
-			AppComponentBase other = (AppComponentBase)obj;
-			// compare objects of the same type, otherwise equals will fail
-			return this.getId() != null && other.getId() != null ? this.getId().equals(other.getId())
-																 : this.getId() != null && other.getId() == null ? false
-																		 										 : this.getId() == null && other.getId() != null ? false
-																		 												 										 : true;	// both null
-		}
-	}
+	} 
 	/**
 	 * AppCode component
 	 */
 	@MarshallType(as="appComponent")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static class AppComponent
-	            extends AppComponentBase {
-		private static final long serialVersionUID = 137722031497569807L;
-
-		public AppComponent(final String oid) {
-			super(oid);
+	public record AppComponent(@Getter String id)
+	   implements IsAppComponent {
+		
+		public static final AppComponent DEFAULT = AppComponent.forId("default");
+		public static final AppComponent NO_COMPONENT = AppComponent.forId("_no_component_");
+		
+		public static AppComponent from(final String id) {
+			return new AppComponent(id);
 		}
 		public static AppComponent forId(final String id) {
 			return new AppComponent(id);
 		}
 		public static AppComponent valueOf(final String id) {
 			return AppComponent.forId(id);
+		}
+		public static AppComponent fromString(final String id) {
+			return new AppComponent(id);
 		}
 		public static AppComponent forIdOrNull(final String id) {
 			if (id == null) return null;
@@ -258,15 +194,15 @@ public abstract class CommonOIDs {
 		public static AppComponent named(final String id) {
 			return AppComponent.forId(id);
 		}
-		public static AppComponent compose(final AppComponent one,final AppComponent other) {
+		public static AppComponent compose(final IsAppComponent one,final IsAppComponent other) {
 			return AppComponent.forId(Strings.customized("{}.{}",
 														 one,other));
 		}
-		public static AppComponent compose(final AppComponent one,final AppComponent two,final AppComponent three) {
+		public static AppComponent compose(final IsAppComponent one,final IsAppComponent two,final IsAppComponent three) {
 			return AppComponent.forId(Strings.customized("{}.{}.{}",
 														 one,two,three));
 		}
-		public static AppComponent compose(final AppComponent one,final String two) {
+		public static AppComponent compose(final IsAppComponent one,final String two) {
 			return AppComponent.forId(Strings.customized("{}.{}",
 														 one,two));
 		}
@@ -279,8 +215,12 @@ public abstract class CommonOIDs {
 														 one,two,three));
 		}
 		@Override
-		public AppComponent asAppComponent() {
-			return this;
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -288,14 +228,11 @@ public abstract class CommonOIDs {
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="workPlaceCode")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class WorkPlaceCode
-	     		      extends OIDBaseMutable<String> {
-		private static final long serialVersionUID = -9005995212776716044L;
-
-		public WorkPlaceCode(final String oid) {
-			super(oid);
+	public record WorkPlaceCode(@Getter String id)
+	   implements OIDTyped<String> {
+		
+		public static WorkPlaceCode from(final String id) {
+			return new WorkPlaceCode(id);
 		}
 		public static WorkPlaceCode forId(final String id) {
 			return new WorkPlaceCode(id);
@@ -303,6 +240,19 @@ public abstract class CommonOIDs {
 		public static WorkPlaceCode valueOf(final String id) {
 			return WorkPlaceCode.forId(id);
 		}
+		public static WorkPlaceCode fromString(final String s) {
+			return WorkPlaceCode.forId(s);
+		}
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
+		
 		public static final WorkPlaceCode UNKNOWN = WorkPlaceCode.forId("unknown");
 		public boolean isUnknown() {
 			return this.is(WorkPlaceCode.UNKNOWN);
@@ -314,15 +264,11 @@ public abstract class CommonOIDs {
 	}
 	@Immutable
 	@MarshallType(as="buildingCode")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class BuildingCode
-	     		      extends OIDBaseMutable<String> {
+	public record BuildingCode(@Getter String id)
+	   implements OIDTyped<String> {
 
-		private static final long serialVersionUID = -2459745121499121940L;
-
-		public BuildingCode(final String oid) {
-			super(oid);
+		public static BuildingCode from(final String id) {
+			return new BuildingCode(id);
 		}
 		public static BuildingCode forId(final String id) {
 			return new BuildingCode(id);
@@ -330,6 +276,18 @@ public abstract class CommonOIDs {
 		public static BuildingCode valueOf(final String id) {
 			return BuildingCode.forId(id);
 		}
+		public static Role fromString(final String s) {
+			return Role.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
+		
 		public static final BuildingCode ANONYMOUS = BuildingCode.forId("anonymous");
 		public boolean isAnonymous() {
 			return this.is(BuildingCode.ANONYMOUS);
@@ -344,14 +302,12 @@ public abstract class CommonOIDs {
 	}
 	@Immutable
 	@MarshallType(as="role")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class Role
-	     		      extends OIDBaseMutable<String>
-				   implements IsRole {
-		private static final long serialVersionUID = 7547259948658810158L;
-		public Role(final String oid) {
-			super(oid);
+	public record Role(@Getter String id)
+	   implements OIDTyped<String>,
+	   			  IsRole {
+		
+		public static Role from(final String id) {
+			return new Role(id);
 		}
 		public static Role forId(final String id) {
 			return new Role(id);
@@ -359,43 +315,32 @@ public abstract class CommonOIDs {
 		public static Role valueOf(final String id) {
 			return new Role(id);
 		}
+		public static Role fromString(final String s) {
+			return Role.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
-
 /////////////////////////////////////////////////////////////////////////////////////////
 //	GENERIC TOKEN
 /////////////////////////////////////////////////////////////////////////////////////////
 	public interface IsToken
 			 extends OIDTyped<String> {
-		public byte[] getBytes();
-	}
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static abstract class TokenBase
-	     		      	 extends OIDBaseMutable<String>
-					  implements IsToken {
-
-		private static final long serialVersionUID = 2597097651034832977L;
-
-		public TokenBase(final String oid) {
-			super(oid);
-		}
-		@Override
-		public byte[] getBytes() {
+		public default byte[] getBytes() {
 			return this.asString().getBytes();
 		}
 	}
 	@Immutable
 	@MarshallType(as="token")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class Token
-	     		      extends TokenBase {
-
-		private static final long serialVersionUID = -5026236014365451126L;
-
-		public Token(final String oid) {
-			super(oid);
-		}
+	public record Token(@Getter String id)
+	   implements IsToken {
+		
 		public static Token from(final String id) {
 			return new Token(id);
 		}
@@ -404,6 +349,17 @@ public abstract class CommonOIDs {
 		}
 		public static Token valueOf(final String id) {
 			return new Token(id);
+		}
+		public static Token fromString(final String s) {
+			return Token.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -414,16 +370,16 @@ public abstract class CommonOIDs {
 	 */
 	@Immutable
 	@MarshallType(as="tenantId")
-	@NoArgsConstructor
-	public static final class TenantID
-		 		      extends OIDBaseMutable<String> {
-
-		private static final long serialVersionUID = -7631726260644902005L;
-
+	public record TenantID(@Getter String id)
+	   implements OIDTyped<String> {
+		
 		public static final TenantID DEFAULT = TenantID.forId("default");
 
-		public TenantID(final String id) {
-			super(id);
+		public static TenantID from(final String id) {
+			return new TenantID(id);
+		}
+		public static TenantID forId(final String id) {
+			return new TenantID(id);
 		}
 		public static TenantID valueOf(final String s) {
 			return TenantID.forId(s);
@@ -431,29 +387,30 @@ public abstract class CommonOIDs {
 		public static TenantID fromString(final String s) {
 			return TenantID.forId(s);
 		}
-		public static TenantID forId(final String id) {
-			return new TenantID(id);
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 	@Immutable
 	@MarshallType(as="env")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class Environment
-	     		      extends OIDBaseMutable<String> {
-
-		private static final long serialVersionUID = -2820663417050382971L;
-
+	public record Environment(@Getter String id)
+	   implements OIDTyped<String> {
+		
 		public static Environment DEFAULT = Environment.forId("default");
 
-		public Environment(final String oid) {
-			super(oid);
-		}
 		public static Environment forId(final String id) {
 			return new Environment(id);
 		}
 		public static Environment valueOf(final String id) {
 			return Environment.forId(id);
+		}
+		public static Environment fromString(final String s) {
+			return Environment.forId(s);
 		}
 		public Env getEnv() {
 			return Env.from(this);
@@ -559,21 +516,36 @@ public abstract class CommonOIDs {
 			}
 			return null;	   
 		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 	@Immutable
 	@MarshallType(as="execContextOid")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class ExecContextId
-				      extends OIDBaseMutable<String> {
+	public record ExecContextId(@Getter String id)
+	    implements OIDTyped<String> {
 
-		private static final long serialVersionUID = 6876006770063375473L;
-
-		public ExecContextId(final String oid) {
-			super(oid);
-		}
 		public static ExecContextId forId(final String id) {
 			return new ExecContextId(id);
+		}
+		public static ExecContextId valueOf(final String str) {
+			return new ExecContextId(str);
+		}
+		public static ExecContextId fromString(final String s) {
+			return ExecContextId.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -581,19 +553,25 @@ public abstract class CommonOIDs {
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="webSessionId")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class WebSessionID
-	     		      extends OIDBaseMutable<String> {
-		private static final long serialVersionUID = 1860937925564750174L;
-		public WebSessionID(final String oid) {
-			super(oid);
-		}
+	public record WebSessionID(@Getter String id)
+	   implements OIDTyped<String> {
+		
 		public static WebSessionID forId(final String id) {
 			return new WebSessionID(id);
 		}
 		public static WebSessionID valueOf(final String id) {
 			return WebSessionID.forId(id);
+		}
+		public static WebSessionID fromString(final String s) {
+			return WebSessionID.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -601,19 +579,25 @@ public abstract class CommonOIDs {
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="propertyId")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class PropertyID
-	     		      extends OIDBaseMutable<String> {
-		private static final long serialVersionUID = -7386816180797103655L;
-		public PropertyID(final String oid) {
-			super(oid);
-		}
+	public record PropertyID(@Getter String id)
+	   implements OIDTyped<String> {
+		
 		public static PropertyID forId(final String id) {
 			return new PropertyID(id);
 		}
 		public static PropertyID valueOf(final String id) {
 			return PropertyID.forId(id);
+		}
+		public static PropertyID fromString(final String s) {
+			return PropertyID.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 }

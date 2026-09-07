@@ -5,63 +5,69 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.Accessors;
 import r01f.annotations.Immutable;
 import r01f.guids.OID;
-import r01f.guids.OIDBaseMutable;
 import r01f.guids.VersionID;
+import r01f.objectstreamer.annotations.MarshallIgnoredField;
 import r01f.objectstreamer.annotations.MarshallType;
 import r01f.patterns.Memoized;
 import r01f.util.types.Strings;
 
+/**
+ * Models a version with the following format: major.minor.patch[-alias]
+ */
 @Immutable
 @MarshallType(as="version")
-@Accessors(prefix="_")
-@NoArgsConstructor
-public class AppVersion 
-	 extends OIDBaseMutable<String>
+public record AppVersion(@Getter String id,
+						 @MarshallIgnoredField
+						 Memoized<AppVersionInfo> _info) 
   implements VersionID {
 
-	private static final long serialVersionUID = 3935180518462516439L;
 /////////////////////////////////////////////////////////////////////////////////////////
-//  FIELDS
+//  CONSTRUCTRORS
 /////////////////////////////////////////////////////////////////////////////////////////
-	private transient final Memoized<AppVersionInfo> _info = Memoized.using(() -> {
-																	if (Strings.isNullOrEmpty(this.getId())) {
-																		throw new IllegalArgumentException("NULL is NOT a valid version string");
-																	}
-																	AppVersionInfo outInfo = null;
-																	Matcher m = APP_VERSION_PATTERN.matcher(this.getId());
-																	if (m.find()) {
-																		int major = Integer.parseInt(m.group(1));
-																		int minor = Integer.parseInt(m.group(2));
-																		int patch = Integer.parseInt(m.group(3));
-																		String alias = m.groupCount() == 4 ? m.group(4) : null;
-																		
-																		outInfo = new AppVersionInfo(major,minor,patch,alias);
-																	} else {
-																		// throw new IllegalArgumentException(this.getId() + " is NOT a valid version strign (does NOT match " + APP_VERSION_PATTERN);
-																		// do nothing... info will be null
-																	}
-																	return outInfo;
-															 });
-	@Accessors(prefix="_")
-	@RequiredArgsConstructor
-	public class AppVersionInfo {
-		@Getter private final int _major;
-		@Getter private final int _minor;
-		@Getter private final int _patch;
-		@Getter private final String _alias;
+	public AppVersion(final String id) {
+		this(id,
+			 Memoized.using(() -> {
+								if (Strings.isNullOrEmpty(id)) throw new IllegalArgumentException("NULL is NOT a valid version string");
+								
+								AppVersionInfo outInfo = null;
+								Matcher m = APP_VERSION_PATTERN.matcher(id);
+								if (m.find()) {
+									int major = Integer.parseInt(m.group(1));
+									int minor = Integer.parseInt(m.group(2));
+									int patch = Integer.parseInt(m.group(3));
+									String alias = m.groupCount() == 4 ? m.group(4) : null;
+									
+									outInfo = new AppVersionInfo(major,minor,patch,alias);
+								} else {
+									// throw new IllegalArgumentException(this.getId() + " is NOT a valid version strign (does NOT match " + APP_VERSION_PATTERN);
+									// do nothing... info will be null
+								}
+								return outInfo;
+						 }));
+	}
+	public AppVersion(final int major,final int minor,final int patch) {
+		this(major,minor,patch,
+			 null);
+	}
+	public AppVersion(final int major,final int minor,final int patch,
+					  final String alias) {
+		this(Strings.isNOTNullOrEmpty(alias) ? Strings.customized("{}.{}.{}-{}",
+																		  major,minor,patch,alias)
+											  : Strings.customized("{}.{}.{}",
+															 	   major,minor,patch));
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //  BUILDER
 /////////////////////////////////////////////////////////////////////////////////////////
-	public AppVersion(final String appVersionStr) {
-		super(appVersionStr);
-	}
 	public static AppVersion fromString(final String appVersionStr) {
+		return AppVersion.valueOf(appVersionStr);
+	}
+	public static AppVersion forId(final String appVersionStr) {
+		return AppVersion.valueOf(appVersionStr);
+	}
+	public static AppVersion of(final String appVersionStr) {
 		return AppVersion.valueOf(appVersionStr);
 	}
 	public static AppVersion from(final String appVersionStr) {
@@ -75,22 +81,16 @@ public class AppVersion
 		return new DefaultAppVersionParser()
 						.canBe(appVersionStr);
 	}
-	public AppVersion(final int major,final int minor,final int patch) {
-		this(major,minor,patch,
-			 null);
-	}
-	public AppVersion(final int major,final int minor,final int patch,
-					  final String alias) {
-		super(Strings.isNOTNullOrEmpty(alias) ? Strings.customized("{}.{}.{}-{}",
-																		  major,minor,patch,alias)
-											  : Strings.customized("{}.{}.{}",
-															 	   major,minor,patch));
-	}
 /////////////////////////////////////////////////////////////////////////////////////////
 // 	PARSING
 /////////////////////////////////////////////////////////////////////////////////////////
-	private static final transient Pattern APP_VERSION_PATTERN = Pattern.compile("([0-9]+).([0-9]+).([0-9]+)(-[0-9a-zA-Z_])?");
-	
+	private static final transient Pattern APP_VERSION_PATTERN = Pattern.compile("([0-9]+)" +			// major version
+																				 "\\." + 
+																				 "([0-9]+)" + 			// minor version
+																				 "\\.?" +
+																				 "([0-9]*)" +			// patch version
+																				 "-?" + 
+																				 "([0-9a-zA-Z_]*)");	// optional alias
 	public interface AppVersionParser {
 		public boolean canBe(final String appVersionStr);
 		public AppVersion parse(final String appVersionStr);		
@@ -110,6 +110,17 @@ public class AppVersion
 			AppVersion outAppVersion = new AppVersion(appVersionStr);
 			return outAppVersion;
 		}
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	STRING CONVERSION
+/////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public String asString() {
+		return this.id;
+	}
+	@Override
+	public String toString() {
+		return this.id;	
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	INFO ACCESS
@@ -137,7 +148,7 @@ public class AppVersion
 			throw new IllegalStateException(this.getId() + " does NOT match " + APP_VERSION_PATTERN + ": AppVersion#getAlias() cannot be used!");
 		}
 		return _info.get().getAlias();
-	}
+	}	
 /////////////////////////////////////////////////////////////////////////////////////////
 //  
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -189,10 +200,7 @@ public class AppVersion
 											  					  : true;	// both null
 	}
 	public boolean isSameAs(final AppVersion other) {
-		if (other == null) {
-			return false;
-		}
-		
+		if (other == null) return false;
 		if (_info.get() == null) {
 			// a not-structured version > compare just the string
 			return this.getId() == null ? other.getId() == null ? true	// both "null"
@@ -230,11 +238,22 @@ public class AppVersion
 		return false;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
+	/**
+	 * Returns the version as a string without the alias
+	 * @return
+	 */
+	public String asStringWithoutAlias() {
+		return Strings.customized("{}.{}.{}",
+								  this.getMajor(),this.getMinor(),this.getPatch());
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
 //	COMPARATOR
 /////////////////////////////////////////////////////////////////////////////////////////
 	public static transient Comparator<AppVersion> COMPARATOR = _createCompartor();
 	
-	protected static <V extends AppVersion> Comparator<V> _createCompartor() {
+	protected static Comparator<AppVersion> _createCompartor() {
 		return (v1, v2) -> {
 					if (v1.isSameAs(v2)) {
 						return 0;
@@ -246,11 +265,28 @@ public class AppVersion
 				};
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
+//	EQUALS & HASHCODE (use just the id, not the version components)
+/////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) return false;
+		if (this == obj) return true;
+		if (!(obj instanceof AppVersion other)) return false;
+		
+		return this.isSameAs(other);
+	}
+	@Override
+	public int hashCode() {
+		return this.getId() != null ? this.getId().hashCode()
+									: 0;
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
 //	VersionID
 /////////////////////////////////////////////////////////////////////////////////////////	
 	@Override
 	public boolean isValid() {
-		return super.isValid() && AppVersion.canBe(this.asString());
+		return this.id != null
+			&& AppVersion.canBe(this.asString());
 	}
 	@Override
 	public int compareTo(final OID o) {

@@ -1,12 +1,13 @@
 package r01f.model.catalogable.geo;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import r01f.annotations.Immutable;
 import r01f.guids.OIDs;
 import r01f.guids.SuppliesOID;
-import r01f.model.catalogable.CatalogableOIDs.CatalogablePickOIDBase;
-import r01f.model.catalogable.CatalogableOIDs.CatalogablePicksOIDBase;
+import r01f.model.catalogable.CatalogableOIDs.CatalogablePickOID;
+import r01f.model.catalogable.CatalogableOIDs.CatalogablePicksOID;
 import r01f.objectstreamer.annotations.MarshallType;
 
 @NoArgsConstructor(access=AccessLevel.PRIVATE)
@@ -19,14 +20,9 @@ public abstract class GeoCatalogableOIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoPickOid")
-	@NoArgsConstructor
-	public static final class CatalogableGeoPickOID
-					  extends CatalogablePickOIDBase
-				   implements SuppliesOID {
-		private static final long serialVersionUID = -2727859776371512718L;
-		public CatalogableGeoPickOID(final String oid) {
-			super(oid);
-		}
+	public record CatalogableGeoPickOID(@Getter String id)
+	   implements CatalogablePickOID,
+	   			  SuppliesOID {
 		public static CatalogableGeoPickOID valueOf(final String s) {
 			return CatalogableGeoPickOID.forId(s);
 		}
@@ -39,19 +35,21 @@ public abstract class GeoCatalogableOIDs {
 		public static CatalogableGeoPickOID supply() {
 			return CatalogableGeoPickOID.forId(OIDs.supplyOid());
 		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 	@Immutable
 	@MarshallType(as="geoPicksOid")
-	@NoArgsConstructor
-	public static final class CatalogableGeoPicksOID
-			   		  extends CatalogablePicksOIDBase
-				   implements SuppliesOID {
+	public record CatalogableGeoPicksOID(@Getter String id)
+	   implements CatalogablePicksOID,
+	   			  SuppliesOID {
 		
-		private static final long serialVersionUID = -2727859776371512718L;
-		
-		public CatalogableGeoPicksOID(final String oid) {
-			super(oid);
-		}
 		public static CatalogableGeoPicksOID valueOf(final String s) {
 			return CatalogableGeoPicksOID.forId(s);
 		}
@@ -63,6 +61,14 @@ public abstract class GeoCatalogableOIDs {
 		}
 		public static CatalogableGeoPicksOID supply() {
 			return CatalogableGeoPicksOID.forId(OIDs.supplyOid());
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 }

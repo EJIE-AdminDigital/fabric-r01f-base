@@ -10,4 +10,12 @@ public interface Debuggable {
 	 * @return the debug info
 	 */
 	public CharSequence debugInfo();
+	/**
+	 * Debugs into an appender
+	 * @param out
+	 */
+	public default 	void debugInfo(final StringBuilder out) {
+		out.append(this.debugInfo());
+	}
+	
 }

@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
 import r01f.objectstreamer.annotations.MarshallIgnoredField;
 import r01f.util.types.Strings;
 import r01f.util.types.collections.CollectionUtils;
-import r01f.util.types.locale.Languages;
 
 /**
  * Text in different languages collection
@@ -99,46 +98,36 @@ public abstract class LanguageTextsBase<SELF_TYPE extends LanguageTextsBase<SELF
 		return new TextInLangFluentAdapter(lang);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
-//	GET
+//	ADD
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
 	public LanguageTexts add(final Language lang,final String text) {
 		_put(lang,text);
 		return this;
 	}
-	@Override
-	public LanguageTexts addForAll(final String text) {
-		for (Language lang : Language.values()) {
-			this.add(lang,text);
-		}
-		return this;
-	}
 	public LanguageTextsBatchAdd addBatchFirst(final Language lang,final String text) {
-		_put(lang,text);
+		this.add(lang,text);
 		return new LanguageTextsBatchAdd();
 	}
 	public class LanguageTextsBatchAdd {
 		public LanguageTextsBatchAdd addBatchNext(final Language lang,final String text) {
-			_put(lang,text);
+			LanguageTextsBase.this.add(lang,text);
 			return this;
 		}
 		public LanguageTexts addBatchLast(final Language lang,final String text) {
-			_put(lang,text);
+			LanguageTextsBase.this.add(lang,text);
 			return LanguageTextsBase.this;
 		}
 	}
-	@Override
-	public void set(final Language lang,final String text) {
-		this.add(lang,text);
-	}
-	@Override
-	public String get(final Language lang) {
-		return this.getFor(lang);
-	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	GET
+/////////////////////////////////////////////////////////////////////////////////////////	
 	@Override
 	public String getFor(final Language lang) {
 		if (lang == null) throw new IllegalArgumentException("lang cannot be null to get a " + LanguageTexts.class.getSimpleName() + " text");
+		
 		String outText = _retrieve(lang);
+		
 		if (outText == null && _langTextNotFoundBehabior == LangTextNotFoundBehabior.RETURN_NULL) {
 			/* outText is yet null */
 		} else if (outText == null && _langTextNotFoundBehabior == LangTextNotFoundBehabior.RETURN_DEFAULT_VALUE) {
@@ -153,53 +142,6 @@ public abstract class LanguageTextsBase<SELF_TYPE extends LanguageTextsBase<SELF
 	@Override
 	public String getForOrNull(final Language lang) {
 		return _retrieve(lang);
-	}
-	@Override
-	public String getForOrDefault(final Language lang,final String def) {
-		String out = this.getForOrNull(lang);
-		return out != null ? out
-						   : def;
-	}
-	@Override
-	public String getForSystemDefaultLanguage() {
-		return this.getFor(Language.DEFAULT);
-	}
-	@Override
-	public String getAny() {
-		Language anyLang = this.getDefinedLanguages()
-							   .stream()
-							   .findAny().orElse(null);
-		return anyLang != null ? this.getFor(anyLang)
-							   : null;
-	}
-	@Override
-	public String getAny(final Language... langs) {
-		if (CollectionUtils.isNullOrEmpty(langs)) throw new IllegalArgumentException();
-		String outText = null;
-		for (Language lang : langs) {
-			outText = this.get(lang);
-			if (Strings.isNOTNullOrEmpty(outText)) break;
-		}
-		if (Strings.isNullOrEmpty(outText)) outText = this.getAny();
-		return outText;
-	}
-	@Override
-	public boolean isTextDefinedFor(final Language... langs) {
-		if (CollectionUtils.isNullOrEmpty(langs)) return false;
-		boolean allLangsDefined = true;
-		for (Language lang : langs) {
-			String text = this.getForOrNull(lang);
-			if (Strings.isNullOrEmpty(text)) {
-				allLangsDefined = false;
-				break;
-			}
-		}
-		return allLangsDefined;
-	}
-	@Override
-	public boolean isTextDefinedForAnyLanguage() {
-		String anyLangText = this.getAny();
-		return Strings.isNOTNullOrEmpty(anyLangText);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //  override
@@ -223,23 +165,6 @@ public abstract class LanguageTextsBase<SELF_TYPE extends LanguageTextsBase<SELF
 			outStr = "NO data";
 		}
 		return outStr;
-	}
-/////////////////////////////////////////////////////////////////////////////////////////
-//  MERGE
-/////////////////////////////////////////////////////////////////////////////////////////
-	@Override
-	public LanguageTexts mergeWith(final LanguageTexts other) {
-		if (other == null) return this;
-		Set<Language> thisObjLangs = this.getDefinedLanguages();
-		Set<Language> otherObjLangs = other.getDefinedLanguages();
-
-		Set<Language> otherObjLangsNotInThis = Languages.difference(otherObjLangs,thisObjLangs);
-		if (CollectionUtils.hasData(otherObjLangsNotInThis)) {
-			for (Language otherObjLang : otherObjLangsNotInThis) {
-				this.add(otherObjLang,other.get(otherObjLang));
-			}
-		}
-		return this;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	EQUALS & HASH-CODE

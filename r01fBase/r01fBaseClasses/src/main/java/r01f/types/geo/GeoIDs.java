@@ -3,13 +3,14 @@ package r01f.types.geo;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import r01f.annotations.Immutable;
-import r01f.guids.OIDBaseMutable;
 import r01f.guids.OIDTyped;
+import r01f.objectstreamer.annotations.MarshallIgnoredField;
 import r01f.objectstreamer.annotations.MarshallType;
 import r01f.patterns.Memoized;
-import r01f.patterns.Supplier;
 import r01f.util.types.Strings;
 /**
  * Geo catalog model object's oids
@@ -57,40 +58,18 @@ import r01f.util.types.Strings;
  * </pre>
  * They're modeled after a long code that encapsulates the geo element (country, territory, street, etc code)
  */
-public class GeoIDs {
+@NoArgsConstructor(access=AccessLevel.PRIVATE)
+public abstract class GeoIDs {
 /////////////////////////////////////////////////////////////////////////////////////////
 // 	base
 /////////////////////////////////////////////////////////////////////////////////////////
 	public interface GeoID
 			 extends OIDTyped<String> {
-		public long getCode();
-		public String asStringPaddedWithZeros(final int numZeros);
-	}
-	/**
-	 * Geo oid
-	 */
-	@Immutable
-	@NoArgsConstructor
-	public static abstract class GeoIDBase
-						 extends OIDBaseMutable<String>
-					  implements GeoID {
-		private static final long serialVersionUID = 6766060252605584309L;
-		public GeoIDBase(final String id) {
-			super(id);
-		}
-		public GeoIDBase(final long id) {
-			super(Long.toString(id));
-		}
-		public GeoIDBase(final Long id) {
-			super(id.toString());
-		}
-		@Override
-		public String asStringPaddedWithZeros(final int numZeros) {
-			return Strings.leftPad(this.toString(),numZeros,'0');
-		}
-		@Override
-		public long getCode() {
+		public default long getCode() {
 			return Long.parseLong(this.getId());
+		}
+		public default String asStringPaddedWithZeros(final int numZeros) {
+			return Strings.leftPad(this.toString(),numZeros,'0');
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -101,18 +80,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoCountryId")
-	@NoArgsConstructor
-	public static class GeoCountryID
-				extends GeoIDBase {
-		private static final long serialVersionUID = -3806247489287958499L;
-		public GeoCountryID(final String oid) {
-			super(oid);
-		}
+	public record GeoCountryID(@Getter String id)
+	   implements GeoID {
 		public GeoCountryID(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoCountryID(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoCountryID forId(final String id) {
 			return new GeoCountryID(id);
@@ -123,9 +97,16 @@ public class GeoIDs {
 		public static GeoCountryID valueOf(final String str) {
 			return new GeoCountryID(Long.parseLong(str));
 		}
+		public static GeoCountryID fromString(final String str) {
+			return new GeoCountryID(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(3);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -133,18 +114,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoTerritoryId")
-	@NoArgsConstructor
-	public static class GeoTerritoryID
-				extends GeoIDBase {
-		private static final long serialVersionUID = -5811800490034132576L;
-		public GeoTerritoryID(final String oid) {
-			super(oid);
-		}
+	public record GeoTerritoryID(@Getter String id)
+	   implements GeoID {
 		public GeoTerritoryID(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoTerritoryID(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoTerritoryID forId(final String id) {
 			return new GeoTerritoryID(id);
@@ -155,9 +131,16 @@ public class GeoIDs {
 		public static GeoTerritoryID valueOf(final String str) {
 			return new GeoTerritoryID(Long.parseLong(str));
 		}
+		public static GeoTerritoryID fromString(final String str) {
+			return new GeoTerritoryID(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(2);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -165,18 +148,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoStateId")
-	@NoArgsConstructor
-	public static class GeoStateID
-				extends GeoIDBase {
-		private static final long serialVersionUID = -7636328071565337389L;
-		public GeoStateID(final String oid) {
-			super(oid);
-		}
+	public record GeoStateID(@Getter String id)
+	   implements GeoID {
 		public GeoStateID(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoStateID(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoStateID forId(final String id) {
 			return new GeoStateID(id);
@@ -187,9 +165,16 @@ public class GeoIDs {
 		public static GeoStateID valueOf(final String str) {
 			return new GeoStateID(Long.parseLong(str));
 		}
+		public static GeoStateID fromString(final String str) {
+			return new GeoStateID(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(2);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -197,18 +182,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoCountyId")
-	@NoArgsConstructor
-	public static class GeoCountyID
-				extends GeoIDBase {
-		private static final long serialVersionUID = 5383827300254174176L;
-		public GeoCountyID(final String oid) {
-			super(oid);
-		}
+	public record GeoCountyID(@Getter String id)
+	   implements GeoID {
 		public GeoCountyID(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoCountyID(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoCountyID forId(final String id) {
 			return new GeoCountyID(id);
@@ -219,9 +199,16 @@ public class GeoIDs {
 		public static GeoCountyID valueOf(final String str) {
 			return new GeoCountyID(Long.parseLong(str));
 		}
+		public static GeoCountyID fromString(final String str) {
+			return new GeoCountyID(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(2);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -229,18 +216,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoRegionId")
-	@NoArgsConstructor
-	public static class GeoRegionID
-				extends GeoIDBase {
-		private static final long serialVersionUID = -5811800490034132576L;
-		public GeoRegionID(final String oid) {
-			super(oid);
-		}
+	public record GeoRegionID(@Getter String id)
+	   implements GeoID {
 		public GeoRegionID(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoRegionID(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoRegionID forId(final String id) {
 			return new GeoRegionID(id);
@@ -251,9 +233,16 @@ public class GeoIDs {
 		public static GeoRegionID valueOf(final String str) {
 			return new GeoRegionID(Long.parseLong(str));
 		}
+		public static GeoRegionID fromString(final String str) {
+			return new GeoRegionID(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(2);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -261,18 +250,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoMunicipalityId")
-	@NoArgsConstructor
-	public static class GeoMunicipalityID
-				extends GeoIDBase {
-		private static final long serialVersionUID = -8855341000465307541L;
-		public GeoMunicipalityID(final String oid) {
-			super(oid);
-		}
+	public record GeoMunicipalityID(@Getter String id)
+	   implements GeoID {
 		public GeoMunicipalityID(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoMunicipalityID(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoMunicipalityID forId(final String id) {
 			return new GeoMunicipalityID(id);
@@ -283,9 +267,16 @@ public class GeoIDs {
 		public static GeoMunicipalityID valueOf(final String str) {
 			return new GeoMunicipalityID(Long.parseLong(str));
 		}
+		public static GeoMunicipalityID fromString(final String str) {
+			return new GeoMunicipalityID(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(3);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -293,18 +284,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoLocalityId")
-	@NoArgsConstructor
-	public static class GeoLocalityID
-				extends GeoIDBase {
-		private static final long serialVersionUID = 8445129300980606911L;
-		public GeoLocalityID(final String oid) {
-			super(oid);
-		}
+	public record GeoLocalityID(@Getter String id)
+	   implements GeoID {
 		public GeoLocalityID(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoLocalityID(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoLocalityID forId(final String id) {
 			return new GeoLocalityID(id);
@@ -315,9 +301,16 @@ public class GeoIDs {
 		public static GeoLocalityID valueOf(final String str) {
 			return new GeoLocalityID(Long.parseLong(str));
 		}
+		public static GeoLocalityID fromString(final String str) {
+			return new GeoLocalityID(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(2);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -325,18 +318,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoDistrictCode")
-	@NoArgsConstructor
-	public static class GeoDistrictCode
-				extends GeoIDBase {
-		private static final long serialVersionUID = 3897470629554422906L;
-		public GeoDistrictCode(final String oid) {
-			super(oid);
-		}
+	public record GeoDistrictCode(@Getter String id)
+	   implements GeoID {
 		public GeoDistrictCode(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoDistrictCode(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoDistrictCode forId(final String id) {
 			return new GeoDistrictCode(id);
@@ -347,9 +335,16 @@ public class GeoIDs {
 		public static GeoDistrictCode valueOf(final String str) {
 			return new GeoDistrictCode(Long.parseLong(str));
 		}
+		public static GeoDistrictCode fromString(final String str) {
+			return new GeoDistrictCode(Long.parseLong(str));
+		}		
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(2);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -357,13 +352,37 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoDistrictId")
-	@NoArgsConstructor
-	public static class GeoDistrictID
-				extends GeoIDBase {
-		private static final long serialVersionUID = -8855341000465307541L;
-		public GeoDistrictID(final String oid) {
-			super(oid);
+	public record GeoDistrictID(@Getter String id,
+								@MarshallIgnoredField
+								Memoized<GeoCountyID> _memoCounty,
+								@MarshallIgnoredField
+								Memoized<GeoMunicipalityID> _memoMunicipality,
+								@MarshallIgnoredField
+								Memoized<Long> _memoNeighborhood)
+	   implements GeoID {
+		
+		public GeoDistrictID(final String id) {
+			this(id,
+				 // county
+				 Memoized.using(() -> {
+									Matcher m = PATTERN.matcher(id);
+									if (!m.find()) throw new IllegalArgumentException("District code " + id + " does NOT match " + PATTERN);
+									return GeoCountyID.valueOf(m.group(1));
+								}),
+				 // municiplity
+				 Memoized.using(() -> {
+									Matcher m = PATTERN.matcher(id);
+									if (!m.find()) throw new IllegalArgumentException("District code " + id + " does NOT match " + PATTERN);
+									return GeoMunicipalityID.valueOf(m.group(2));
+								}),
+				 // neighborhood
+				 Memoized.using(() -> {
+									Matcher m = PATTERN.matcher(id);
+									if (!m.find()) throw new IllegalArgumentException("District code " + id + " does NOT match " + PATTERN);
+									return Long.parseLong(m.group(3));
+								}));
 		}
+		
 		public static GeoDistrictID forId(final String str) {
 			return new GeoDistrictID(str);
 		}
@@ -383,30 +402,6 @@ public class GeoIDs {
 																		 "([0-9]{2})" +		// county
 																		 "([0-9]{3})" +		// municipality
 																		 "([0-9]{8})");		// district
-		private final Memoized<GeoCountyID> _memoCounty = Memoized.using(new Supplier<GeoCountyID>() {
-																				@Override
-																				public GeoCountyID supply() {
-																					Matcher m = PATTERN.matcher(GeoDistrictID.this.getId());
-																					if (!m.find()) throw new IllegalArgumentException("District code " + GeoDistrictID.this.getId() + " does NOT match " + PATTERN);
-																					return GeoCountyID.valueOf(m.group(1));
-																				}
-																   });
-		private final Memoized<GeoMunicipalityID> _memoMunicipality = Memoized.using(new Supplier<GeoMunicipalityID>() {
-																							@Override
-																							public GeoMunicipalityID supply() {
-																								Matcher m = PATTERN.matcher(GeoDistrictID.this.getId());
-																								if (!m.find()) throw new IllegalArgumentException("District code " + GeoDistrictID.this.getId() + " does NOT match " + PATTERN);
-																								return GeoMunicipalityID.valueOf(m.group(2));
-																							}
-																					});
-		private final Memoized<Long> _memoNeighborhood = Memoized.using(new Supplier<Long>() {
-																				@Override
-																				public Long supply() {
-																					Matcher m = PATTERN.matcher(GeoDistrictID.this.getId());
-																					if (!m.find()) throw new IllegalArgumentException("District code " + GeoDistrictID.this.getId() + " does NOT match " + PATTERN);
-																					return Long.parseLong(m.group(3));
-																				}
-																		});
 		public GeoCountyID getCountyId() {
 			return _memoCounty.get();
 		}
@@ -417,27 +412,68 @@ public class GeoIDs {
 			return _memoNeighborhood.get();
 		}
 		@Override
+		public long getCode() {
+			return this.getNeigborhoodId();
+		}
+		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(8);
 		}
 		@Override
-		public long getCode() {
-			return this.getNeigborhoodId();
+		public String toString() {
+			return this.asString();
+		}
+		////////// --- EQUALS & HASHCODE: use just the id field
+		@Override
+		public boolean equals(final Object other) {
+			if (other == null) return false;
+			if (other == this) return true;
+			if (!this.getClass().isInstance(other)) return false;
+			
+			GeoDistrictID otherGeoDistrictId = (GeoDistrictID)other;
+			return this.getId().equals(otherGeoDistrictId.getId());
+		}
+		@Override
+		public int hashCode() {
+			return this.getId().hashCode();
 		}
 	}
-
 	/**
 	 * District
 	 */
 	@Immutable
 	@MarshallType(as="geoNeighborhoodId")
-	@NoArgsConstructor
-	public static class GeoNeighborhoodID
-				extends GeoIDBase {
-		private static final long serialVersionUID = -1210892690137358726L;
-		public GeoNeighborhoodID(final String oid) {
-			super(oid);
+	public record GeoNeighborhoodID(@Getter String id,
+								    @MarshallIgnoredField
+								    Memoized<GeoCountyID> _memoCounty,
+								    @MarshallIgnoredField
+								    Memoized<GeoMunicipalityID> _memoMunicipality,
+								    @MarshallIgnoredField
+								    Memoized<Long> _memoNeighborhood)
+	   implements GeoID {
+		
+		public GeoNeighborhoodID(final String id) {
+			this(id,
+				 // county
+				 Memoized.using(() -> {
+									Matcher m = PATTERN.matcher(id);
+									if (!m.find()) throw new IllegalArgumentException("Neighborhood code " + id + " does NOT match " + PATTERN);
+									return GeoCountyID.valueOf(m.group(1));
+								}),
+				 // municiplity
+				 Memoized.using(() -> {
+									Matcher m = PATTERN.matcher(id);
+									if (!m.find()) throw new IllegalArgumentException("Neighborhood code " + id + " does NOT match " + PATTERN);
+									return GeoMunicipalityID.valueOf(m.group(2));
+								}),
+				 // neighborhood
+				 Memoized.using(() -> {
+									Matcher m = PATTERN.matcher(id);
+									if (!m.find()) throw new IllegalArgumentException("Neighborhood code " + id + " does NOT match " + PATTERN);
+									return Long.parseLong(m.group(3));
+								}));
 		}
+		
 		public static GeoNeighborhoodID forId(final String str) {
 			return new GeoNeighborhoodID(str);
 		}
@@ -457,30 +493,6 @@ public class GeoIDs {
 																		 "([0-9]{2})" +		// county
 																		 "([0-9]{3})" +		// municipality
 																		 "([0-9]{8})");		// neighborhood
-		private final Memoized<GeoCountyID> _memoCounty = Memoized.using(new Supplier<GeoCountyID>() {
-																				@Override
-																				public GeoCountyID supply() {
-																					Matcher m = PATTERN.matcher(GeoNeighborhoodID.this.getId());
-																					if (!m.find()) throw new IllegalArgumentException("Neighborhood code " + GeoNeighborhoodID.this.getId() + " does NOT match " + PATTERN);
-																					return GeoCountyID.valueOf(m.group(1));
-																				}
-																   });
-		private final Memoized<GeoMunicipalityID> _memoMunicipality = Memoized.using(new Supplier<GeoMunicipalityID>() {
-																							@Override
-																							public GeoMunicipalityID supply() {
-																								Matcher m = PATTERN.matcher(GeoNeighborhoodID.this.getId());
-																								if (!m.find()) throw new IllegalArgumentException("Neighborhood code " + GeoNeighborhoodID.this.getId() + " does NOT match " + PATTERN);
-																								return GeoMunicipalityID.valueOf(m.group(2));
-																							}
-																					});
-		private final Memoized<Long> _memoNeighborhood = Memoized.using(new Supplier<Long>() {
-																				@Override
-																				public Long supply() {
-																					Matcher m = PATTERN.matcher(GeoNeighborhoodID.this.getId());
-																					if (!m.find()) throw new IllegalArgumentException("Neighborhood code " + GeoNeighborhoodID.this.getId() + " does NOT match " + PATTERN);
-																					return Long.parseLong(m.group(3));
-																				}
-																		});
 		public GeoCountyID getCountyId() {
 			return _memoCounty.get();
 		}
@@ -491,12 +503,30 @@ public class GeoIDs {
 			return _memoNeighborhood.get();
 		}
 		@Override
+		public long getCode() {
+			return this.getNeigborhoodId();
+		}
+		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(8);
 		}
 		@Override
-		public long getCode() {
-			return this.getNeigborhoodId();
+		public String toString() {
+			return this.asString();
+		}
+		////////// --- EQUALS & HASHCODE: use just the id field
+		@Override
+		public boolean equals(final Object other) {
+			if (other == null) return false;
+			if (other == this) return true;
+			if (!this.getClass().isInstance(other)) return false;
+			
+			GeoNeighborhoodID otherN = (GeoNeighborhoodID)other;
+			return this.getId().equals(otherN.getId());
+		}
+		@Override
+		public int hashCode() {
+			return this.getId().hashCode();
 		}
 	}
 	/**
@@ -504,19 +534,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoNeighborhoodCode")
-	@NoArgsConstructor
-	public static class GeoNeighborhoodCode
-				extends GeoIDBase {
-		private static final long serialVersionUID = -6250817034170766150L;
-
-		public GeoNeighborhoodCode(final String oid) {
-			super(oid);
-		}
+	public record GeoNeighborhoodCode(@Getter String id)
+	   implements GeoID {
 		public GeoNeighborhoodCode(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoNeighborhoodCode(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoNeighborhoodCode forId(final String id) {
 			return new GeoNeighborhoodCode(id);
@@ -527,9 +551,16 @@ public class GeoIDs {
 		public static GeoNeighborhoodCode valueOf(final String str) {
 			return new GeoNeighborhoodCode(Long.parseLong(str));
 		}
+		public static GeoNeighborhoodCode fromString(final String str) {
+			return new GeoNeighborhoodCode(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(2);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -537,20 +568,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoStreetCode")
-	@NoArgsConstructor
-	public static class GeoStreetCode
-				extends GeoIDBase {
-
-		private static final long serialVersionUID = 8444972117315222460L;
-
-		public GeoStreetCode(final String oid) {
-			super(oid);
-		}
+	public record GeoStreetCode(@Getter String id)
+	   implements GeoID {
 		public GeoStreetCode(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoStreetCode(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoStreetCode forId(final String id) {
 			return new GeoStreetCode(id);
@@ -561,9 +585,16 @@ public class GeoIDs {
 		public static GeoStreetCode valueOf(final String str) {
 			return new GeoStreetCode(Long.parseLong(str));
 		}
+		public static GeoStreetCode fromString(final String str) {
+			return new GeoStreetCode(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(2);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -571,15 +602,13 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoStreetId")
-	@NoArgsConstructor
-	public static class GeoStreetID
-				extends GeoIDBase {
-		private static final long serialVersionUID = 8671822814362300783L;
+	public record GeoStreetID(@Getter String id)
+	   implements GeoID {
 		public GeoStreetID(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoStreetID(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoStreetID forId(final long id) {
 			return new GeoStreetID(id);
@@ -587,9 +616,16 @@ public class GeoIDs {
 		public static GeoStreetID valueOf(final String str) {
 			return new GeoStreetID(Long.parseLong(str));
 		}
+		public static GeoStreetID fromString(final String str) {
+			return new GeoStreetID(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(3);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -597,12 +633,10 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoStreetTypeId")
-	@NoArgsConstructor
-	public static class GeoStreetTypeID
-				extends OIDBaseMutable<String> {
-		private static final long serialVersionUID = -3531756242105659769L;
-		public GeoStreetTypeID(final String oid) {
-			super(oid);
+	public record GeoStreetTypeID(@Getter String id)
+	   implements OIDTyped<String> {
+		public static GeoStreetTypeID from(final String id) {
+			return new GeoStreetTypeID(id);
 		}
 		public static GeoStreetTypeID forId(final String id) {
 			return new GeoStreetTypeID(id);
@@ -610,21 +644,30 @@ public class GeoIDs {
 		public static GeoStreetTypeID valueOf(final String str) {
 			return new GeoStreetTypeID(str);
 		}
+		public static GeoStreetTypeID fromString(final String id) {
+			return new GeoStreetTypeID(id);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 	/**
 	 * Portal
 	 */
 	@Immutable
 	@MarshallType(as="geoPortalId")
-	@NoArgsConstructor
-	public static class GeoPortalID
-				extends GeoIDBase {
-		private static final long serialVersionUID = -1968008874772952156L;
+	public record GeoPortalID(@Getter String id)
+	   implements GeoID {
 		public GeoPortalID(final long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public GeoPortalID(final Long oid) {
-			super(oid);
+			this(Long.toString(oid));
 		}
 		public static GeoPortalID forId(final long id) {
 			return new GeoPortalID(id);
@@ -632,9 +675,16 @@ public class GeoIDs {
 		public static GeoPortalID valueOf(final String str) {
 			return new GeoPortalID(Long.parseLong(str));
 		}
+		public static GeoPortalID fromString(final String str) {
+			return new GeoPortalID(Long.parseLong(str));
+		}
 		@Override
 		public String asString() {
 			return this.asStringPaddedWithZeros(3);
+		}
+		@Override
+		public String toString() {
+			return this.asString();
 		}
 	}
 	/**
@@ -642,18 +692,27 @@ public class GeoIDs {
 	 */
 	@Immutable
 	@MarshallType(as="geoZipCode")
-	@NoArgsConstructor
-	public static class GeoZipCode
-				extends OIDBaseMutable<String> {
-		private static final long serialVersionUID = -3531756242105659769L;
-		public GeoZipCode(final String oid) {
-			super(oid);
+	public record GeoZipCode(@Getter String id)
+	   implements OIDTyped<String> {
+		public static GeoZipCode from(final String str) {
+			return new GeoZipCode(str);
 		}
 		public static GeoZipCode forId(final String id) {
 			return new GeoZipCode(id);
 		}
 		public static GeoZipCode valueOf(final String str) {
 			return new GeoZipCode(str);
+		}
+		public static GeoZipCode fromString(final String str) {
+			return new GeoZipCode(str);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 }

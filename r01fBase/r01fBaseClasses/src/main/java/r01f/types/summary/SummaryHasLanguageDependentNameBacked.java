@@ -1,6 +1,6 @@
 package r01f.types.summary;
 
-import r01f.facets.LangDependentNamed.HasLangDependentNamedFacet;
+import r01f.facets.HasLangDependentName;
 import r01f.locale.Language;
 import r01f.locale.LanguageTexts;
 import r01f.types.summary.SummaryBases.MutableLangDependentSummary;
@@ -18,21 +18,21 @@ public class SummaryHasLanguageDependentNameBacked
 	/**
 	 * Summary in each language
 	 */
-	private final HasLangDependentNamedFacet _hasName;
+	private final HasLangDependentName _hasName;
 /////////////////////////////////////////////////////////////////////////////////////////
 //  
 /////////////////////////////////////////////////////////////////////////////////////////
 	private SummaryHasLanguageDependentNameBacked(final boolean isFullText,
-												  final HasLangDependentNamedFacet hasName) {
+												  final HasLangDependentName hasName) {
 		super(isFullText);
 		_hasName = hasName;
 	}
-	public static SummaryHasLanguageDependentNameBacked of(final HasLangDependentNamedFacet hasNameFacet) {
+	public static SummaryHasLanguageDependentNameBacked of(final HasLangDependentName hasNameFacet) {
 		SummaryHasLanguageDependentNameBacked outSummary = new SummaryHasLanguageDependentNameBacked(false,		// NOT fullText
 																									 hasNameFacet);
 		return outSummary;
 	}
-	public static SummaryHasLanguageDependentNameBacked fullTextOf(final HasLangDependentNamedFacet hasNameFacet) {
+	public static SummaryHasLanguageDependentNameBacked fullTextOf(final HasLangDependentName hasNameFacet) {
 		SummaryHasLanguageDependentNameBacked outSummary = new SummaryHasLanguageDependentNameBacked(true,		// fullText
 																									 hasNameFacet);
 		return outSummary;

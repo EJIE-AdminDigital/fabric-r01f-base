@@ -1,5 +1,6 @@
 package r01f.concurrent;
 
+import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 
 import lombok.AccessLevel;
@@ -14,14 +15,17 @@ public abstract class Threads {
 //  
 /////////////////////////////////////////////////////////////////////////////////////////
 	public static void safeSleep(final long milis) {
+		Threads.safeSleep(Duration.ofMillis(milis));
+	}
+	public static void safeSleep(final TimeLapse lapse) {
+		Threads.safeSleep(lapse.asDuration());
+	}
+	public static void safeSleep(final Duration duration) {
 		try {
-			Thread.sleep(milis);
+			Thread.sleep(duration);
 		} catch (InterruptedException ignore) {
 			log.error("Could NOT sleep thread: {}",ignore.getMessage(),ignore);
 		}
-	}
-	public static void safeSleep(final TimeLapse lapse) {
-		Threads.safeSleep(lapse.asMillis());
 	}
 	public static void waitExecutorServiceToShutdow(final ExecutorService threadPoolExecutor,
 												    final TimeLapse checkEvery) {

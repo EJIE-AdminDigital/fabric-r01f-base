@@ -1,16 +1,13 @@
 package r01f.securitycontext;
 
-import java.util.UUID;
-
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import r01f.annotations.Immutable;
 import r01f.facts.FactDimension;
-import r01f.guids.OIDBaseMutable;
+import r01f.guids.JavaOIDDispenser;
 import r01f.guids.OIDTyped;
 import r01f.guids.PersistableObjectOID;
 import r01f.objectstreamer.annotations.MarshallType;
 import r01f.patterns.FactoryFrom;
-import r01f.securitycontext.SecurityIDS.LoginID;
 
 public abstract class SecurityOIDs {
 
@@ -18,59 +15,38 @@ public abstract class SecurityOIDs {
 // Base marker interface
 /////////////////////////////////////////////////////////////////////////////////////////
 
-	public static interface SecurityObjectOID
-					extends PersistableObjectOID,OIDTyped<String>,
+	public static interface IsSecurityObjectOID
+					extends OIDTyped<String>,
+							PersistableObjectOID,
 							FactDimension {
 		// just a marker interface
 	}
-/////////////////////////////////////////////////////////////////////////////////////////
-// 	OID base
-/////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	* Base for every User oid objects
-	*/
-	@Immutable
-	@NoArgsConstructor
-	public static abstract class SecurityObjectOIDBase
-						 extends OIDBaseMutable<String>
-					  implements SecurityObjectOID {
-
-		private static final long serialVersionUID = 7778880230670929915L;
-
-		public SecurityObjectOIDBase(final String id) {
-			super(id);
+	public interface IsIdentityBrokerObjectOID
+	   	     extends IsSecurityObjectOID {
+		// just a marker interface
+		@SuppressWarnings("unchecked")
+		public default <IDB extends IsIdentityBrokerObjectOID>  IDB as(final Class<IDB> id) {
+			return (IDB)this;
 		}
-		/**
-		* Generates an oid
-		* @return
-		*/
-		protected static String supplyId() {
-			UUID uuid = UUID.randomUUID();
-			return uuid.toString();
-		}
-		public String convertToDatabaseColumn(final SecurityObjectOID attribute) {
-			return attribute.asString();
-		}
-	}
-
+	}	
 /////////////////////////////////////////////////////////////////////////////////////////
 // 	Security Base OID's
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="userOid")
-	public static final class UserOID
-					  extends SecurityObjectOIDBase
-				   implements SecurityObjectOID,
-							  PersistableObjectOID {
-
-		private static final long serialVersionUID = -7020929167799107328L;
+	public record UserOID(@Getter String id)
+	   implements IsSecurityObjectOID {
 
 		public static final UserOID ALL = UserOID.forId("*");
-		public UserOID() {
-			super();
+		
+//		public static UserOID from(final LoginID loginId) {
+//			return new UserOID(loginId.asString());
+//		}
+		public static UserOID from(final String id) {
+			return new UserOID(id);
 		}
-		public UserOID(final String oid) {
-			super(oid);
+		public static UserOID forId(final String id) {
+			return new UserOID(id);
 		}
 		public static UserOID valueOf(final String s) {
 			return UserOID.forId(s);
@@ -78,14 +54,8 @@ public abstract class SecurityOIDs {
 		public static UserOID fromString(final String s) {
 			return UserOID.forId(s);
 		}
-		public static UserOID forId(final String id) {
-			return new UserOID(id);
-		}
-		public static UserOID from(final LoginID loginId) {
-			return new UserOID(loginId.asString());
-		}
 		public static UserOID supply() {
-			return UserOID.forId(SecurityObjectOIDBase.supplyId());
+			return UserOID.forId(JavaOIDDispenser.supplyOid());
 		}
 		public static FactoryFrom<CharSequence,UserOID> FACTORY_FROM_STRING = oid -> UserOID.forId(oid.toString());
 		
@@ -105,21 +75,27 @@ public abstract class SecurityOIDs {
 		public boolean isSystem() {
 			return this.is(SYSTEM);
 		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 	@Immutable
 	@MarshallType(as="loginOid")
-	public static final class LoginOID
-					  extends SecurityObjectOIDBase
-				   implements SecurityObjectOID {
-
-		private static final long serialVersionUID = -2162289370851262116L;
+	public record LoginOID(@Getter String id)
+	   implements IsSecurityObjectOID {
 
 		public static final LoginOID ALL = LoginOID.forId("*");
-		public LoginOID() {
-			super();
+		
+		public static LoginOID from(final String id) {
+			return new LoginOID(id);
 		}
-		public LoginOID(final String oid) {
-			super(oid);
+		public static LoginOID forId(final String id) {
+			return new LoginOID(id);
 		}
 		public static LoginOID valueOf(final String s) {
 			return LoginOID.forId(s);
@@ -127,35 +103,30 @@ public abstract class SecurityOIDs {
 		public static LoginOID fromString(final String s) {
 			return LoginOID.forId(s);
 		}
-		public static LoginOID forId(final String id) {
-			return new LoginOID(id);
-		}
 		public static LoginOID supply() {
-			return LoginOID.forId(SecurityObjectOIDBase.supplyId());
+			return LoginOID.forId(JavaOIDDispenser.supplyOid());
 		}
-		public static FactoryFrom<String,LoginOID> FACTORY_FROM_STRING = new FactoryFrom<String,LoginOID>() {
-																				@Override
-																				public LoginOID from(final String oid) {
-																					return LoginOID.forId(oid);
-																				}
-																		 };
+		public static FactoryFrom<String,LoginOID> FACTORY_FROM_STRING = LoginOID::forId;
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	USER PASSWORD LOGIN
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="userLoginEntryOid")
-	public static final class UserLoginEntryOID
-					  extends SecurityObjectOIDBase
-				   implements SecurityObjectOID {
+	public record UserLoginEntryOID(@Getter String id)
+	   implements IsSecurityObjectOID {
 
-		private static final long serialVersionUID = -2162289370851262116L;
-
-		public UserLoginEntryOID() {
-			super();
-		}
-		public UserLoginEntryOID(final String oid) {
-			super(oid);
+		public static UserLoginEntryOID from(final String id) {
+			return new UserLoginEntryOID(id);
 		}
 		public static UserLoginEntryOID valueOf(final String s) {
 			return UserLoginEntryOID.forId(s);
@@ -167,31 +138,32 @@ public abstract class SecurityOIDs {
 			return new UserLoginEntryOID(id);
 		}
 		public static UserLoginEntryOID supply() {
-			return UserLoginEntryOID.forId(SecurityObjectOIDBase.supplyId());
+			return UserLoginEntryOID.forId(JavaOIDDispenser.supplyOid());
+		}		
+		public static FactoryFrom<String,UserLoginEntryOID> FACTORY_FROM_STRING = UserLoginEntryOID::forId;
+		
+		@Override
+		public String asString() {
+			return this.id;
 		}
-		public static FactoryFrom<String,UserLoginEntryOID> FACTORY_FROM_STRING = new FactoryFrom<String,UserLoginEntryOID>() {
-																								@Override
-																								public UserLoginEntryOID from(final String oid) {
-																									return UserLoginEntryOID.forId(oid);
-																								}
-																						};
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	PAIRED PHONE LOGIN
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="pairedPhoneLoginConsentOid")
-	public static final class PairedPhoneLoginConsentOID
-					  extends SecurityObjectOIDBase
-				   implements SecurityObjectOID {
+	public record PairedPhoneLoginConsentOID(@Getter String id)
+	   implements IsSecurityObjectOID {
 	
-		private static final long serialVersionUID = -2162289370851262116L;
-		
-		public PairedPhoneLoginConsentOID() {
-			super();
+		public static PairedPhoneLoginConsentOID from(final String id) {
+			return new PairedPhoneLoginConsentOID(id);
 		}
-		public PairedPhoneLoginConsentOID(final String oid) {
-			super(oid);
+		public static PairedPhoneLoginConsentOID forId(final String id) {
+			return new PairedPhoneLoginConsentOID(id);
 		}
 		public static PairedPhoneLoginConsentOID valueOf(final String s) {
 			return PairedPhoneLoginConsentOID.forId(s);
@@ -199,33 +171,33 @@ public abstract class SecurityOIDs {
 		public static PairedPhoneLoginConsentOID fromString(final String s) {
 			return PairedPhoneLoginConsentOID.forId(s);
 		}
-		public static PairedPhoneLoginConsentOID forId(final String id) {
-			return new PairedPhoneLoginConsentOID(id);
-		}
 		public static PairedPhoneLoginConsentOID supply() {
-			return PairedPhoneLoginConsentOID.forId(SecurityObjectOIDBase.supplyId());
+			return PairedPhoneLoginConsentOID.forId(JavaOIDDispenser.supplyOid());
 		}
-		public static FactoryFrom<String,PairedPhoneLoginConsentOID> FACTORY_FROM_STRING = new FactoryFrom<String,PairedPhoneLoginConsentOID>() {
-					@Override
-					public PairedPhoneLoginConsentOID from(final String oid) {
-						return PairedPhoneLoginConsentOID.forId(oid);
-					}
-			};
+		public static FactoryFrom<String,PairedPhoneLoginConsentOID> FACTORY_FROM_STRING = PairedPhoneLoginConsentOID::forId;
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	API-KEY LOGIN
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="apiKeyVersionOid")
-	public static final class ApiKeyVersionOID
-					  extends SecurityObjectOIDBase
-				   implements SecurityObjectOID {
-		private static final long serialVersionUID = 1158729335397111474L;
-		public ApiKeyVersionOID() {
-			super();
+	public record ApiKeyVersionOID(@Getter String id)
+       implements IsSecurityObjectOID {
+		
+		public static ApiKeyVersionOID from(final String id) {
+			return new ApiKeyVersionOID(id);
 		}
-		public ApiKeyVersionOID(final String oid) {
-			super(oid);
+		public static ApiKeyVersionOID forId(final String id) {
+			return new ApiKeyVersionOID(id);
 		}
 		public static ApiKeyVersionOID valueOf(final String s) {
 			return ApiKeyVersionOID.forId(s);
@@ -233,11 +205,18 @@ public abstract class SecurityOIDs {
 		public static ApiKeyVersionOID fromString(final String s) {
 			return ApiKeyVersionOID.forId(s);
 		}
-		public static ApiKeyVersionOID forId(final String id) {
-			return new ApiKeyVersionOID(id);
-		}
 		public static ApiKeyVersionOID supply() {
-			return ApiKeyVersionOID.forId	(SecurityObjectOIDBase.supplyId());
+			return ApiKeyVersionOID.forId(JavaOIDDispenser.supplyOid());
+		}
+		public static FactoryFrom<String,ApiKeyVersionOID> FACTORY_FROM_STRING = ApiKeyVersionOID::forId;
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -245,17 +224,14 @@ public abstract class SecurityOIDs {
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="authorizationOnResourceOid")
-	public static final class UserAuthorizationOnResourceOID
-					  extends SecurityObjectOIDBase
-				   implements SecurityObjectOID {
+	public record UserAuthorizationOnResourceOID(@Getter String id)
+	   implements IsSecurityObjectOID {
 		
-		private static final long serialVersionUID = 6831850273088749277L;
-		
-		public UserAuthorizationOnResourceOID() {
-			super();
+		public static UserAuthorizationOnResourceOID from(final String id) {
+			return new UserAuthorizationOnResourceOID(id);
 		}
-		public UserAuthorizationOnResourceOID(final String oid) {
-			super(oid);
+		public static UserAuthorizationOnResourceOID forId(final String id) {
+			return new UserAuthorizationOnResourceOID(id);
 		}
 		public static UserAuthorizationOnResourceOID valueOf(final String s) {
 			return UserAuthorizationOnResourceOID.forId(s);
@@ -263,35 +239,33 @@ public abstract class SecurityOIDs {
 		public static UserAuthorizationOnResourceOID fromString(final String s) {
 			return UserAuthorizationOnResourceOID.forId(s);
 		}
-		public static UserAuthorizationOnResourceOID forId(final String id) {
-			return new UserAuthorizationOnResourceOID(id);
-		}
 		public static UserAuthorizationOnResourceOID supply() {
-			return UserAuthorizationOnResourceOID.forId(SecurityObjectOIDBase.supplyId());
+			return UserAuthorizationOnResourceOID.forId(JavaOIDDispenser.supplyOid());
 		}
-		public static FactoryFrom<String,UserAuthorizationOnResourceOID> FACTORY_FROM_STRING = new FactoryFrom<String,UserAuthorizationOnResourceOID>() {
-																										@Override
-																										public UserAuthorizationOnResourceOID from(final String oid) {
-																											return UserAuthorizationOnResourceOID.forId(oid);
-																										}
-																								};
+		public static FactoryFrom<String,UserAuthorizationOnResourceOID> FACTORY_FROM_STRING = UserAuthorizationOnResourceOID::forId;
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	AUTHORIZATION TARGET RESOURCE
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="authorizationTargetResourceOid")
-	public static final class AuthorizationTargetResourceOID
-					  extends SecurityObjectOIDBase
-				   implements SecurityObjectOID {
+	public record AuthorizationTargetResourceOID(@Getter String id)
+	   implements IsSecurityObjectOID {
 		
-		private static final long serialVersionUID = 6831850273088749277L;
-		
-		public AuthorizationTargetResourceOID() {
-			super();
+		public static AuthorizationTargetResourceOID from(final String id) {
+			return new AuthorizationTargetResourceOID(id);
 		}
-		public AuthorizationTargetResourceOID(final String oid) {
-			super(oid);
+		public static AuthorizationTargetResourceOID forId(final String id) {
+			return new AuthorizationTargetResourceOID(id);
 		}
 		public static AuthorizationTargetResourceOID valueOf(final String s) {
 			return AuthorizationTargetResourceOID.forId(s);
@@ -299,17 +273,18 @@ public abstract class SecurityOIDs {
 		public static AuthorizationTargetResourceOID fromString(final String s) {
 			return AuthorizationTargetResourceOID.forId(s);
 		}
-		public static AuthorizationTargetResourceOID forId(final String id) {
-			return new AuthorizationTargetResourceOID(id);
-		}
 		public static AuthorizationTargetResourceOID supply() {
-			return AuthorizationTargetResourceOID.forId(SecurityObjectOIDBase.supplyId());
+			return AuthorizationTargetResourceOID.forId(JavaOIDDispenser.supplyOid());
 		}
-		public static FactoryFrom<String,AuthorizationTargetResourceOID> FACTORY_FROM_STRING = new FactoryFrom<String,AuthorizationTargetResourceOID>() {
-																										@Override
-																										public AuthorizationTargetResourceOID from(final String oid) {
-																											return AuthorizationTargetResourceOID.forId(oid);
-																										}
-																								};
+		public static FactoryFrom<String,AuthorizationTargetResourceOID> FACTORY_FROM_STRING = AuthorizationTargetResourceOID::forId;
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 }

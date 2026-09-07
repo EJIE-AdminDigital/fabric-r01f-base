@@ -1,7 +1,8 @@
 package r01f.properties;
 
 import r01f.guids.CommonOIDs.AppCode;
-import r01f.guids.CommonOIDs.AppComponent;
+import r01f.guids.CommonOIDs.IsAppCode;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.xmlproperties.XMLPropertiesForApp;
 import r01f.xmlproperties.XMLPropertiesForAppComponent;
 
@@ -113,16 +114,18 @@ public interface PropertiesBase<PA extends PropertiesForApp<?,?,?,?>,PC extends 
 /////////////////////////////////////////////////////////////////////////////////////////
 	/**
 	 * Gets an app properties manager {@link XMLPropertiesForApp}
-	 * @param appCode app code
-	 * @return the manager that provides access to components and from there to properties
+	 * @param appCode
+	 * @return
 	 */
-	public PA forApp(final AppCode appCode);
+	public PA forApp(final IsAppCode appCode);
 	/**
 	 * Gets an app properties manager {@link XMLPropertiesForApp}
 	 * @param appCode app code
 	 * @return the manager that provides access to components and from there to properties
 	 */
-	public PA forApp(final String appCode);
+	public default PA forApp(final String appCode) {
+		return this.forApp(AppCode.forId(appCode));
+	}
 	/**
 	 * Gets an app properties manager (a {@link XMLPropertiesForApp} instance) and from it
 	 * an manager of component properties (a {@link XMLPropertiesForAppComponent}) that provides
@@ -131,7 +134,7 @@ public interface PropertiesBase<PA extends PropertiesForApp<?,?,?,?>,PC extends 
 	 * @param component
 	 * @return
 	 */
-	public PC forAppComponent(final AppCode appCode,final AppComponent component);
+	public PC forAppComponent(final IsAppCode appCode,final IsAppComponent component);
 	/**
 	 * Gets an app properties manager (a {@link XMLPropertiesForApp} instance) and from it
 	 * an manager of component properties (a {@link XMLPropertiesForAppComponent}) that provides

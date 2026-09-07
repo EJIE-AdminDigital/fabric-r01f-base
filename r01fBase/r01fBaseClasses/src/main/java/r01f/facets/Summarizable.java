@@ -2,8 +2,6 @@ package r01f.facets;
 
 import lombok.RequiredArgsConstructor;
 import r01f.annotations.Immutable;
-import r01f.facets.LangDependentNamed.HasLangDependentNamedFacet;
-import r01f.facets.LangInDependentNamed.HasLangInDependentNamedFacet;
 import r01f.types.summary.Summary;
 
 /**
@@ -18,7 +16,7 @@ import r01f.types.summary.Summary;
  * </pre>
  * The summary can be created from the [name]; to do so there exists 
  * two cases:
- * a) If the type implements {@link HasLangInDependentNamedFacet}
+ * a) If the type implements {@link HasLangInDependentName}
  * <pre class='brush:java'>
  * 		public class MyLangIndependentSummarizableType
  * 	   	  implements HasLangInDependentNamedFacet,
@@ -32,7 +30,7 @@ import r01f.types.summary.Summary;
  *	        }
  *      }
  * </pre>
- * b) If the type implements {@link HasLangDependentNamedFacet}
+ * b) If the type implements {@link HasLangDependentName}
  * <pre class='brush:java'>
  * 		public class MyLangDependentSummarizableType
  * 	   	  implements HasLangDependentNamedFacet,

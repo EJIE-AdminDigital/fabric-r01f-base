@@ -124,75 +124,75 @@ public abstract class Lists {
 	 */
 	public static <E> List<E> getSiblings(final List<E> theList,final E element) {
 		if (theList.size() == 1) return null;		// there's only one child (this item), so this item do not have any siblings
-		List<E> outSlibings = new ArrayList<>(theList.size()-1);
+		List<E> outSiblings = new ArrayList<>(theList.size()-1);
 		for (E item : theList) {
 			if (item == element) {
 				continue;	// this item does not belong to the siblings collection
 			}
-			outSlibings.add(item);
+			outSiblings.add(item);
 		}
-		return outSlibings;
+		return outSiblings;
 	}
 	/**
 	 * Returns a list with all siblings elements AFTER the provided one
 	 * If the element is the one and only element or the last element in the list null is returned
-	 * @param allSlibings
+	 * @param allSiblings
 	 * @param element
 	 * @return
 	 */
-	public static <E> List<E> getSiblingsAfter(final List<E> allSlibings,final E element) {
-		if (allSlibings.size() == 1) return null;	// there's only item (this item), so this item do not have any siblings
+	public static <E> List<E> getSiblingsAfter(final List<E> allSiblings,final E element) {
+		if (allSiblings.size() == 1) return null;	// there's only item (this item), so this item do not have any siblings
 		
-		int thisItemIndex = allSlibings.indexOf(element);
-		int numOfSlibingsAfter = allSlibings.size() - (thisItemIndex+1);
-		if (numOfSlibingsAfter == 0) return null;		// this is the last child... no siblings after
+		int thisItemIndex = allSiblings.indexOf(element);
+		int numOfSiblingsAfter = allSiblings.size() - (thisItemIndex+1);
+		if (numOfSiblingsAfter == 0) return null;		// this is the last child... no siblings after
 		
-		List<E> outSlibingsAfter = new ArrayList<>(numOfSlibingsAfter);
-		for (int i=thisItemIndex+1; i < allSlibings.size(); i++) {
-			outSlibingsAfter.add(allSlibings.get(i));
+		List<E> outSiblingsAfter = new ArrayList<>(numOfSiblingsAfter);
+		for (int i=thisItemIndex+1; i < allSiblings.size(); i++) {
+			outSiblingsAfter.add(allSiblings.get(i));
 		}
-		return outSlibingsAfter;
+		return outSiblingsAfter;
 	}
 	/**
 	 * Returns the next element in the list AFTER the provided one
 	 * If the element is the one and only element or the last element in the list null is returned
-	 * @param allSlibings
+	 * @param allSiblings
 	 * @param element
 	 * @return
 	 */
-	public static <E> E getNextSibling(final List<E> allSlibings,final E element) {
-		List<E> siblingsAfter = Lists.getSiblingsAfter(allSlibings,element);
+	public static <E> E getNextSibling(final List<E> allSiblings,final E element) {
+		List<E> siblingsAfter = Lists.getSiblingsAfter(allSiblings,element);
 		return siblingsAfter != null ? siblingsAfter.get(0) : null;
 	}
 	/**
 	 * Returns a list with all the siblings elements BEFORE the provided one
 	 * If the element is the one and only element or the first element in the list null is returned
-	 * @param allSlibings
+	 * @param allSiblings
 	 * @param element
 	 * @return
 	 */
-	public static <E> List<E> getSiblingsBefore(final List<E> allSlibings,final E element) {
-		if (allSlibings.size() == 1) return null;	// there's only one item (this item), so this item do not have any siblings
+	public static <E> List<E> getSiblingsBefore(final List<E> allSiblings,final E element) {
+		if (allSiblings.size() == 1) return null;	// there's only one item (this item), so this item do not have any siblings
 		
-		int thisItemIndex = allSlibings.indexOf(element);
-		int numOfSlibingsBefore = thisItemIndex;
-		if (numOfSlibingsBefore == 0) return null;		// this is the first child... no siblings before
+		int thisItemIndex = allSiblings.indexOf(element);
+		int numOfSiblingsBefore = thisItemIndex;
+		if (numOfSiblingsBefore == 0) return null;		// this is the first child... no siblings before
 		
-		List<E> outSlibingsAfter = new ArrayList<>(numOfSlibingsBefore);
+		List<E> outSiblingsAfter = new ArrayList<>(numOfSiblingsBefore);
 		for (int i=0; i < thisItemIndex; i++) {
-			outSlibingsAfter.add(allSlibings.get(i));
+			outSiblingsAfter.add(allSiblings.get(i));
 		}
-		return outSlibingsAfter;
+		return outSiblingsAfter;
 	}
 	/**
 	 * Returns the previous element in the list BEFORE the provided one
 	 * If the element is the one and only element or the first element in the list null is returned
-	 * @param allSlibings
+	 * @param allSiblings
 	 * @param element
 	 * @return
 	 */
-	public static <E> E getPrevSibling(final List<E> allSlibings,final E element) {
-		List<E> siblingsBefore = Lists.getSiblingsBefore(allSlibings,element);
+	public static <E> E getPrevSibling(final List<E> allSiblings,final E element) {
+		List<E> siblingsBefore = Lists.getSiblingsBefore(allSiblings,element);
 		return siblingsBefore != null ? siblingsBefore.get(siblingsBefore.size() - 1) : null;
 	}
 }

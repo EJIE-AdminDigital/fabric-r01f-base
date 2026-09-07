@@ -2,31 +2,38 @@ package r01f.types.html;
 
 import java.util.UUID;
 
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import r01f.annotations.Immutable;
-import r01f.guids.OIDBaseMutable;
+import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallType;
 
 @Immutable
 @MarshallType(as="htmlElementId")
-@NoArgsConstructor
-public class HtmlElementId
-	 extends OIDBaseMutable<String> {
+public record HtmlElementId(@Getter String id)
+   implements OIDTyped<String> {
 	
-	private static final long serialVersionUID = -9181977752174509450L;
-/////////////////////////////////////////////////////////////////////////////////////////
-//	
-/////////////////////////////////////////////////////////////////////////////////////////	
-	public HtmlElementId(final String oid) {
-		super(oid);
-	}
-	public static HtmlElementId valueOf(final String id) {
+	public static HtmlElementId from(final String id) {
 		return new HtmlElementId(id);
 	}
 	public static HtmlElementId forId(final String id) {
 		return new HtmlElementId(id);
 	}
+	public static HtmlElementId valueOf(final String id) {
+		return new HtmlElementId(id);
+	}
+	public static HtmlElementId fromString(final String s) {
+		return HtmlElementId.forId(s);
+	}
 	public static HtmlElementId supply() {
 		return HtmlElementId.forId(UUID.randomUUID().toString());
+	}
+	
+	@Override
+	public String asString() {
+		return this.id;
+	}
+	@Override
+	public String toString() {
+		return this.id;
 	}
 }

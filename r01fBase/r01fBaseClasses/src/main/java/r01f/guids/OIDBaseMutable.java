@@ -14,6 +14,7 @@ import r01f.annotations.Immutable;
  * otherwise a WARNING is thrown and the final field is NOT serialized)
  * @param <T> the type of the id
  */
+@Deprecated	// use records instead of this class
 @Immutable	// the object is immutable (but underneath it's mutable... so it's name is OIDBaseMutable
 @Accessors(prefix="_")
 @EqualsAndHashCode(callSuper=false)
@@ -28,9 +29,11 @@ public abstract class OIDBaseMutable<T extends Comparable<? super T>>
 /////////////////////////////////////////////////////////////////////////////////////////
 //	CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////	
+	@Deprecated
 	protected OIDBaseMutable() {
 		super();
 	}
+	@Deprecated
 	protected OIDBaseMutable(final T id) {
 		super();
 		if (id == null) throw new IllegalArgumentException("An OID cannot be created with null value!");

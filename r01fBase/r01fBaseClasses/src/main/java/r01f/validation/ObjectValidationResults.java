@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import r01f.annotations.Immutable;
-import r01f.guids.OIDBaseMutable;
+import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallType;
 import r01f.util.types.collections.CollectionUtils;
 
@@ -86,16 +86,13 @@ public class ObjectValidationResults {
 /////////////////////////////////////////////////////////////////////////////////////////
 //  
 /////////////////////////////////////////////////////////////////////////////////////////
-	@MarshallType(as="objValidationErrorSourceId")
 	@Immutable
-	public static class ObjectValidationErrorSourceID
-	            extends OIDBaseMutable<String> { 	// normally this should extend OIDBaseImutable BUT it MUST have a default no-args constructor to be serializable
-		private static final long serialVersionUID = -4305395894867558460L;
-		public ObjectValidationErrorSourceID() {
-			/* default no args constructor for serialization purposes */
-		}
-		public ObjectValidationErrorSourceID(final String id) {
-			super(id);
+	@MarshallType(as="objValidationErrorSourceId")
+	public record ObjectValidationErrorSourceID(@Getter String id)
+	    implements OIDTyped<String> { 	// normally this should extend OIDBaseImutable BUT it MUST have a default no-args constructor to be serializable
+		
+		public static ObjectValidationErrorSourceID from(final String id) {
+			return new ObjectValidationErrorSourceID(id);
 		}
 		public static ObjectValidationErrorSourceID forId(final String id) {
 			return new ObjectValidationErrorSourceID(id);
@@ -105,6 +102,14 @@ public class ObjectValidationResults {
 		}
 		public static ObjectValidationErrorSourceID fromString(final String id) {
 			return ObjectValidationErrorSourceID.forId(id);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 	

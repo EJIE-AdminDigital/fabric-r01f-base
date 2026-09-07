@@ -1,6 +1,7 @@
 package r01f.model.services;
 
-import r01f.guids.OIDBaseMutable;
+import lombok.Getter;
+import r01f.guids.OIDTyped;
 import r01f.model.persistence.PersistencePerformedOperation;
 import r01f.model.persistence.PersistenceRequestedOperation;
 import r01f.objectstreamer.annotations.MarshallType;
@@ -10,20 +11,22 @@ import r01f.util.types.collections.CollectionUtils;
  * An id of the called [core service] method
  */
 @MarshallType(as="coreServiceMethod")
-public class COREServiceMethod 
-     extends OIDBaseMutable<String> {
-	
-	private static final long serialVersionUID = -7020929167799107328L;
+public record COREServiceMethod(@Getter String id) 
+   implements OIDTyped<String> {
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //	                                                                          
 /////////////////////////////////////////////////////////////////////////////////////////
 	public static COREServiceMethod UNKNOWN = COREServiceMethod.named("unknown");
-	public COREServiceMethod() {
-		super();
+	
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////
+	public static COREServiceMethod from(final String s) {
+		return COREServiceMethod.named(s);
 	}
-	public COREServiceMethod(final String oid) {
-		super(oid);
+	public static COREServiceMethod forId(final String s) {
+		return COREServiceMethod.named(s);
 	}
 	public static COREServiceMethod valueOf(final String s) {
 		return COREServiceMethod.named(s);
@@ -82,5 +85,16 @@ public class COREServiceMethod
 			}
 		}
 		return outIn;
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
+	@Override
+	public String asString() {
+		return this.id;
+	}
+	@Override
+	public String toString() {
+		return this.id;
 	}
 }

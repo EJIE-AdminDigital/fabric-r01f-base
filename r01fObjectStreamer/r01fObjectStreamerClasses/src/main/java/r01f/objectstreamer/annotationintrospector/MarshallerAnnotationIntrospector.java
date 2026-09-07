@@ -167,13 +167,14 @@ public class MarshallerAnnotationIntrospector
 	@Override
 	public List<NamedType> findSubtypes(final MapperConfig<?> config,final Annotated ann) {
 		List<NamedType> outTypes = _polymorphicTypes.findSubtypes(config,ann);
+		
 		return outTypes != null ? outTypes
 								: _delegatedJacksonAnnotationIntrospector.findSubtypes(config,ann);	// if not found, delegate
 	}
 	@Override
 	public String findTypeName(final MapperConfig<?> config,final AnnotatedClass ac) {
 		String typeId = _polymorphicTypes.findPolymorphicTypeIdFromType(ac.getRawType());
-
+		
 		return Strings.isNOTNullOrEmpty(typeId) ? typeId
 												: _delegatedJacksonAnnotationIntrospector.findTypeName(config,ac);
 	}

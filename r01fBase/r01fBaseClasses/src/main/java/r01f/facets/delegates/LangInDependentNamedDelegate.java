@@ -1,13 +1,13 @@
 package r01f.facets.delegates;
 
+import r01f.facets.HasLangInDependentName;
 import r01f.facets.LangInDependentNamed;
-import r01f.facets.LangInDependentNamed.HasLangInDependentNamedFacet;
 
 /**
  * Encapsulates the {@link LangInDependentNamed} behavior
  * @param <L>
  */
-public class LangInDependentNamedDelegate<L extends HasLangInDependentNamedFacet>
+public class LangInDependentNamedDelegate<L extends HasLangInDependentName>
 	 extends FacetDelegateBase<L>
   implements LangInDependentNamed {
 

@@ -5,8 +5,9 @@ import java.util.Set;
 
 import com.google.common.base.Splitter;
 
-import lombok.experimental.Accessors;
-import r01f.guids.OIDBaseMutable;
+import lombok.Getter;
+import r01f.guids.OIDTyped;
+import r01f.objectstreamer.annotations.MarshallConstructor;
 import r01f.objectstreamer.annotations.MarshallIgnoredField;
 import r01f.objectstreamer.annotations.MarshallType;
 import r01f.util.types.StringSplitter;
@@ -14,40 +15,37 @@ import r01f.util.types.Strings;
 import r01f.util.types.collections.CollectionUtils;
 
 @MarshallType(as="host")
-@Accessors(prefix="_")
-public class Host
-	 extends OIDBaseMutable<String> {
+public record Host(@Getter String id,
+				   // Somethimes (not a canonical usage), the host contains protocol, port, urlPath, querystring or anchor
+				   // ... this var stores these components
+				   // BEWARE! it's NOT serialized
+				   @MarshallIgnoredField 
+				   UrlComponents urlComponents)	
+   implements OIDTyped<String> {
 
 	private static final long serialVersionUID = -3712825671090881670L;
 /////////////////////////////////////////////////////////////////////////////////////////
-//  FIELDS
-/////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 * Somethimes (not a canonical usage), the host contains protocol, port, urlPath, querystring or anchor
-	 * ... this var stores these components
-	 * BEWARE! it's NOT serialized
-	 */
-	@MarshallIgnoredField
-	private final transient UrlComponents _urlComponents;
-/////////////////////////////////////////////////////////////////////////////////////////
 //  CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
-	public Host() {
-		/* default no args constructor for serialization purposes */
-		_urlComponents = null;
-	}
+	@MarshallConstructor
 	public Host(final String host) {
-		this(new UrlParserNoRegExp(host)
+		this(host,
+			 new UrlParserNoRegExp(host)
 						.getComponents());
 	}
-	private Host(final UrlComponents urlComponents) {
-		super(urlComponents.getHost().asString());	// store the host
-		_urlComponents = urlComponents;
-	}
 	public Host(final Host other) {
-		this(other != null ? other.getId() : (String)null);
+		this(other != null ? other.getId() : (String)null,
+			 other != null ? other.urlComponents : (UrlComponents)null);
 	}
+	
 	public static Host from(final String host) {
+		return new Host(host);
+	}
+	public static Host forId(final String host) {
+		return new Host(host);
+	}
+
+	public static Host fromString(final String host) {
 		return new Host(host);
 	}
 	public static Host of(final String host) {
@@ -58,15 +56,8 @@ public class Host
 	}
 	public static Host strict(final String host) {
 		if (host.indexOf("/") > 0 || host.indexOf(":") > 0) throw new IllegalArgumentException(host + " does NOT seem to be strictly a host!!");
-		Host theHost = new Host();	// beware! do not set the components
-		theHost.setId(host);
-		return theHost;
-	}
-	public static Host valueOf(final String host) {
-		return new Host(host);
-	}
-	public static Host forId(final String host) {
-		return new Host(host);
+		return new Host(host,
+					    null);	// beware! do not set the components
 	}
 	
 	public static String LOCALHOST_STR = "localhost";
@@ -74,6 +65,33 @@ public class Host
 	
 	public static Host LOCALHOST = new Host(LOCALHOST_STR);
 	public static Host LOCALHOST_USING_IP = new Host(LOCALHOST_USING_IP_STR);
+/////////////////////////////////////////////////////////////////////////////////////////
+//	STRING CONVERSION
+/////////////////////////////////////////////////////////////////////////////////////////	
+	@Override
+	public String asString() {
+		return this.id;
+	}
+	@Override
+	public String toString() {
+		return this.id;
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	EQUALS & HASHCODE (use just the id, not the url components)
+/////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public boolean equals(final Object obj) {
+		if (obj == null) return false;
+		if (obj == this) return true;
+		if (!(obj instanceof Host)) return false;
+		
+		Host other = (Host)obj;
+		return this.getId().equals(other.getId());
+	}
+	@Override
+	public int hashCode() {
+		return this.getId().hashCode();
+	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -88,9 +106,9 @@ public class Host
 	 */
 	UrlComponents getUrlComponents() {
 		// if the host was constructed as strict() url components is null
-		return _urlComponents != null ? _urlComponents
-									  : new UrlComponents(null,Host.strict(this.getId()),0,		// protocol / host / port
-											  			  null,null,null);						// path / query string / anchor
+		return this.urlComponents != null ? this.urlComponents
+									  	  : new UrlComponents(null,Host.strict(this.getId()),0,		// protocol / host / port
+											  			  	  null,null,null);						// path / query string / anchor
 	}
 	/**
 	 * Returns the TLD (top level domain)

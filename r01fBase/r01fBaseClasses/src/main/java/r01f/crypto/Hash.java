@@ -3,6 +3,7 @@ package r01f.crypto;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.HexFormat;
 
 import lombok.Getter;
@@ -58,6 +59,23 @@ public class Hash
 		// Convert byte array to a readable Hex string (Java 17+)
 		String hexString = HexFormat.of().formatHex(hashBytes);
 		return Hash.from(hexString);
+	}
+	
+	public static Hash createSHA256AsBase64From(final CharSequence str) {
+	    MessageDigest digest = _digest.get();
+	    if (digest == null) {
+	        throw new IllegalStateException("Cannot create a SHA-256 hash because the MessageDigest instance could not be created");
+	    }
+	    
+	  // create the hash
+	    Charset utf8Charset = StandardCharsets.UTF_8;
+	    byte[] hashBytes = digest.digest(str.toString().getBytes(utf8Charset));
+	    
+	 // Convert byte array to a Base64UrlEncoding
+	    String base64UrlString = Base64.getUrlEncoder()
+	                                   .withoutPadding()
+	                                   .encodeToString(hashBytes);
+	    return Hash.from(base64UrlString);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	CanBeRepresentedAsString

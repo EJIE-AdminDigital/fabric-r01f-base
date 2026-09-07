@@ -13,7 +13,7 @@ public interface LangNamed
 //  HaLangInDependentNamedFacet
 /////////////////////////////////////////////////////////////////////////////////////////
 	public static interface HasLangNamedFacet 
-					extends HasLangInDependentNamedFacet {
+					extends HasLangInDependentName {
 		// just extend
 	}
 }

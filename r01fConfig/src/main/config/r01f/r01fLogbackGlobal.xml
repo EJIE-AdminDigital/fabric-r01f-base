@@ -101,7 +101,7 @@ This GLOBAL logback.xml is NOT ENVIRONMENT DEPENDENT
 		<!-- encoders are assigned the type
 		     ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
 		<encoder>
-			<pattern>%highlight(%date [%thread] %-5level %logger{0} [%method - %line] - %message%n %exception{30})</pattern>
+			<pattern>%highlight(%date [%thread] %-5level) %logger{0} [%method - %line] - %message%n %exception{30}</pattern>
 		</encoder>
 	</appender>
 	<!-- Root Logger -->

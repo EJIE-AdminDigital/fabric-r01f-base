@@ -3,7 +3,6 @@ package r01f.cache;
 import java.io.Serializable;
 import java.time.Instant;
 
-import lombok.Getter;
 import lombok.experimental.Accessors;
 
 /**
@@ -67,50 +66,42 @@ import lombok.experimental.Accessors;
  * @param <O>
  */
 @Accessors(prefix="_")
-public class CacheEntry<O,M>
-  implements Serializable {
+public record CacheEntry<O,M>(O oid,
+							  M object,
+							  Instant cachedAt,
+							  Instant lastUpdatedAt)
+   implements Serializable {
 
 	private static final long serialVersionUID = -3077860130764155886L;
 /////////////////////////////////////////////////////////////////////////////////////////
-//	FIELDS
-/////////////////////////////////////////////////////////////////////////////////////////
-	@Getter private final O _oid;
-	@Getter private final M _object;
-	@Getter private final Instant _cachedAt;
-	@Getter private final Instant _lastUpdatedAt;
-
-/////////////////////////////////////////////////////////////////////////////////////////
-//	CONSTRUCTORS & BUILDERS
-/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
 	public CacheEntry(final O oid,final M obj,
 					  final Instant lastUpdatedAt) {
-		_oid = oid;
-		_object = obj;
-		_cachedAt = Instant.now();
-		_lastUpdatedAt = lastUpdatedAt;
+		this(oid,obj,
+			 Instant.now(),lastUpdatedAt);
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////
+	public O getOid() {
+		return this.oid;
+	}
+	public M getObject() {
+		return this.object;
+	}
+	public Instant getCachedAt() {
+		return this.cachedAt;
+	}
+	public Instant getLastUpdatedAt() {
+		return this.lastUpdatedAt;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 	public boolean needsReloadIfLastUpdatedAt(final Instant lastUpdatedAt) {
 		if (lastUpdatedAt == null) return false;	
-		return _lastUpdatedAt != null ? lastUpdatedAt.isAfter(_lastUpdatedAt)
-									  : true;
-	}
-/////////////////////////////////////////////////////////////////////////////////////////
-//	EQUALS & HASHCODE
-/////////////////////////////////////////////////////////////////////////////////////////
-	@Override @SuppressWarnings("unchecked")
-	public boolean equals(final Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
-		if (!(obj instanceof CacheEntry)) return false;
-		
-		CacheEntry<O,M> otherEntry = (CacheEntry<O,M>)obj;
-		return this.getOid().equals(otherEntry.getOid());
-	}
-	@Override
-	public int hashCode() {
-		return _oid.hashCode();
+		return this.lastUpdatedAt != null ? lastUpdatedAt.isAfter(this.lastUpdatedAt)
+									  	  : true;
 	}
 }

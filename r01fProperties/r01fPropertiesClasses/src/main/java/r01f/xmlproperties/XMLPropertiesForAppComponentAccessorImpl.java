@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.CommonOIDs.AppComponent;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.types.Path;
 
 @Slf4j
@@ -27,12 +27,12 @@ implements XMLPropertiesForAppComponentAccessor {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	FIELDS
 /////////////////////////////////////////////////////////////////////////////////////////
-	@Getter private final AppComponent _appComponent;
+	@Getter private final IsAppComponent _appComponent;
 	@Getter private final Document _document;
 /////////////////////////////////////////////////////////////////////////////////////////
 //	CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
-	XMLPropertiesForAppComponentAccessorImpl(final AppComponent component,
+	XMLPropertiesForAppComponentAccessorImpl(final IsAppComponent component,
 											 final Document xmlDocument) {
 		_appComponent = component;
 		_document = xmlDocument;

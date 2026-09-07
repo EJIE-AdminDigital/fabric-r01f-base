@@ -6,6 +6,9 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import r01f.guids.CommonOIDs.AppCode;
 import r01f.guids.CommonOIDs.AppComponent;
+import r01f.guids.CommonOIDs.Environment;
+import r01f.guids.CommonOIDs.IsAppCode;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.properties.PropertiesForAppComponentPropertiesLoadedListener;
 
 /**
@@ -23,14 +26,18 @@ implements XMLProperties {
 //	FIELDS
 /////////////////////////////////////////////////////////////////////////////////////////
 	/**
-	 * Cache of {@link XMLPropertiesForApp} for every managed app
-	 * the {@link XMLPropertiesForApp} also have another cache (an instance of {@link XMLPropertiesCache})
+	 * The environment (dev,prod,etc)
 	 */
-	private final Map<AppCode,XMLPropertiesForApp> _appPropsCache;
+	private final Environment _env;
 	/**
 	 * true if no properties cache is used
 	 */
 	private final boolean _useCache;
+	/**
+	 * Cache of {@link XMLPropertiesForApp} for every managed app
+	 * the {@link XMLPropertiesForApp} also have another cache (an instance of {@link XMLPropertiesCache})
+	 */
+	private final Map<IsAppCode,XMLPropertiesForApp> _appPropsCache;
 	/**
 	 * A listener for AppComponent properties loaded event
 	 */
@@ -39,16 +46,31 @@ implements XMLProperties {
 //	CONSTRUCTORS
 /////////////////////////////////////////////////////////////////////////////////////////
 	public XMLPropertiesImpl() {
-		this(true,	// use cache
+		this((Environment)null,	// default environment (guessed from system env prop)
+			 true,	// use cache
+			 null);	// no listener
+	}
+	public XMLPropertiesImpl(final Environment env) {
+		this(env,	// default environment (guessed from system env prop)
+			 true,	// use cache
 			 null);	// no listener
 	}
 	public XMLPropertiesImpl(final boolean useCache) {
-		this(useCache,
+		this((Environment)null,	// default environment (guessed from system env prop)
+			 useCache,
 			 null);
 	}
-	public XMLPropertiesImpl(final boolean useCache,
+	public XMLPropertiesImpl(final Environment env,
+							 final boolean useCache) {
+		this(env,	// default environment (guessed from system env prop)
+			 useCache,
+			 null);
+	}
+	public XMLPropertiesImpl(final Environment env,
+							 final boolean useCache,
 							 final PropertiesForAppComponentPropertiesLoadedListener appCompPropertiesLoadedListener) {
 		log.debug("XMLProperties BootStraping");
+		_env = env;
 		_useCache = useCache;
 		_appPropsCache = useCache ? new HashMap<>(DEF_APP_NUM,
 												  APP_CACHE_MAP_LOAD_FACTOR)
@@ -59,13 +81,14 @@ implements XMLProperties {
 //	METHODS
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
-	public XMLPropertiesForApp forApp(final AppCode appCode) {
+	public XMLPropertiesForApp forApp(final IsAppCode appCode) {
 		XMLPropertiesForApp propsForApp = _useCache ? _appPropsCache != null ? _appPropsCache.get(appCode)
 																 			 : null
 													: null;
 		if (propsForApp == null) {
 			log.warn("The properties for application {} are not present in the cache or the cache is not loaded: they must be loaded NOW",appCode);
-			propsForApp = new XMLPropertiesForAppImpl(XMLPropertiesEnv.guessEnvironmentFromSystemEnvProp(),
+			propsForApp = new XMLPropertiesForAppImpl(_env != null ? _env
+																   : XMLPropertiesEnv.guessEnvironmentFromSystemEnvProp(),
 													  appCode,
 													  _appComponentLoadedListener,
 													  _useCache);
@@ -74,11 +97,7 @@ implements XMLProperties {
 		return propsForApp;
 	}
 	@Override
-	public XMLPropertiesForApp forApp(final String appCode) {
-		return this.forApp(AppCode.forId(appCode));
-	}
-	@Override
-	public XMLPropertiesForAppComponent forAppComponent(final AppCode appCode,final AppComponent component) {
+	public XMLPropertiesForAppComponent forAppComponent(final IsAppCode appCode,final IsAppComponent component) {
 		XMLPropertiesForApp propsForApp = this.forApp(appCode);
 		return propsForApp.forComponent(component);
 	}

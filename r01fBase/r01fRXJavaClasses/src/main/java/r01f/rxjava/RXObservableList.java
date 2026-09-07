@@ -8,6 +8,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
+
 /**
  * Class for getting an Observable over a dynamic list. 
  * The observable emits a new element when it is added to the list

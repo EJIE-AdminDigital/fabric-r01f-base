@@ -1,7 +1,7 @@
 package r01f.types.url.web;
 
-import lombok.experimental.Accessors;
-import r01f.guids.OIDBaseMutable;
+import lombok.Getter;
+import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallType;
 
 /**
@@ -16,9 +16,8 @@ import r01f.objectstreamer.annotations.MarshallType;
  * </pre>
  */
 @MarshallType(as="openTaget")
-@Accessors(prefix="_")
-public class WebLinkOpenTarget
-     extends OIDBaseMutable<String> {
+public record WebLinkOpenTarget(@Getter String id)
+   implements OIDTyped<String> {
 
 	private static final long serialVersionUID = 5416033585280880913L;
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -31,8 +30,8 @@ public class WebLinkOpenTarget
 /////////////////////////////////////////////////////////////////////////////////////////
 //	
 /////////////////////////////////////////////////////////////////////////////////////////	
-	public WebLinkOpenTarget(final String oid) {
-		super(oid);
+	public static WebLinkOpenTarget from(final String id) {
+		return new WebLinkOpenTarget(id);
 	}
 	public static WebLinkOpenTarget forId(final String id) {
 		return new WebLinkOpenTarget(id);
@@ -40,11 +39,23 @@ public class WebLinkOpenTarget
 	public static WebLinkOpenTarget valueOf(final String id) {
 		return WebLinkOpenTarget.forId(id);
 	}
+	public static WebLinkOpenTarget fromString(final String s) {
+		return WebLinkOpenTarget.forId(s);
+	}
 	public static WebLinkOpenTarget forIdOrNull(final String id) {
 		if (id == null) return null;
 		return new WebLinkOpenTarget(id);
 	}
 	public static WebLinkOpenTarget frameNamed(final String frameName) {
 		return new WebLinkOpenTarget(frameName);
+	}
+	
+	@Override
+	public String asString() {
+		return this.id;
+	}
+	@Override
+	public String toString() {
+		return this.id;
 	}
 }

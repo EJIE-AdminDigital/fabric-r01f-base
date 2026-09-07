@@ -3,7 +3,7 @@ package r01f.types.geo;
 import java.io.Serializable;
 
 import r01f.debug.Debuggable;
-import r01f.facets.LangDependentNamed.HasLangDependentNamedFacet;
+import r01f.facets.HasLangDependentName;
 import r01f.locale.Language;
 import r01f.types.geo.GeoFacets.GeoLocationBelongsToCountry;
 import r01f.types.geo.GeoFacets.GeoLocationBelongsToCounty;
@@ -47,7 +47,7 @@ import r01f.types.geo.GeoIDs.GeoID;
  * 			|							 |Suburb
  */
 public interface GeoLocation<GID extends GeoID> 
-		 extends HasLangDependentNamedFacet,
+		 extends HasLangDependentName,
 		 		 Debuggable,
 				 Serializable {
 /////////////////////////////////////////////////////////////////////////////////////////

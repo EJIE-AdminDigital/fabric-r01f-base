@@ -1867,6 +1867,7 @@ public class ReflectionUtils {
 	 * @param accessible the value to set the <code>accessible</code> flag to.
 	 * @throws SecurityException if the request is denied.
 	 */
+	@SuppressWarnings("removal")
 	public static void setAccessible(final AccessibleObject o,final boolean accessible) {
 		AccessController.doPrivileged(new SetAccessibleAction(o,accessible));
 	}

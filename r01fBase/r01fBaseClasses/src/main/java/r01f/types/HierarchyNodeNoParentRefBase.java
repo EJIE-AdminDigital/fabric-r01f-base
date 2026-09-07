@@ -66,32 +66,41 @@ public abstract class HierarchyNodeNoParentRefBase<T,SELF_TYPE extends Hierarchy
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
-	public SELF_TYPE addChild(final SELF_TYPE child) {
-		int position = CollectionUtils.hasData(_children) ? _children.size() : 0;
-		return this.insertChildAt(child,position);
+	public boolean addChild(final SELF_TYPE child) {
+		if (child == null) return false;
+		if (_children == null) _children = new ArrayList<>();
+		_children.add(child);
+		return true;
 	}
 	@Override
-	public void addChildren(final Collection<SELF_TYPE> children) {
-		if (CollectionUtils.hasData(children)) {
-			for (SELF_TYPE item : children) this.addChild(item);
-		}
-	}
-	@Override
-	public SELF_TYPE insertChildAt(final SELF_TYPE child,final int index) {
+	public void addChildAt(final int index,final SELF_TYPE child) {
 		if (_children == null) _children = new ArrayList<>();
 		_children.add(index,child);
-		return child;
+	}
+	@Override
+	public boolean addChildren(final Collection<SELF_TYPE> children) {
+		if (CollectionUtils.isNullOrEmpty(children)) return false;
+		if (_children == null) _children = new ArrayList<>();
+		_children.addAll(children);
+		return true;
+	}
+	@Override
+	public boolean addChildrenAt(final int index,final Collection<SELF_TYPE> children) {
+		if (CollectionUtils.isNullOrEmpty(children)) return false;
+		if (_children == null) _children = new ArrayList<>();
+		_children.addAll(index,children);
+		return true;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
-	public void removeChild(final SELF_TYPE child) {
-		if (_children != null) _children.remove(child);
+	public boolean removeChild(final SELF_TYPE child) {
+		return _children != null ? _children.remove(child) : false;
 	}
 	@Override
-	public void removeChildAt(final int index) {
-		if (_children != null) _children.remove(index);
+	public SELF_TYPE removeChildAt(final int index) {
+		return _children != null ? _children.remove(index) : null;
 	}
 	@Override
 	public void removeAllChilds() {

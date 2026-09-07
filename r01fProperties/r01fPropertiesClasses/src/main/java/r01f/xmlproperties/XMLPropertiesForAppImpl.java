@@ -17,9 +17,10 @@ import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.CommonOIDs.AppCode;
-import r01f.guids.CommonOIDs.AppComponent;
+import r01f.configproperties.PropertiesComponentDefLoader;
 import r01f.guids.CommonOIDs.Environment;
+import r01f.guids.CommonOIDs.IsAppCode;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.patterns.FactoryFrom;
 import r01f.properties.PropertiesComponentDef;
 import r01f.properties.PropertiesForAppComponentPropertiesLoadedListener;
@@ -51,7 +52,7 @@ public final class XMLPropertiesForAppImpl
 	/**
 	 * App code
 	 */
-	@Getter private final AppCode _appCode;
+	@Getter private final IsAppCode _appCode;
 	/**
 	 * The environment
 	 */
@@ -67,12 +68,12 @@ public final class XMLPropertiesForAppImpl
 	/**
 	 * AppComponent cache
 	 */
-	@Getter private final Map<AppComponent,XMLPropertiesForAppComponentCache> _appComponentCache;
+	@Getter private final Map<IsAppComponent,XMLPropertiesForAppComponentCache> _appComponentCache;
 /////////////////////////////////////////////////////////////////////////////////////////
 //  CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
 	public XMLPropertiesForAppImpl(final Environment environment,
-								   final AppCode appCode,
+								   final IsAppCode appCode,
 								   final PropertiesForAppComponentPropertiesLoadedListener compLoadedListener,
 								   final boolean useCache) {
 		_appCode = appCode;
@@ -87,7 +88,7 @@ public final class XMLPropertiesForAppImpl
 //  API
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
-	public XMLPropertiesForAppComponent forComponent(final AppComponent component) {
+	public XMLPropertiesForAppComponent forComponent(final IsAppComponent component) {
 		// [1] - get the component cache
 		XMLPropertiesForAppComponentCache appCompsPropsCache = _retrieveComponent(component);
 		// [2] - Create a XMLPropertyWrapper factory
@@ -98,7 +99,7 @@ public final class XMLPropertiesForAppImpl
 												xmlProperyWrapperFactory);
 	}
 	@Override
-	public XMLPropertiesForAppComponent forComponentProperties(final AppComponent component,
+	public XMLPropertiesForAppComponent forComponentProperties(final IsAppComponent component,
 															   final Document xmlDoc) {
 		// [1] - get the component cache
 		XMLPropertiesForAppComponentCache appCompsPropsCache = _createAppComponentCache(component,
@@ -111,7 +112,7 @@ public final class XMLPropertiesForAppImpl
 												xmlProperyWrapperFactory);
 	}
 	@Override
-	public XMLPropertiesForAppComponentAccessor of(final AppComponent component) {
+	public XMLPropertiesForAppComponentAccessor of(final IsAppComponent component) {
 		XMLPropertiesForAppComponentCache appCompsPropsCache = _retrieveComponent(component);
 		return appCompsPropsCache.getXMLDocumentAccessor();
 	}
@@ -119,7 +120,7 @@ public final class XMLPropertiesForAppImpl
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
-	public boolean existsComponentPropertiesFile(final AppComponent component) {
+	public boolean existsComponentPropertiesFile(final IsAppComponent component) {
 		XMLPropertiesForAppComponentCache cache = _retrieveComponent(component);
 		return cache != null;
 	}
@@ -131,7 +132,7 @@ public final class XMLPropertiesForAppImpl
 		if (_useCache) _appComponentCache.clear();	// remove all cached components: it'll be loaded again
 	}
 	@Override
-	public void clearCacheOf(final AppComponent component) {
+	public void clearCacheOf(final IsAppComponent component) {
 		if (_useCache) _appComponentCache.remove(component);	// just removing the component cache it'll be loaded again
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -142,7 +143,7 @@ public final class XMLPropertiesForAppImpl
 	 * @param appComp
 	 * @return
 	 */
-	private XMLPropertiesForAppComponentCache _retrieveComponent(final AppComponent appComp) {
+	private XMLPropertiesForAppComponentCache _retrieveComponent(final IsAppComponent appComp) {
 		XMLPropertiesForAppComponentCache outComp = null;
 		try {
 			outComp =_useCache ? _appComponentCache.get(appComp)	// Get the component from the cache if present
@@ -179,7 +180,7 @@ public final class XMLPropertiesForAppImpl
 	 * @param appComp
 	 * @return
 	 */
-	private XMLPropertiesForAppComponentCache _createAppComponentCache(final AppComponent appComp,
+	private XMLPropertiesForAppComponentCache _createAppComponentCache(final IsAppComponent appComp,
 																 	   final Document xmlDoc) {
 		// [a] -- Create a XML Document accessor
 		XMLPropertiesForAppComponentAccessor xmlDocAccessor = new XMLPropertiesForAppComponentAccessorImpl(appComp,
@@ -285,20 +286,20 @@ public final class XMLPropertiesForAppImpl
 	public String cacheStatsDebugInfo() {
 		StringBuilder dbg = new StringBuilder();
 		dbg.append("XMLProperties for app").append(_appCode).append(" chache statistics:\n");
-		for (Map.Entry<AppComponent,PropertiesAppComponentPropertyCacheStats> me : this.getCacheStatsByAppComponent().entrySet()) {
+		for (Map.Entry<IsAppComponent,PropertiesAppComponentPropertyCacheStats> me : this.getCacheStatsByAppComponent().entrySet()) {
 			dbg.append(Strings.customized("- {}: {}\n",
 										  me.getKey(),me.getValue().debugInfo()));
 		}
 		return dbg.toString();
 	}
 	@Override
-	public Map<AppComponent,PropertiesAppComponentPropertyCacheStats> getCacheStatsByAppComponent() {
+	public Map<IsAppComponent,PropertiesAppComponentPropertyCacheStats> getCacheStatsByAppComponent() {
 		if (!_useCache) return Maps.newHashMap();
 		return _appComponentCache.entrySet()
 					.stream()
-					.map(me -> new Map.Entry<AppComponent,PropertiesAppComponentPropertyCacheStats>() {
+					.map(me -> new Map.Entry<IsAppComponent,PropertiesAppComponentPropertyCacheStats>() {
 										@Override
-										public AppComponent getKey() {
+										public IsAppComponent getKey() {
 											return me.getKey();
 										}
 										@Override
@@ -314,13 +315,13 @@ public final class XMLPropertiesForAppImpl
 					.collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue));
 	}
 	@Override
-	public String cacheStatsDebugInfoOf(final AppComponent appComp) {
+	public String cacheStatsDebugInfoOf(final IsAppComponent appComp) {
 		PropertiesAppComponentPropertyCacheStats compStats = this.getCacheStatsOf(appComp);
 		return compStats != null ? compStats.debugInfo()
 								 : "no properties cache info for " + appComp;
 	}
 	@Override
-	public PropertiesAppComponentPropertyCacheStats getCacheStatsOf(final AppComponent appComp) {
+	public PropertiesAppComponentPropertyCacheStats getCacheStatsOf(final IsAppComponent appComp) {
 		XMLPropertiesForAppComponentCache compCache = _appComponentCache.get(appComp);
 		return compCache != null ? compCache.usageStats()
 								 : null;

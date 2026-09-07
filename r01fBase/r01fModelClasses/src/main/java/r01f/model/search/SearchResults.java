@@ -101,6 +101,17 @@ public class SearchResults<F extends SearchFilter,
 	}
 	/**
 	 * Constructor
+	 * @param newPageItems
+	 */
+	public SearchResults(final Collection<I> newPageItems) {
+		this(null, 	// no filter
+			 0, 	// total items count
+			 0, 	// start position
+			 0, 	// requested number of items
+			 newPageItems);
+	}
+	/**
+	 * Constructor
 	 * @param newFilter
 	 * @param newTotalItemsCount
 	 * @param newStartPosition
@@ -117,6 +128,21 @@ public class SearchResults<F extends SearchFilter,
 			 newTotalItemsCount,
 			 newStartPosition,
 			 requestedNumberOfItems,
+			 pageItems.stream()
+					  .map(conversionFunction)
+					  .collect(Collectors.toList()));
+	}
+	/**
+	 * Constructor
+	 * @param pageItems
+	 * @param conversionFunction
+	 */
+	public <T> SearchResults(final Collection<T> pageItems,
+						 	 final Function<T,I> conversionFunction) {
+		this(null, 	// no filter
+			 0, 	// total items count
+			 0, 	// start position
+			 0, 	// requested number of items
 			 pageItems.stream()
 					  .map(conversionFunction)
 					  .collect(Collectors.toList()));

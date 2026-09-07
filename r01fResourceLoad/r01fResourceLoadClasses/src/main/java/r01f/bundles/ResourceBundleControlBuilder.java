@@ -177,7 +177,7 @@ public class ResourceBundleControlBuilder
     }
     public static ResourceBundleControl forLoadingDefinitionAt(final XMLPropertiesForApp xmlPropertiesForApp,
     														   final AppComponent component,final Path definitionPath) {
-    	PropertyLocation propLoc = new PropertyLocation(xmlPropertiesForApp.getAppCode(),component,definitionPath);
+    	PropertyLocation propLoc = new PropertyLocation(xmlPropertiesForApp.getAppCode().asAppCode(),component,definitionPath);
     	String id = propLoc.composeId();
     	ResourceBundleControl outCtrl = _resourceBundleControlCache.get(id);
     	if (outCtrl == null) {

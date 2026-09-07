@@ -133,9 +133,7 @@ public class UrlProtocol
 		if (host == null) return null;
 		return UrlProtocol.of(host.asString());
 	}
-	public static UrlProtocol valueOf(final String str) {
-		return UrlProtocol.of(str);
-	}
+	
 	public static UrlProtocol fromString(final String str) {
 		return UrlProtocol.of(str);
 	}

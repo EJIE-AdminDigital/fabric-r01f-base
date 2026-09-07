@@ -1,11 +1,11 @@
 package r01f.facets.builders;
 
-import r01f.facets.LangInDependentNamed.HasLangInDependentNamedFacet;
+import r01f.facets.HasLangInDependentName;
 import r01f.patterns.FactoryFrom;
 
 
 public class LanguageInDependentNamedBuilder<NEXT_BUILD_STEP,
-											 M extends HasLangInDependentNamedFacet> 
+											 M extends HasLangInDependentName> 
   	 extends FacetBuilderBase<NEXT_BUILD_STEP,M> {
 /////////////////////////////////////////////////////////////////////////////////////////
 //  CONSTRUCTOR

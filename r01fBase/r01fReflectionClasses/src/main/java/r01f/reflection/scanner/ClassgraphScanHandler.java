@@ -145,7 +145,7 @@ public class ClassgraphScanHandler
 		ClassInfoList classInfoList = _scanForTypesExtending(baseClass);
 		return classInfoList.loadClasses()
 							.stream()
-							.map(t -> (Class<? extends T >)t)	// force set
+							.map(t -> (Class<? extends T>)t)	// force set
 							.collect(Collectors.toUnmodifiableSet());
   	}
   	private <T> ClassInfoList _scanForTypesExtending(final Class<T> baseClass) {
@@ -163,7 +163,7 @@ public class ClassgraphScanHandler
 		ClassInfoList classInfoList = _scanForTypesExtendingOrImplementing(superTypeOrIface);
 		return classInfoList.loadClasses()
 							.stream()
-							.map(t -> (Class<? extends T >)t)	// force set
+							.map(t -> (Class<? extends T>)t)	// force set
 							.collect(Collectors.toUnmodifiableSet());
   	}
   	private <T> ClassInfoList _scanForTypesExtendingOrImplementing(final Class<T> baseClass) {

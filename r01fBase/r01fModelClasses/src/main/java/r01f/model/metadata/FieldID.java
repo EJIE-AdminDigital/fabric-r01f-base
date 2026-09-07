@@ -1,8 +1,8 @@
 package r01f.model.metadata;
 
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 import r01f.annotations.Immutable;
-import r01f.guids.OIDBaseMutable;
+import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallType;
 import r01f.types.summary.Summary;
 
@@ -16,17 +16,9 @@ import r01f.types.summary.Summary;
  */
 @Immutable
 @MarshallType(as="indexableFieldId")
-@NoArgsConstructor
-public final class FieldID
-	       extends OIDBaseMutable<String> {
+public record FieldID(@Getter String id)
+   implements OIDTyped<String> {
 
-	private static final long serialVersionUID = 8049806262539341650L;
-/////////////////////////////////////////////////////////////////////////////////////////
-//  
-/////////////////////////////////////////////////////////////////////////////////////////
-	public FieldID(final String oid) {
-		super(oid);
-	}
 	public static FieldID from(final FieldIDToken... tokens) {
 		StringBuilder sb = new StringBuilder();
 		for (int i=0; i < tokens.length; i++) {
@@ -35,13 +27,25 @@ public final class FieldID
 		}
 		return FieldID.forId(sb.toString());
 	}
+	public static FieldID from(final String id) {
+		return new FieldID(id);
+	}
+	public static FieldID forId(final String id) {
+		return new FieldID(id);
+	}
 	public static FieldID valueOf(final String s) {
 		return FieldID.forId(s);
 	}
 	public static FieldID fromString(final String s) {
 		return FieldID.forId(s);
 	}
-	public static FieldID forId(final String id) {
-		return new FieldID(id);
+	
+	@Override
+	public String asString() {
+		return this.id;
+	}
+	@Override
+	public String toString() {
+		return this.id;
 	}
 }

@@ -2,15 +2,15 @@ package r01f.facets.delegates;
 
 import java.util.Collection;
 
+import r01f.facets.HasLangDependentName;
 import r01f.facets.LangDependentNamed;
-import r01f.facets.LangDependentNamed.HasLangDependentNamedFacet;
 import r01f.locale.Language;
 
 /**
  * Encapsulates the {@link LangDependentNamed} behavior
  * @param <SELF_TYPE>
  */
-public class LangDependentNamedDelegate<SELF_TYPE extends HasLangDependentNamedFacet>
+public class LangDependentNamedDelegate<SELF_TYPE extends HasLangDependentName>
 	 extends FacetDelegateBase<SELF_TYPE>
   implements LangDependentNamed {
 

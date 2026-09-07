@@ -1,10 +1,10 @@
 package r01f.model.catalogable;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import r01f.annotations.Immutable;
-import r01f.guids.OIDBaseMutable;
-import r01f.guids.SuppliesOID;
+import r01f.guids.OID;
 import r01f.objectstreamer.annotations.MarshallType;
 
 /**
@@ -20,14 +20,8 @@ public abstract class CatalogableIDs {
 	 */
 	@Immutable
 	@MarshallType(as="catalogableObjectTypeId")
-	@NoArgsConstructor
-	public static final class CatalogableObjectTypeID
-					  extends OIDBaseMutable<String>
-			       implements SuppliesOID {
-		private static final long serialVersionUID = -2727859776371512718L;
-		public CatalogableObjectTypeID(final String oid) {
-			super(oid);
-		}
+	public record CatalogableObjectTypeID(@Getter String id)
+	   implements OID {
 		public static CatalogableObjectTypeID valueOf(final String s) {
 			return CatalogableObjectTypeID.forId(s);
 		}
@@ -39,6 +33,10 @@ public abstract class CatalogableIDs {
 		}
 		public static <E extends Enum<E>> CatalogableObjectTypeID from(final E enumVal) {
 			return CatalogableObjectTypeID.forId(enumVal.name());
+		}
+		@Override
+		public String asString() {
+			return this.getId();
 		}
 	}
 }

@@ -1,8 +1,8 @@
 package r01f.xmlproperties;
 
 import lombok.experimental.Accessors;
-import r01f.guids.CommonOIDs.AppCode;
-import r01f.guids.CommonOIDs.AppComponent;
+import r01f.guids.CommonOIDs.IsAppCode;
+import r01f.guids.CommonOIDs.IsAppComponent;
 import r01f.patterns.FactoryFrom;
 import r01f.properties.PropertiesForAppComponent;
 import r01f.types.Path;
@@ -39,7 +39,7 @@ public class XMLPropertiesForAppComponent
 /////////////////////////////////////////////////////////////////////////////////////////
 //	CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
-	public XMLPropertiesForAppComponent(final AppCode appCode,final AppComponent appComp,
+	public XMLPropertiesForAppComponent(final IsAppCode appCode,final IsAppComponent appComp,
 										final FactoryFrom<Path,XMLPropertyWrapper> xmlPropertiesWrapperFactory) {
 		super(appCode,appComp,
 			  xmlPropertiesWrapperFactory);

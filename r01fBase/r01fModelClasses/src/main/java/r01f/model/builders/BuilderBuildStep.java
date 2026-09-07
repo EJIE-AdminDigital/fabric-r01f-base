@@ -1,13 +1,11 @@
 package r01f.model.builders;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import r01f.model.PersistableModelObject;
 import r01f.patterns.IsBuilderStep;
 
 @Accessors(prefix="_")
-@RequiredArgsConstructor
 public class BuilderBuildStep<T> 
   implements IsBuilderStep {
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -17,6 +15,15 @@ public class BuilderBuildStep<T>
 	 * The {@link PersistableModelObject} instance that's being built
 	 */
 	@Getter protected final T _modelObject;
+/////////////////////////////////////////////////////////////////////////////////////////
+//	CONSTRUCTOR & BUILDER
+/////////////////////////////////////////////////////////////////////////////////////////
+	public BuilderBuildStep(final T modelObject) {
+		_modelObject = modelObject;
+	}
+	public static <T> BuilderBuildStep<T> create(final T modelObject) {
+		return new BuilderBuildStep<T>(modelObject);
+	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //  BUILD
 /////////////////////////////////////////////////////////////////////////////////////////

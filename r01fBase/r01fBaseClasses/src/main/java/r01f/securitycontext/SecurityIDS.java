@@ -3,22 +3,17 @@ package r01f.securitycontext;
 import java.io.Serializable;
 import java.util.HexFormat;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import r01f.annotations.Immutable;
 import r01f.guids.CommonOIDs.AppCode;
 import r01f.guids.CommonOIDs.IsRole;
-import r01f.guids.CommonOIDs.TokenBase;
-import r01f.guids.OIDBaseMutable;
+import r01f.guids.CommonOIDs.IsToken;
 import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
 import r01f.objectstreamer.annotations.MarshallType;
-import r01f.patterns.Memoized;
 import r01f.types.StringHex;
 import r01f.types.contact.EMail;
 import r01f.types.contact.IsPersonID;
@@ -26,28 +21,23 @@ import r01f.types.contact.PersonID;
 import r01f.types.contact.Phone;
 import r01f.util.types.Passwords;
 
+@NoArgsConstructor(access=AccessLevel.PRIVATE)
 public abstract class SecurityIDS {
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-	public static interface IsSecurityID
-					extends OIDTyped<String> {
+	public interface IsSecurityObjectID
+   		     extends OIDTyped<String> {
 		// just a marker interface
 	}
-	/**
-	 * Base for every oid objects
-	 */
-	@Immutable
-	@NoArgsConstructor
-	public static abstract class SecurityIDBase
-						 extends OIDBaseMutable<String>
-					  implements IsSecurityID {
-
-		private static final long serialVersionUID = 4162366466990455545L;
-
-		public SecurityIDBase(final String id) {
-			super(id);
+	
+	public interface IsIdentityBrokerObjectID
+	   	     extends IsSecurityObjectID {
+		// just a marker interface
+		@SuppressWarnings("unchecked")
+		public default <IDB extends IsIdentityBrokerObjectID>  IDB as(final Class<IDB> id) {
+			return (IDB)this;
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -55,34 +45,32 @@ public abstract class SecurityIDS {
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="securityId")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class SecurityID
-	     		      extends OIDBaseMutable<String>
-				   implements IsSecurityID {
-		private static final long serialVersionUID = -8145305261344081383L;
-
-		public SecurityID(final String oid) {
-			super(oid);
-		}
+	public record SecurityID(@Getter String id)
+	   implements IsSecurityObjectID {
 		public static SecurityID forId(final String id) {
 			return new SecurityID(id);
 		}
 		public static SecurityID valueOf(final String id) {
 			return new SecurityID(id);
 		}
+		public static SecurityID fromString(final String s) {
+			return SecurityID.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 	@Immutable
 	@MarshallType(as="securityToken")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class SecurityToken
-	     		      extends TokenBase {
+	public record SecurityToken(@Getter String id)
+	   implements IsToken {
 		private static final long serialVersionUID = -6056892755877680637L;
 
-		public SecurityToken(final String oid) {
-			super(oid);
-		}
 		public static SecurityToken from(final String id) {
 			return new SecurityToken(id);
 		}
@@ -92,23 +80,44 @@ public abstract class SecurityIDS {
 		public static SecurityToken valueOf(final String id) {
 			return new SecurityToken(id);
 		}
+		public static SecurityToken fromString(final String s) {
+			return SecurityToken.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	SECURITY PROVIDER
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
-	@MarshallType(as="loginId")
-	@NoArgsConstructor
-	public static class SecurityProviderID
-		 		extends SecurityIDBase {
+	public record SecurityProviderID(@Getter String id)
+	   implements IsSecurityObjectID {
 
-		private static final long serialVersionUID = -3633101002845530783L;
-
-		public SecurityProviderID(final String id) {
-			super(id);
+		public static SecurityProviderID from(final String id) {
+			return new SecurityProviderID(id);
 		}
 		public static SecurityProviderID forId(final String idAsString) {
 			return new SecurityProviderID(idAsString);
+		}
+		public static SecurityProviderID valueOf(final String id) {
+			return new SecurityProviderID(id);
+		}
+		public static SecurityProviderID fromString(final String s) {
+			return SecurityProviderID.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 
 		public static final SecurityProviderID USER_PASSWORD = SecurityProviderID.forId("usrpwd");
@@ -120,6 +129,8 @@ public abstract class SecurityIDS {
 		public static final SecurityProviderID PAIRED_PHONE = SecurityProviderID.forId("pairedphone");
 		public static final SecurityProviderID REGISTERED_DEVICE = SecurityProviderID.forId("registered-device");
 		public static final SecurityProviderID API_KEY = SecurityProviderID.forId("api-key");
+		public static final SecurityProviderID IDENTITY_BROKER = SecurityProviderID.forId("id-broker");
+		
 		public static final SecurityProviderID SYSTEM = SecurityProviderID.forId("system");		// ie: app login
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -127,15 +138,11 @@ public abstract class SecurityIDS {
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="userGroupCode")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class UserGroupCode
-	     		      extends OIDBaseMutable<String> {
+	public record UserGroupCode(@Getter String id)
+	   implements IsSecurityObjectID {
 
-		private static final long serialVersionUID = -8145305261344081383L;
-
-		public UserGroupCode(final String oid) {
-			super(oid);
+		public static UserGroupCode from(final String id) {
+			return new UserGroupCode(id);
 		}
 		public static UserGroupCode forId(final String id) {
 			return new UserGroupCode(id);
@@ -143,17 +150,26 @@ public abstract class SecurityIDS {
 		public static UserGroupCode valueOf(final String id) {
 			return UserGroupCode.forId(id);
 		}
+		public static UserGroupCode fromString(final String s) {
+			return UserGroupCode.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
+
 	}
 	@Immutable
 	@MarshallType(as="userRole")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class UserRole
-	     		      extends OIDBaseMutable<String>
-				   implements IsRole {
-		private static final long serialVersionUID = 4547730052420260613L;
-		public UserRole(final String oid) {
-			super(oid);
+	public record UserRole(@Getter String id)
+	   implements IsSecurityObjectID,
+				  IsRole {
+		public static UserRole from(final String id) {
+			return new UserRole(id);
 		}
 		public static UserRole forId(final String id) {
 			return new UserRole(id);
@@ -161,30 +177,30 @@ public abstract class SecurityIDS {
 		public static UserRole valueOf(final String id) {
 			return new UserRole(id);
 		}
+		public static UserRole fromString(final String s) {
+			return UserRole.forId(s);
+		}
 		public static UserRole named(final String id) {
 			return new UserRole(id);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 		public static final UserRole MASTER = UserRole.named("MASTER");
 		public static final UserRole HORIZONTAL_ADMIN = UserRole.named("HORIZONTAL_ADMIN");
 	}
 	@Immutable
 	@MarshallType(as="password")
-	@EqualsAndHashCode(callSuper=true)
-	@Accessors(prefix="_")
-	@NoArgsConstructor
-	public static final class Password
-	     			  extends OIDBaseMutable<String> {
+	public record Password(@Getter String id)
+	   implements IsSecurityObjectID {
 
-		private static final long serialVersionUID = -4110070527400569196L;
-
-		private final transient Memoized<PasswordHash> _hash = new Memoized<>() {
-																		@Override
-																		public PasswordHash supply() {
-																			return PasswordHash.fromPassword(Password.this);
-																		}
-															   };
-		public Password(final String pwd) {
-			super(pwd);
+		public static Password from(final String id) {
+			return new Password(id);
 		}
 		public static Password forId(final String id) {
 			return new Password(id);
@@ -192,8 +208,19 @@ public abstract class SecurityIDS {
 		public static Password valueOf(final String id) {
 			return Password.forId(id);
 		}
+		public static Password fromString(final String s) {
+			return Password.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 		public PasswordHash hash() {
-			return _hash.get();
+			return PasswordHash.fromPassword(Password.this);
 		}
 		public char[] toCharArray() {
 			return this.asString().toCharArray();
@@ -229,20 +256,27 @@ public abstract class SecurityIDS {
 	}
 	@Immutable
 	@MarshallType(as="passwordHash")
-	@EqualsAndHashCode(callSuper=true)
-	@NoArgsConstructor
-	public static final class PasswordHash
-	     		      extends OIDBaseMutable<String> {
-		private static final long serialVersionUID = -4102923783713904433L;
-
-		public PasswordHash(final String oid) {
-			super(oid);
+	public record PasswordHash(@Getter String id)
+	   implements OIDTyped<String> {
+		public static PasswordHash from(final String id) {
+			return new PasswordHash(id);
 		}
 		public static PasswordHash forId(final String id) {
 			return new PasswordHash(id);
 		}
 		public static PasswordHash valueOf(final String id) {
 			return PasswordHash.forId(id);
+		}
+		public static PasswordHash fromString(final String s) {
+			return PasswordHash.forId(s);
+		}
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 		public static PasswordHash fromHash(final String hash) {
 			return PasswordHash.forId(hash);
@@ -268,31 +302,28 @@ public abstract class SecurityIDS {
 	}
 	@Immutable
 	@MarshallType(as="userAndPassword")
-	@Accessors(prefix="_")
-	@NoArgsConstructor @AllArgsConstructor
-	public static final class LoginAndPassword
-			       implements Serializable {
-		private static final long serialVersionUID = 1549566021138557737L;
-
-		@MarshallField(as="loginId",
-					   whenXml=@MarshallFieldAsXml(attr=true))
-		@Getter @Setter private LoginID _loginId;
-
-		@MarshallField(as="password",
-					   whenXml=@MarshallFieldAsXml(attr=true))
-		@Getter @Setter private Password _password;
+	public record LoginAndPassword(@MarshallField(as="loginId",
+					   							  whenXml=@MarshallFieldAsXml(attr=true))
+								   @Getter LoginID loginId,
+								   @MarshallField(as="password",
+								   				  whenXml=@MarshallFieldAsXml(attr=true))
+								   @Getter Password password)
+	   implements Serializable {
+		public static LoginAndPassword from(final LoginID loginId,final Password password) {
+			return new LoginAndPassword(loginId,
+									   password);
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 // 	ID's for data, login and authorizations of an user
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="loginId")
-	@NoArgsConstructor
-	public static final class LoginID
-					  extends SecurityIDBase {
-		private static final long serialVersionUID = -2959560256371887489L;
-		public LoginID(final String oid) {
-			super(oid);
+	public record LoginID(@Getter String id)
+	   implements IsSecurityObjectID {
+
+		public static LoginID from(final String id) {
+			return new LoginID(id);
 		}
 		public static LoginID forId(final String id) {
 			return new LoginID(id);
@@ -342,6 +373,15 @@ public abstract class SecurityIDS {
 		public boolean isSystem() {
 			return this.is(SYSTEM);
 		}
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
+		}
 
 		public boolean isEMail() {
 			EMail email = EMail.of(this.asString());
@@ -361,21 +401,53 @@ public abstract class SecurityIDS {
 		public AppCode asAppCode() {
 			return AppCode.forId(this.getId());
 		}
+		
+		public IsIdentityBrokerObjectID asIdentityProviderSecurityId() {
+			return new IsIdentityBrokerObjectID() {				
+						private static final long serialVersionUID = -8408648918753083953L;
+						@Override
+						public String getId() {					
+							return LoginID.this.id();
+						};
+						@Override
+						public String toString() {					
+							return LoginID.this.id();
+						}
+						@Override
+						public String asString() {
+							return LoginID.this.id();
+						}};
+						
+		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="userLoginEntryID")
-	@NoArgsConstructor
-	public static final class UserLoginEntryID
-					  extends SecurityIDBase {
-		private static final long serialVersionUID = -5890084484482886799L;
-		public UserLoginEntryID(final String oid) {
-			super(oid);
+	public record UserLoginEntryID(@Getter String id)
+  	   implements IsSecurityObjectID {
+		
+		public static UserLoginEntryID from(final String id) {
+			return new UserLoginEntryID(id);
 		}
 		public static UserLoginEntryID forId(final String id) {
 			return new UserLoginEntryID(id);
+		}
+		public static UserLoginEntryID valueOf(final String id) {
+			return new UserLoginEntryID(id);
+		}
+		public static UserLoginEntryID fromString(final String id) {
+			return new UserLoginEntryID(id);
+		}
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 
 		public static final UserLoginEntryID NOT_CONFIRMED = new UserLoginEntryID("NOT_CONFIRMED");
@@ -421,15 +493,28 @@ public abstract class SecurityIDS {
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="authorizationCode")
-	@NoArgsConstructor
-	public static final class AuthorizationCode
-					  extends SecurityIDBase {
-		private static final long serialVersionUID = 962520569656270232L;
-		public AuthorizationCode(final String oid) {
-			super(oid);
+	public record AuthorizationCode(@Getter String id)
+	   implements IsSecurityObjectID {
+		public static AuthorizationCode from(final String id) {
+			return new AuthorizationCode(id);
 		}
 		public static AuthorizationCode forId(final String id) {
 			return new AuthorizationCode(id);
+		}
+		public static AuthorizationCode valueOf(final String id) {
+			return new AuthorizationCode(id);
+		}
+		public static AuthorizationCode fromString(final String id) {
+			return new AuthorizationCode(id);
+		}
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -437,15 +522,28 @@ public abstract class SecurityIDS {
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Immutable
 	@MarshallType(as="securityGroup")
-	@NoArgsConstructor
-	public static final class SecurityGroup
-					  extends SecurityIDBase {
-		private static final long serialVersionUID = -4252322371800429748L;
-		public SecurityGroup(final String oid) {
-			super(oid);
+	public record SecurityGroup(@Getter String id)
+	   implements IsSecurityObjectID {
+		public static SecurityGroup from(final String id) {
+			return new SecurityGroup(id);
 		}
 		public static SecurityGroup forId(final String id) {
 			return new SecurityGroup(id);
+		}
+		public static SecurityGroup valueOf(final String id) {
+			return new SecurityGroup(id);
+		}
+		public static SecurityGroup fromString(final String id) {
+			return new SecurityGroup(id);
+		}
+		
+		@Override
+		public String asString() {
+			return this.id;
+		}
+		@Override
+		public String toString() {
+			return this.id;
 		}
 	}
 }

@@ -21,7 +21,7 @@ import com.google.common.collect.Sets;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.CommonOIDs.AppCode;
+import r01f.guids.CommonOIDs.IsAppCode;
 import r01f.internal.R01F;
 import r01f.internal.R01FAppCodes;
 import r01f.objectstreamer.MarshallerModuleBase.JacksonSerializerAndDeserializerPair;
@@ -64,13 +64,13 @@ public abstract class MarshallerBuilder
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-	public static MarshallerBuilderModulesStep findTypesToMarshallAt(final AppCode... appCodes) {
+	public static MarshallerBuilderModulesStep findTypesToMarshallAt(final IsAppCode... appCodes) {
 		return MarshallerBuilder.findTypesToMarshallAtJavaPackages(appCodes != null ? Stream.of(appCodes)
 																							.map(JavaPackage.APP_CODE_TO_JAVA_PACKAGE)
 																							.collect(Collectors.toSet())
 																				    : Sets.<JavaPackage>newLinkedHashSet());
 	}
-	public static MarshallerBuilderModulesStep findTypesToMarshallAt(final Collection<AppCode> appCodes) {
+	public static MarshallerBuilderModulesStep findTypesToMarshallAt(final Collection<IsAppCode> appCodes) {
 		return MarshallerBuilder.findTypesToMarshallAtJavaPackages(appCodes != null ? appCodes.stream()
 																							  .map(JavaPackage.APP_CODE_TO_JAVA_PACKAGE)
 																							  .collect(Collectors.toSet())

@@ -24,4 +24,7 @@ import r01f.spring.boot.SpringBootAutoconfigurationNames;
 public @interface SpringBootFabricApplication {
     @AliasFor(annotation = SpringBootApplication.class)
     String[] scanBasePackages() default {};
+    
+    @AliasFor(annotation = SpringBootApplication.class, attribute = "exclude")
+    Class<?>[] exclude() default {};
 }

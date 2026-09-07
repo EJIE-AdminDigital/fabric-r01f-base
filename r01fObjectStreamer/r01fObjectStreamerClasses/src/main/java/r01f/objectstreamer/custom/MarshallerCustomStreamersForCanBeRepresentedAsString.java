@@ -127,7 +127,7 @@ abstract class MarshallerCustomStreamersForCanBeRepresentedAsString {
 		 */
 		protected abstract SELF_TYPE cloneFrom(final Class<T> objType,final FactoryFromType<T> objFactory,final BeanProperty property);
 
-		@Override @SuppressWarnings("unchecked")
+		@Override 
 		public ValueDeserializer<?> createContextual(final DeserializationContext ctxt,
 													 final BeanProperty property) {
 			return _property == property ? this	// collections

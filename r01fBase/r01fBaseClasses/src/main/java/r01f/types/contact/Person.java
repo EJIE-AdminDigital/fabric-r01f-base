@@ -46,9 +46,9 @@ public class Person<PERSONID extends IsPersonID>
 	@Override
 	public int hashCode() {
 		return Objects.hashCode(_id,
-								_name,_surname1,_surname2,
+								this.getFullName(),
 								_salutation,_preferredLang,
 								_gender,
 								_details);
-	}
+	}	
 }

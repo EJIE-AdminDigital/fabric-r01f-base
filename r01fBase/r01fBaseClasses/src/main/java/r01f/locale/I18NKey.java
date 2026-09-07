@@ -1,27 +1,28 @@
 package r01f.locale;
 
+import lombok.Getter;
 import r01f.guids.OID;
-import r01f.guids.OIDBaseMutable;
+import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallType;
-import r01f.patterns.Memoized;
 import r01f.types.CanBeRepresentedAsString;
 
 /**
  * A view key
  */
 @MarshallType(as="i18nKey")
-public class I18NKey
-	 extends OIDBaseMutable<String> {
-
-	private static final long serialVersionUID = 7659549152655411096L;
+public record I18NKey(@Getter String id)
+   implements OIDTyped<String> {
 /////////////////////////////////////////////////////////////////////////////////////////
-//
+//	
 /////////////////////////////////////////////////////////////////////////////////////////
-	public I18NKey(final String oid) {
-		super(oid);
-	}
 	public static I18NKey named(final String id) {
 		return new I18NKey(id);
+	}
+	public static I18NKey valueOf(final String str) {
+		return new I18NKey(str);
+	}
+	public static I18NKey fromString(final String s) {
+		return I18NKey.forId(s);
 	}
 	/**
 	 * Dirty trick used when the I18NKey is NOT really a key but a literal string  
@@ -43,16 +44,23 @@ public class I18NKey
 	public static <O extends OID> I18NKey forId(final O oid) {
 		return new I18NKey(oid.toString());
 	}
-	public static I18NKey valueOf(final String id) {
-		return I18NKey.forId(id);
+	@Override
+	public String toString() {
+		return this.id;
 	}
+	@Override
+	public String asString() {
+		return this.getId();
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
 	@Override
 	public boolean is(final String id) {
 		return this.asString().equals(id);
 	}
-	private final transient Memoized<Boolean> _isLiteral = Memoized.using(() -> this.getId() != null && this.getId().startsWith("$!"));
 	public boolean isLiteral() {
-		return _isLiteral.get();
+		return this.getId() != null && this.getId().startsWith("$!");
 	}
 	public boolean isNOTLiteral() {
 		return !this.isLiteral();
