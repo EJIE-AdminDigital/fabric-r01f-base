@@ -1,97 +1,69 @@
 package r01f.types.money;
 
-import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Locale;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Accessors;
-import r01f.comparable.ComparableObject;
 import r01f.debug.Debuggable;
+import r01f.enums.EnumExtended;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
-import r01f.util.comparable.ComparableObjectUtils;
 
 /**
  *  [ Working-with-monetary-amounts ]
- *	 --------------------------------
+ *	--------------------------------
  *	The amount of money, in the smallest denomination of the currency indicated by currency.
- *		For example, when currency is USD or EURO, amount is in cents (this "cents" are indicated as the 'base ' - cents or units -)
+ *	For example, when currency is USD or EURO, amount is in cents (this "cents" are indicated as the 'base ' - cents or units -)
  *	Monetary amounts can be positive or negative
  *	// see f.e https://developer.squareup.com/docs/build-basics/common-data-types/working-with-monetary-amounts
  */
-@NoArgsConstructor
-@Accessors(prefix="_")
-public class Money 
-  implements Serializable,
-			 Debuggable,
-			 ComparableObject<Money>,Comparable<Money> {
+public record Money(@MarshallField(as="amount",
+				   				   whenXml=@MarshallFieldAsXml(attr=true))
+					@Getter long amount,
 	
-	private static final long serialVersionUID = 3057858118010148006L;	
-/////////////////////////////////////////////////////////////////////////////////////////
-//	 FIELDS
-////////////////////////////////////////////////////////////////////////////////////////
-	@MarshallField(as="amount",
-				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private long _amount;
-	
-	@MarshallField(as="base",
-				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private MoneyBase _base;
-	
-	@MarshallField(as="currency",
-				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private Currency _currency;	// ISO 4217 format
-	
-/////////////////////////////////////////////////////////////////////////////////////////
-// CONSTRUCTOR
-/////////////////////////////////////////////////////////////////////////////////////////
-	public Money(final long amount,final MoneyBase base,final Currency currency) {
-		_amount = amount;
-		_base = base;
-		_currency = currency;
-	}
-	
+					@MarshallField(as="base",
+								   whenXml=@MarshallFieldAsXml(attr=true))
+					@Getter MoneyBase base,
+					
+					@MarshallField(as="currency",
+								   whenXml=@MarshallFieldAsXml(attr=true))
+				    @Getter Currency currency)	// ISO 4217 format)				 
+   implements Comparable<Money>,
+			  Debuggable {
 /////////////////////////////////////////////////////////////////////////////////////////
 // 	OPERATION
 /////////////////////////////////////////////////////////////////////////////////////////
-	public enum MoneyOperation {
+	public enum MoneyOperation 
+	 implements EnumExtended<MoneyOperation> {
 		ADD,
 		SUBTRACT
 	}
-	
 /////////////////////////////////////////////////////////////////////////////////////////
 // 	MONEY BASE
 /////////////////////////////////////////////////////////////////////////////////////////
-	public enum MoneyBase {
+	public enum MoneyBase 
+	 implements EnumExtended<MoneyBase> {
 		CENTS,
 		UNITS
 	}
-	
 /////////////////////////////////////////////////////////////////////////////////////////
 // 	UTILITY
 /////////////////////////////////////////////////////////////////////////////////////////
 	public long getAmountInCents() {
-		if (MoneyBase.UNITS.equals(_base)) {
-			return _amount * 100;
-		}
-		return _amount;
+		if (MoneyBase.UNITS.equals(this.base)) return this.amount * 100;
+		return this.amount;
 
 	}
 	public double getAmountInUnits() {
-		if (MoneyBase.UNITS.equals(_base)) {
-			return _amount;
-		}
-		return _amount / 100D;
+		if (MoneyBase.UNITS.equals(this.base)) return this.amount;
+		return this.amount / 100D;
 
 	}
 	public String getAmountFormatted(final Locale currentLocale) {
 		NumberFormat formatter = NumberFormat.getCurrencyInstance(currentLocale);
-		if (_currency!=null && _base!=null) {
-			formatter.setCurrency(_currency);
+		if (this.currency!=null && this.base!=null) {
+			formatter.setCurrency(this.currency);
 			return formatter.format(getAmountInUnits());
 		}
 		return formatter.format(0D);
@@ -99,33 +71,35 @@ public class Money
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-	@Override
-	public boolean isSameObject(final Money other) {
-		return  _amount == other.getAmount()
-						 && ComparableObjectUtils.compare(_base,other.getBase())
-						 && ComparableObjectUtils.compare(_currency,other.getCurrency());
+	public boolean is(final Money other) {
+		return this.equals(other);
 	}
+	public boolean isNOT(final Money other) {
+		return !this.equals(other);
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	COMPARABLE
+/////////////////////////////////////////////////////////////////////////////////////////	
 	@Override
 	public int compareTo(final Money o) {	
-	    if (o == null) {
-	        return 1;
-	    }	  
-	    if (this.isSameObject(o)) {
-	        return 0;
-	    } else {
-	    	return 1;
-	    }
-
-	  
+	    if (o == null) return 1;
+	    if (this.currency.equals(o.currency)) throw new IllegalArgumentException("Cannot compare money with different currencies: " + this.currency + " vs " + o.currency);
+	    
+	    Long thisAmountInCents = this.getAmountInCents();
+	    Long otherAmountInCents = o.getAmountInCents();
+	    return thisAmountInCents.compareTo(otherAmountInCents);
 	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	DEBUG
+/////////////////////////////////////////////////////////////////////////////////////////	
 	@Override
 	public CharSequence debugInfo() {
 		StringBuilder sb = new StringBuilder("money  >> ");
-		sb.append(_amount)
+		sb.append(this.amount)
 		  .append(" ")
-		  .append(_currency.getDisplayName() )
-		  .append("(" + _currency.getSymbol() + ")  ")
-		  .append(" [" + _base + "]  ");
+		  .append(this.currency.getDisplayName() )
+		  .append("(" + this.currency.getSymbol() + ")  ")
+		  .append(" [" + this.base + "]  ");
 		return sb.toString();
 	}
 	

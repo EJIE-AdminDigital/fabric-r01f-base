@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import com.google.common.collect.Lists;
 
-import r01f.guids.CommonOIDs.AppCode;
+import r01f.oids.CommonOIDs.AppCode;
 import r01f.services.ids.ServiceIDs.ClientApiAppCode;
 import r01f.services.ids.ServiceIDs.CoreAppCode;
 import r01f.util.types.collections.CollectionUtils;

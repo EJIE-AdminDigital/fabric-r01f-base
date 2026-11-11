@@ -1,9 +1,9 @@
 package r01f.model.metadata;
 
 import r01f.exceptions.Throwables;
-import r01f.guids.OID;
 import r01f.locale.LanguageTexts;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OID;
 
 @MarshallType(as="metaDataConfigForOIDField")
 public class FieldMetaDataForOID

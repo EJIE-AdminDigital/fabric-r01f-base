@@ -19,7 +19,7 @@ import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
 import r01f.objectstreamer.annotations.MarshallFrom;
 import r01f.objectstreamer.annotations.MarshallType;
-import r01f.securitycontext.SecurityIDS.LoginID;
+import r01f.oids.SecurityIDs.LoginID;
 import r01f.types.CanBeRepresentedAsString;
 import r01f.types.Path;
 import r01f.util.types.Strings;

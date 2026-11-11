@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.OID;
 import r01f.locale.Language;
 import r01f.model.ModelObject;
 import r01f.model.metadata.FieldID;
@@ -36,8 +35,10 @@ import r01f.model.search.query.EqualsQueryClause;
 import r01f.model.search.query.QueryClause;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
+import r01f.objectstreamer.annotations.MarshallIgnore;
+import r01f.oids.OID;
+import r01f.oids.SecurityIDs.LoginID;
 import r01f.objectstreamer.annotations.MarshallIgnoredField;
-import r01f.securitycontext.SecurityIDS.LoginID;
 import r01f.types.Range;
 import r01f.util.types.collections.CollectionUtils;
 import r01f.util.types.collections.Lists;
@@ -216,7 +217,8 @@ public abstract class SearchFilterForModelObjectBase<SELF_TYPE extends SearchFil
 	 * @param modelObjTypes
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+    @MarshallIgnore
+    @SuppressWarnings("unchecked")
 	public SELF_TYPE setModelObjectTypesToFilterBy(final Class<? extends ModelObject>... modelObjTypes) {
 		Collection<Class<? extends ModelObject>> colTypes = Sets.newLinkedHashSet(Lists.newArrayList(modelObjTypes));
 		this.setModelObjectTypesToBeFiltered(colTypes);

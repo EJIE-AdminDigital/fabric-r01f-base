@@ -1,6 +1,11 @@
 package r01f.rest.resources.delegates;
 
-
 public interface RESTDelegate { 
-	// just a marker interface
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
+	@SuppressWarnings("unchecked")
+	public default <D extends RESTDelegate> D delegateAs(final Class<D> delegate) {
+		return (D)this;
+	}
 }

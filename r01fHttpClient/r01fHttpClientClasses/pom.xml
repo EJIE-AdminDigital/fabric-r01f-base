@@ -77,6 +77,12 @@
 			<version>${apache-http-mime.version}</version>
 		</dependency>
 		-->
+		<!-- (just) jakarta.Inject annotation-->
+		<dependency>
+			<groupId>r01.fabric.base.di</groupId>
+			<artifactId>r01fDIClasses</artifactId>
+			<version>${revision}</version>
+		</dependency>
 	</dependencies>
 
 </project>

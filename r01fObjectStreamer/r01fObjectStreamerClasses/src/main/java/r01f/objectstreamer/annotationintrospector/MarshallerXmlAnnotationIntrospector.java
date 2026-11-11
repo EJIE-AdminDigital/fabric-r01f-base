@@ -209,7 +209,7 @@ public class MarshallerXmlAnnotationIntrospector
 //	General member (field, method/constructor) annotations
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
-	public PropertyName findWrapperName(final MapperConfig<?> config, final Annotated ann) {
+	public PropertyName findWrapperName(final MapperConfig<?> config,final Annotated ann) {
 		return _findName(config,ann,
 						 MarshallerXmlNameFor.PROPERTY_WRAPPER);
 	}
@@ -242,51 +242,54 @@ public class MarshallerXmlAnnotationIntrospector
 	}
 	private PropertyName _findName(final MapperConfig<?> config,final Annotated ann,
 								   final MarshallerXmlNameFor whatFor) {
-		if (ann instanceof AnnotatedMethod ) return null;
+		if (ann instanceof AnnotatedMethod) return null;
 
 		PropertyName outName = null;
 
 		// [1] - Use @MarshallField if it's a collection-like field or type, see if an item name is set
 		// 1.1 - Type level
 		if (ann instanceof AnnotatedClass
-		 && ann.hasAnnotation(MarshallField.class)) { // do NOT move!! (problem with aspects inter-type injected fields)) {
+		 && ann.hasAnnotation(MarshallType.class)) { // do NOT move!! (problem with aspects inter-type injected fields)) {
 
 			MarshallType mt = ann.getAnnotation(MarshallType.class);
-
+			
 			outName = Strings.isNullOrEmpty(mt.namespace()) ? new PropertyName(mt.as())
 														    : new PropertyName(mt.as(),mt.namespace());
 		}
 		// 1.2 - Properties level
-		else if (ann instanceof AnnotatedField
+		else if ((ann instanceof AnnotatedField 
+				  || 
+				  ann instanceof AnnotatedParameter)	// records: the constructor parameters are annotated with @MarshallField
 			  && ann.hasAnnotation(MarshallField.class)) {	// do NOT move!! (problem with aspects inter-type injected fields)
 
-			MarshallField fm = ann.getAnnotation(MarshallField.class);
+			MarshallField mf = ann.getAnnotation(MarshallField.class);
 
 			if (ann.getType().isCollectionLikeType()
 			 || ann.getType().isArrayType()) {
 				// collection wrapper
 				if (whatFor ==  MarshallerXmlNameFor.PROPERTY_WRAPPER) {
-					if (fm.whenCollectionLike() != null
-					 && fm.whenCollectionLike().useWrapping() == false) {
+					if (mf.whenCollectionLike() != null
+					 && mf.whenCollectionLike().useWrapping() == false) {
 						outName = PropertyName.NO_NAME;		// DO NOT WRAP
 					}
-					else if (fm.whenXml() != null
-						  && fm.whenXml().asParentElementValue() == true) {
+					else if (mf.whenXml() != null
+						  && mf.whenXml().asParentElementValue() == true) {
 						outName = PropertyName.NO_NAME;		// DO NOT WRAP
 					}
 					else {
-						outName = new PropertyName(fm.as());// WRAP
+						outName = new PropertyName(mf.as());// WRAP
 					}
 				// collection's items
 				} else if (whatFor == MarshallerXmlNameFor.PROPERTY_SERIALIZATION
 						|| whatFor == MarshallerXmlNameFor.PROPERTY_DESERIALIZATION) {
-					if (fm.whenXml() != null
-						&& !MarshallField.MARKER_FOR_DEFAULT.equals(fm.whenXml().collectionElementName())) {
+					if (mf.whenXml() != null
+					 && !MarshallField.MARKER_FOR_DEFAULT.equals(mf.whenXml().collectionElementName())) {
 						// annotated with @MarshallField and explicitly setting the collection element names
 						// 		@MarshallField(as="wrapper")
 						//				   	   whenXml=@MarshallXmlField(collectionElementName="item"))
 						//		@Getter private Collection<MyType> _items;
-						outName = PropertyName.construct(fm.whenXml().collectionElementName());
+						outName = PropertyName.construct(mf.whenXml()
+														   .collectionElementName());
 					} else {
 						// not explicitly setting the collection element names: use the type name set at the collection's items
 						JavaType contentType = ann.getType().getContentType();

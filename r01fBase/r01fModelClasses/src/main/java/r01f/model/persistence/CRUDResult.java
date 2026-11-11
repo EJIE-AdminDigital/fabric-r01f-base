@@ -32,4 +32,13 @@ public interface CRUDResult<T>
 		 && this.asCRUDError().wasBecauseClientRequestedEntityWasNOTFound()) return null;
 		return this.getOrThrow();
 	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////	
+	public static <T extends CRUDResult<T>> boolean hasSucceeded(final CRUDResult<T> res) {
+		return res != null && res.hasSucceeded();
+	}
+	public static <T extends CRUDResult<T>> boolean hasFailed(final CRUDResult<T> res) {
+		return res != null && res.hasFailed();
+	}
 }

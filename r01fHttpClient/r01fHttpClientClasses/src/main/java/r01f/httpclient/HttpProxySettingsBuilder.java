@@ -15,9 +15,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import r01f.exceptions.Throwables;
+import r01f.oids.SecurityIDs.LoginID;
+import r01f.oids.SecurityIDs.Password;
 import r01f.patterns.IsBuilder;
-import r01f.securitycontext.SecurityIDS.LoginID;
-import r01f.securitycontext.SecurityIDS.Password;
 import r01f.types.url.Host;
 import r01f.xmlproperties.XMLPropertiesForAppComponent;
 

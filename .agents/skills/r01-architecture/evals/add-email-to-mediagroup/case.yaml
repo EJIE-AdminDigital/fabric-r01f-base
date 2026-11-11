@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: add-email-to-mediagroup
+expected_outcome: |
+  OG10MediaGroup gets a @MarshallField _email with @Getter @Setter; no DB column is added since no finder uses it (or the report justifies one); the mock factory may set it; the report says which layers did not need changes and why.

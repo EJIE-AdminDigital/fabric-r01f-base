@@ -7,8 +7,8 @@ import com.google.common.collect.Maps;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import r01f.guids.CommonOIDs.Environment;
 import r01f.internal.Env;
+import r01f.oids.CommonOIDs.Environment;
 
 /**
  * Creates a holder type for a property's values by environment

@@ -26,7 +26,6 @@ public class RESTDateParam {
 //	CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
 	public RESTDateParam(final String dateMillisStr) {
-		Long millis = Long.parseLong(dateMillisStr);
 		_theDate = DateTimeMarshaller.forUnMarshallingFrom(dateMillisStr)
 									 .asInstantAsummingISO8601OrEPOCHMillis()
 									 .orElse(null);

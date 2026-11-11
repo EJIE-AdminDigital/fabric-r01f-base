@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.CommonOIDs.IsAppComponent;
+import r01f.oids.CommonOIDs.IsAppComponent;
 import r01f.properties.PropertiesForApp.PropertiesAppComponentPropertyCacheStats;
 import r01f.types.Path;
 import r01f.xmlproperties.XMLPropertiesForAppComponentAccessor;

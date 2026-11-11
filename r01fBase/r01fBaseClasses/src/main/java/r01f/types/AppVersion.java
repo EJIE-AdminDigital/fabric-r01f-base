@@ -6,10 +6,10 @@ import java.util.regex.Pattern;
 
 import lombok.Getter;
 import r01f.annotations.Immutable;
-import r01f.guids.OID;
-import r01f.guids.VersionID;
 import r01f.objectstreamer.annotations.MarshallIgnoredField;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OID;
+import r01f.oids.VersionID;
 import r01f.patterns.Memoized;
 import r01f.util.types.Strings;
 

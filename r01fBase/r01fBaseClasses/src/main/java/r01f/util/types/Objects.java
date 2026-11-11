@@ -79,7 +79,8 @@ public class Objects {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	EQUAL
 /////////////////////////////////////////////////////////////////////////////////////////
-	public static <T> boolean areEqual(final T o1,final T o2,
+////////// --- OBJECTS
+    public static <T> boolean areEqual(final T o1,final T o2,
 								   	   final BiFunction<T,T,Boolean> eqsFunc) {
 		return o1 == o2 ? true
 						: o1 != null && o2 != null
@@ -88,6 +89,12 @@ public class Objects {
 											 : o2 != null ? false
 												   		  : true;	// both null
 	}
+	public static <T> boolean areNOTEqual(final T o1,final T o2,
+								   	   	  final BiFunction<T,T,Boolean> eqsFunc) {
+		return !Objects.areEqual(o1,o2,
+								 eqsFunc);
+	}
+////////// --- collections	
 	public static <T> boolean areEqual(final Collection<T> c1,final Collection<T> c2,
 									   final BiFunction<T,T,Boolean> eqsFunc) {
 		if (c1 == c2) return true;
@@ -141,6 +148,12 @@ public class Objects {
 		}
 		return count;
 	}
+	public static <T> boolean areNOTEqual(final Collection<T> c1,final Collection<T> c2,
+									   	  final BiFunction<T,T,Boolean> eqsFunc) {
+		return !Objects.areEqual(c1,c2,
+								 eqsFunc);
+	}
+////////// --- MAPS	
 	public static <K,V> boolean areEqual(final Map<K,V> m1,final Map<K,V> m2,
 									     final BiFunction<K,K,Boolean> keyEqsFunc,
 									     final BiFunction<V,V,Boolean> valueEqsFunc) {
@@ -160,6 +173,13 @@ public class Objects {
 											 valueEqsFunc);
 
 		return keysEqs && valuesEqs;
+	}
+	public static <K,V> boolean areNOTEqual(final Map<K,V> m1,final Map<K,V> m2,
+									     	final BiFunction<K,K,Boolean> keyEqsFunc,
+									     	final BiFunction<V,V,Boolean> valueEqsFunc) {
+		return !Objects.areEqual(m1,m2,
+								 keyEqsFunc,
+								 valueEqsFunc);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	HASH

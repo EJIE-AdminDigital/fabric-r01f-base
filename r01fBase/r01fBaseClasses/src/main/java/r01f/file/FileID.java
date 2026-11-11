@@ -1,6 +1,6 @@
 package r01f.file;
 
-import r01f.guids.OID;
+import r01f.oids.OID;
 import r01f.types.Path;
 
 /**

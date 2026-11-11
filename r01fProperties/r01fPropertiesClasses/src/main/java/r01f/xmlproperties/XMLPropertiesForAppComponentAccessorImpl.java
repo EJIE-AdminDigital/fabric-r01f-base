@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.CommonOIDs.IsAppComponent;
+import r01f.oids.CommonOIDs.IsAppComponent;
 import r01f.types.Path;
 
 @Slf4j

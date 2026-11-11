@@ -3,11 +3,11 @@ package r01f.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import r01f.guids.OID;
-import r01f.guids.PersistableObjectID;
-import r01f.guids.PersistableObjectOID;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
+import r01f.oids.OID;
+import r01f.oids.PersistableObjectID;
+import r01f.oids.PersistableObjectOID;
 
 @Accessors(prefix="_")
 public abstract class PersistableModelObjectWithIDBase<O extends PersistableObjectOID,I extends PersistableObjectID<O>,

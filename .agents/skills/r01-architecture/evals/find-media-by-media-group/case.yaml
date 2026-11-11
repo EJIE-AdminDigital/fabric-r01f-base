@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: find-media-by-media-group
+expected_outcome: |
+  findByMediaGroup(SecurityContext,OG10MediaGroupOID) exists in the Find interface, Client API delegate (without SecurityContext), DAO with a @NamedQuery on a new MEDIAGROUP_OID column copied in the transfer delegate, Tier 2 validation and Tier 1 delegation, plus a test block, all formatted in house style.

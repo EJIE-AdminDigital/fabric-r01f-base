@@ -5,7 +5,7 @@ import java.io.File;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.CommonOIDs.Environment;
+import r01f.oids.CommonOIDs.Environment;
 import r01f.patterns.Memoized;
 import r01f.types.Path;
 import r01f.util.OSType;

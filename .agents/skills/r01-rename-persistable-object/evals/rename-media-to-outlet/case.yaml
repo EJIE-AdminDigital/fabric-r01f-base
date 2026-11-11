@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: rename-media-to-outlet
+expected_outcome: |
+  All Media classes, the media packages, members, table OG11MEDIA and tests become Outlet, while MediaGroup, MediaRegister, media-register folders and prose such as "media group" stay as they are; imports resolve and the report explains the follow-up steps.

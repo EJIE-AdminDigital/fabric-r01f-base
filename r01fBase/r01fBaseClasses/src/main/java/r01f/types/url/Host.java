@@ -6,10 +6,10 @@ import java.util.Set;
 import com.google.common.base.Splitter;
 
 import lombok.Getter;
-import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallConstructor;
 import r01f.objectstreamer.annotations.MarshallIgnoredField;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OIDTyped;
 import r01f.util.types.StringSplitter;
 import r01f.util.types.Strings;
 import r01f.util.types.collections.CollectionUtils;
@@ -99,17 +99,32 @@ public record Host(@Getter String id,
 	 * @return the host as an url
 	 */
 	public Url asUrl() {
-		return new Url(this.getUrlComponents());
+		return this.asUrl(null);
+	}
+	public Url asUrl(final UrlProtocol protocol) {
+		return new Url(this.getUrlComponents(protocol));
 	}
 	/**
 	 * @return the url components
 	 */
 	UrlComponents getUrlComponents() {
 		// if the host was constructed as strict() url components is null
-		return this.urlComponents != null ? this.urlComponents
-									  	  : new UrlComponents(null,Host.strict(this.getId()),0,		// protocol / host / port
-											  			  	  null,null,null);						// path / query string / anchor
+		return this.getUrlComponents(null);
 	}
+	UrlComponents getUrlComponents(final UrlProtocol protocol) {
+		// if the host was constructed as strict() url components is null
+		UrlComponents outUrlComps = this.urlComponents != null
+								 && this.urlComponents.getProtocol() != null
+								 && this.urlComponents.getProtocol().is(protocol) ? this.urlComponents	// the Host contains the protocol
+										 										  : null;
+	  	if (outUrlComps != null) return outUrlComps;
+	  	// the host does not contain the protocol, so create a new UrlComponents with the given protocol
+	  	if (this.urlComponents != null) return new UrlComponents(protocol,this.urlComponents.getHost(),this.urlComponents.getPort(),
+	  												   			 this.urlComponents.getUrlPath(),this.urlComponents.getQueryString(),this.urlComponents.getUrlPathFragment());
+	  	// the host was constructed as strict() so create a new UrlComponents with the given protocol
+	  	return new UrlComponents(protocol,Host.strict(this.getId()),0,	// protocol / host / port
+	  							 null,null,null);						// path / query string / anchor
+	}	
 	/**
 	 * Returns the TLD (top level domain)
 	 * @return

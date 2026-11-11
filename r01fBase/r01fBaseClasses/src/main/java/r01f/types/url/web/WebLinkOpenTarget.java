@@ -1,8 +1,8 @@
 package r01f.types.url.web;
 
 import lombok.Getter;
-import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OIDTyped;
 
 /**
  * The window open target: https://www.w3schools.com/tags/att_a_target.asp

@@ -4,11 +4,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import r01f.annotations.Immutable;
-import r01f.guids.OIDs;
-import r01f.guids.SuppliesOID;
 import r01f.model.catalogable.CatalogableOIDs.CatalogablePickOID;
 import r01f.model.catalogable.CatalogableOIDs.CatalogablePicksOID;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OIDs;
+import r01f.oids.SuppliesOID;
 
 @NoArgsConstructor(access=AccessLevel.PRIVATE)
 public abstract class GeoCatalogableOIDs {	

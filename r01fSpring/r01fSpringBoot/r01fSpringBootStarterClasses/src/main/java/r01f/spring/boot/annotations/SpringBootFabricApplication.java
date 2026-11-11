@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.annotation.AliasFor;
+
 import r01f.spring.boot.SpringBootAutoconfigurationNames;
 
 
@@ -22,6 +23,7 @@ import r01f.spring.boot.SpringBootAutoconfigurationNames;
 										SpringBootAutoconfigurationNames.V4.TRANSACTION
 								      })
 public @interface SpringBootFabricApplication {
+	
     @AliasFor(annotation = SpringBootApplication.class)
     String[] scanBasePackages() default {};
     

@@ -8,11 +8,11 @@ import com.google.common.reflect.TypeToken;
 
 import r01f.exceptions.Throwables;
 import r01f.facets.HasOID;
-import r01f.guids.OID;
 import r01f.model.HasModelObjectTypeInfo;
 import r01f.model.ModelObject;
 import r01f.model.SummarizedModelObject;
 import r01f.objectstreamer.annotations.MarshallPolymorphicTypeInfo;
+import r01f.oids.OID;
 import r01f.util.types.collections.CollectionUtils;
 
 @MarshallPolymorphicTypeInfo

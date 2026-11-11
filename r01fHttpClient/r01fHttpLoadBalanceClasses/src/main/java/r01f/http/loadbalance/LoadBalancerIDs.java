@@ -4,9 +4,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import r01f.annotations.Immutable;
-import r01f.guids.OID;
-import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OID;
+import r01f.oids.OIDTyped;
 import r01f.types.url.Url;
 
 @NoArgsConstructor(access=AccessLevel.PRIVATE)

@@ -9,7 +9,7 @@ import r01f.locale.Language;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
 import r01f.objectstreamer.annotations.MarshallType;
-import r01f.securitycontext.SecurityIDS.LoginID;
+import r01f.oids.SecurityIDs.LoginID;
 import r01f.types.url.Url;
 import r01f.util.types.Objects;
 
@@ -28,7 +28,7 @@ import r01f.util.types.Objects;
 @NoArgsConstructor
 public class ContactSocialNetwork 
      extends ContactMeanDataBase<ContactSocialNetwork>
-  implements ContactMean,
+  implements IsContactMean,
   			 HasLanguage {
 	
 	private static final long serialVersionUID = 4611690233960483088L;
@@ -40,7 +40,7 @@ public class ContactSocialNetwork
 	 */
 	@MarshallField(as="type",
 				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private ContactSocialNetworkType _type;
+	@Getter @Setter private ContactSocialNetworkType _socialNetworkType;
 	/**
 	 * The language
 	 */
@@ -71,7 +71,7 @@ public class ContactSocialNetwork
 //  FLUENT-API
 /////////////////////////////////////////////////////////////////////////////////////////
 	public ContactSocialNetwork forNetwork(final ContactSocialNetworkType type) {
-		_type = type;
+		_socialNetworkType = type;
 		return this;
 	}
 	public ContactSocialNetwork user(final LoginID user) {
@@ -88,7 +88,7 @@ public class ContactSocialNetwork
 	@Override
 	public void updateFrom(final ContactSocialNetwork other) {
 		super.updateFrom(other);
-		_type = other.getType();
+		_socialNetworkType = other.getSocialNetworkType();
 		_language = other.getLanguage();
 		_user = other.getUser();
 		_profileUrl = other.getProfileUrl();
@@ -111,7 +111,7 @@ public class ContactSocialNetwork
 		if (!(obj instanceof ContactSocialNetwork)) return false;
 		ContactSocialNetwork other = (ContactSocialNetwork)obj;
 		return super.equals(other)
-			&& Objects.areEqual(this.getType(),other.getType(),ContactSocialNetworkType::equals)
+			&& Objects.areEqual(this.getSocialNetworkType(),other.getSocialNetworkType(),ContactSocialNetworkType::equals)
 			&& Objects.areEqual(this.getUser(),other.getUser(),LoginID::equals)
 			&& Objects.areEqual(this.getLanguage(),other.getLanguage(),Language::equals)
 			&& Objects.areEqual(this.getProfileUrl(),other.getProfileUrl(),Url::equals);
@@ -122,7 +122,7 @@ public class ContactSocialNetwork
 								_usage,
 							    _usageDetails,
 							    _default,
-							    _type,
+							    _socialNetworkType,
 							    _user,
 							    _language,
 							    _profileUrl);

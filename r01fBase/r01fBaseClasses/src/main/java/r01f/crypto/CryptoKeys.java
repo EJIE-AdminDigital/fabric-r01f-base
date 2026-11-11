@@ -18,7 +18,7 @@ import java.security.spec.X509EncodedKeySpec;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import r01f.securitycontext.SecurityIDS.SecurityToken;
+import r01f.oids.SecurityIDs.SecurityToken;
 import r01f.types.Path;
 
 

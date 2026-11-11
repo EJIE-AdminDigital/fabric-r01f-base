@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import r01f.guids.OID;
+import r01f.oids.OID;
 import r01f.types.Range;
 import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonGenerator;

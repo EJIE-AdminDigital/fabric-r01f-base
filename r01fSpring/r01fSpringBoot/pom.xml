@@ -31,5 +31,6 @@
 		<module>r01fSpringBootStarterWebClasses</module>
 		<module>r01fSpringBootStarterActuatorClasses</module>
 		<module>r01fSpringBootStarterTestClasses</module>
+		<module>r01fSpringBootStarterDocOpenAPIClasses</module>
 	</modules>
 </project>

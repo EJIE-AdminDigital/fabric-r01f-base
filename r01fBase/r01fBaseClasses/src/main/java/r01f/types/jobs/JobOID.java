@@ -1,8 +1,8 @@
 package r01f.types.jobs;
 
 import r01f.annotations.Immutable;
-import r01f.guids.JavaOIDDispenser;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.JavaOIDDispenser;
 
 @Immutable
 @MarshallType(as="jobOid")

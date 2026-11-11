@@ -1,5 +1,9 @@
 package r01f.model.persistence;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Accessors;
 import r01f.enums.EnumExtended;
 import r01f.httpclient.HttpResponseCode;
 import r01f.model.services.COREServiceMethod;
@@ -9,17 +13,22 @@ import r01f.model.services.COREServiceMethod;
  * Note that the performed operation is NOT always the same as the requested one
  * (ie: an update could be requested by the client BUT the record didn't exist so a creation is performed)
  */
+@Accessors(prefix="_")
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum PersistencePerformedOperation
  implements EnumExtended<PersistencePerformedOperation> {
-	EXISTS,
-	LOADED,
-	CREATED,
-	UPDATED,
-	DELETED,
-	NOT_MODIFIED,
-	COUNTED,
-	FOUND;
+	EXISTS(PersistenceRequestedOperation.EXISTS),
+	LOADED(PersistenceRequestedOperation.LOAD),
+	SAVED(PersistenceRequestedOperation.SAVE),	// can be used for both create and update operations
+	CREATED(PersistenceRequestedOperation.CREATE),
+	UPDATED(PersistenceRequestedOperation.UPDATE),
+	DELETED(PersistenceRequestedOperation.DELETE),
+	COUNTED(PersistenceRequestedOperation.COUNT),
+	FOUND(PersistenceRequestedOperation.FIND),
+	NOT_MODIFIED(null),;
 
+	@Getter private final PersistenceRequestedOperation _requestedOperation;
+	
 	public COREServiceMethod getCOREServiceMethod() {
 		return COREServiceMethod.named(this.name());
 	}

@@ -3,10 +3,10 @@ package r01f.types.collections;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
 import lombok.experimental.Accessors;
-import r01f.guids.JavaOIDDispenser;
-import r01f.guids.OID;
 import r01f.locale.Language;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.JavaOIDDispenser;
+import r01f.oids.OID;
 
 @MarshallType(as="metaDatedValuesCollectionItemID")
 @Accessors(prefix="_")

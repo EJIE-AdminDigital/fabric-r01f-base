@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.CommonOIDs.AppCode;
-import r01f.guids.CommonOIDs.AppComponent;
-import r01f.guids.CommonOIDs.Environment;
-import r01f.guids.CommonOIDs.IsAppCode;
-import r01f.guids.CommonOIDs.IsAppComponent;
+import r01f.oids.CommonOIDs.AppCode;
+import r01f.oids.CommonOIDs.AppComponent;
+import r01f.oids.CommonOIDs.Environment;
+import r01f.oids.CommonOIDs.IsAppCode;
+import r01f.oids.CommonOIDs.IsAppComponent;
 import r01f.properties.PropertiesForAppComponentPropertiesLoadedListener;
 
 /**

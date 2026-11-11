@@ -40,7 +40,7 @@ public interface HasPersonContacts {
 									    .collect(Collectors.joining("; "))
 					: "";
 	}
-	public default Collection<ContactMail> getEmails() {
+	public default Collection<ContactEMail> getEmails() {
 		return CollectionUtils.hasData(this.getContacts())
 					? this.getContacts().stream()
 									    .flatMap(contact -> contact.getContactMails()

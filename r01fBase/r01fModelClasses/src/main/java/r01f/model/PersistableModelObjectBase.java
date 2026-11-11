@@ -10,14 +10,14 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import r01f.annotations.OidField;
 import r01f.aspects.interfaces.dirtytrack.ConvertToDirtyStateTrackable;
-import r01f.guids.OID;
-import r01f.guids.PersistableObjectOID;
 import r01f.model.builders.facets.TrackableBuilder;
 import r01f.model.facets.DirtyStateTrackableModelObject;
 import r01f.model.facets.DirtyStateTrackableModelObject.HasDirtyStateTrackableModelObjectFacet;
 import r01f.model.facets.delegates.DirtyStateTrackableModelObjectDelegate;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
+import r01f.oids.OID;
+import r01f.oids.PersistableObjectOID;
 import r01f.types.annotations.CompositionRelated;
 
 @ConvertToDirtyStateTrackable
@@ -148,16 +148,16 @@ public abstract class PersistableModelObjectBase<O extends PersistableObjectOID,
 //
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
-	public Instant getCreateDate() {
-		return this.getTrackingInfo() != null ? this.getTrackingInfo().getCreateDate()
+	public Instant getCreatedAt() {
+		return this.getTrackingInfo() != null ? this.getTrackingInfo().getCreatedAt()
 									   		  : null;
 	}
 	@Override
-	public Instant getLastUpdateDate() {
-		return this.getTrackingInfo() != null ? this.getTrackingInfo().getLastUpdateDate() != null
-														? this.getTrackingInfo().getLastUpdateDate()
-														: this.getTrackingInfo().getCreateDate() != null
-																? this.getTrackingInfo().getCreateDate()
+	public Instant getLastUpdatedAt() {
+		return this.getTrackingInfo() != null ? this.getTrackingInfo().getLastUpdatedAt() != null
+														? this.getTrackingInfo().getLastUpdatedAt()
+														: this.getTrackingInfo().getCreatedAt() != null
+																? this.getTrackingInfo().getCreatedAt()
 																: null
 											   : null;
 	}

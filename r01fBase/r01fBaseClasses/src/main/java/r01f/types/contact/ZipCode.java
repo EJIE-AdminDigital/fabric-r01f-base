@@ -1,6 +1,6 @@
 package r01f.types.contact;
 
-import r01f.guids.OID;
+import r01f.oids.OID;
 
 public record ZipCode(String id) 
    implements OID {	

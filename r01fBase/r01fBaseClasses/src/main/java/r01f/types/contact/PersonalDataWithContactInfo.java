@@ -67,17 +67,17 @@ public class PersonalDataWithContactInfo
 						   .map(ContactPhone::getNumber)
 						   .collect(Collectors.toList());
 	}
-	public Collection<ContactMail> getContactMails() {
-		if (_contactInfo == null || CollectionUtils.isNullOrEmpty(_contactInfo.getContactMails())) return Collections.emptyList();
-		return _contactInfo.getContactMails()
+	public Collection<ContactEMail> getContactMails() {
+		if (_contactInfo == null || CollectionUtils.isNullOrEmpty(_contactInfo.getContactEMails())) return Collections.emptyList();
+		return _contactInfo.getContactEMails()
 						   .stream()
 						   .collect(Collectors.toList());
 	}
 	public Collection<EMail> getContactMailAddresses() {
-		if (_contactInfo == null || CollectionUtils.isNullOrEmpty(_contactInfo.getContactMails())) return Collections.emptyList();
-		return _contactInfo.getContactMails()
+		if (_contactInfo == null || CollectionUtils.isNullOrEmpty(_contactInfo.getContactEMails())) return Collections.emptyList();
+		return _contactInfo.getContactEMails()
 						   .stream()
-						   .map(ContactMail::getMail)
+						   .map(ContactEMail::getMail)
 						   .collect(Collectors.toList());
 	}
 	public Collection<ContactSocialNetwork> getContactSocialNetworks() {

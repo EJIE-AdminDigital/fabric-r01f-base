@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import r01f.debug.Debuggable;
-import r01f.guids.CommonOIDs.AppComponent;
-import r01f.guids.CommonOIDs.IsAppCode;
-import r01f.guids.CommonOIDs.IsAppComponent;
+import r01f.oids.CommonOIDs.AppComponent;
+import r01f.oids.CommonOIDs.IsAppCode;
+import r01f.oids.CommonOIDs.IsAppComponent;
 import r01f.util.types.Strings;
 import r01f.xmlproperties.XMLPropertiesForAppComponent;
 

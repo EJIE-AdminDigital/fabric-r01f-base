@@ -11,6 +11,7 @@ import r01f.facets.Summarizable.HasSummaryFacet;
 import r01f.facets.builders.SummarizableBuilder;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.types.CanBeRepresentedAsString;
 import r01f.types.summary.Summary;
 import r01f.types.summary.SummaryStringBacked;
 import r01f.util.types.StringEncodeUtils;
@@ -30,7 +31,8 @@ public record PersonFullName(// name
 							 // second surname
 							 @MarshallField(as="surname2",escape=true)
 							 @Getter String surname2) 
-    implements HasSummaryFacet,
+    implements CanBeRepresentedAsString,
+    		   HasSummaryFacet,
   			   HasFullTextSummaryFacet,
 			   SelfValidates<PersonFullName> {
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -39,10 +41,21 @@ public record PersonFullName(// name
 	public PersonFullName {
 		if (Strings.isNullOrEmpty(name)) throw new IllegalArgumentException("The name is mandatory");
 	}
+	public PersonFullName(final String name) {
+		this(name,
+			 null,	// surname
+			 null); // surname2
+	}
 	public PersonFullName(final String name,final String surname) {
 		this(name,
 			 surname,
 			 null); // surname2
+	}
+	public static PersonFullName of(final String name,final String surname,final String surname2) {
+		return new PersonFullName(name,surname,surname2);
+	}
+	public static PersonFullName of(final String name,final String surname) {
+		return new PersonFullName(name,surname);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	GET & SET
@@ -88,6 +101,54 @@ public record PersonFullName(// name
 																  PersonFullName.class);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
+//	CAN BE REPRESENTED AS STRING
+/////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public String asString() {
+		String outSummary = null;
+
+		String name = this.getName();
+		String surname = this.getSurname();
+
+		if (Strings.isNOTNullOrEmpty(surname) 
+		 && Strings.isNOTNullOrEmpty(this.getName())) {
+			outSummary = Strings.customized("{}, {}",
+											surname,name);
+		}
+		else if (Strings.isNOTNullOrEmpty(surname)) {
+			outSummary = surname;
+		}
+		else if (Strings.isNOTNullOrEmpty(name)) {
+			outSummary = name;
+		}
+		else {
+			outSummary = Strings.customized("--NO summary for {}--",PersonFullName.class);
+		}
+		return outSummary;
+	}
+	/**
+	 * Returns the display name with the name first, then the surnames.
+	 * @return
+	 */
+	public String getDisplayName() {
+		return this.asString();
+	}
+	/**
+	 * Returns the display name with the surnames first, then the name. 
+	 * If there are surnames, they are separated from the name by a comma.
+	 * @return
+	 */
+	public String getDisplayNameWithSurnamesFirst() {
+		String surnames = Strings.customized("{}{}",
+								  			 this.surname != null ? this.surname + " " : "",
+								  			 this.surname2 != null ? this.surname2 + " " : "")
+					  			 .trim();
+		return Strings.customized("{}{}",
+								  Strings.isNOTNullOrEmpty(surnames) ? surnames + ", " : "",
+								  this.name != null ? this.name : "")
+					  .trim();
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
 //  HasSummary
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override
@@ -99,26 +160,7 @@ public record PersonFullName(// name
 		return SummarizableBuilder.fullTextSummarizableFrom(this.asSummarizable());
 	}
 	public Summary getSummary() {
-		SummaryStringBacked outSummary = null;
-
-		String name = this.getName();
-		String surname = this.getSurname();
-
-		if (Strings.isNOTNullOrEmpty(surname) 
-		 && Strings.isNOTNullOrEmpty(this.getName())) {
-			outSummary = SummaryStringBacked.of(Strings.customized("{}, {}",
-																   surname,name));
-		}
-		else if (Strings.isNOTNullOrEmpty(surname)) {
-			outSummary = SummaryStringBacked.of(surname);
-		}
-		else if (Strings.isNOTNullOrEmpty(name)) {
-			outSummary = SummaryStringBacked.of(name);
-		}
-		else {
-			outSummary = SummaryStringBacked.of(Strings.customized("--NO summary for {}--",PersonalData.class));
-		}
-		return outSummary;
+		return SummaryStringBacked.of(this.asString());
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	HASH

@@ -1,10 +1,13 @@
 package r01f.model;
 
 import r01f.model.facets.HasCreationData;
+import r01f.model.facets.HasImpersonatingSecurityPrincipal;
 import r01f.model.facets.HasLastUpdateData;
 
 public interface HasTrackingInfo 
-		 extends HasCreationData,HasLastUpdateData {
+		 extends HasCreationData,
+		 		 HasLastUpdateData,
+		 		 HasImpersonatingSecurityPrincipal {
 	/**
 	 * @return the {@link ModelObjectTracking} info
 	 */

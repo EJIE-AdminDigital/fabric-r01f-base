@@ -14,10 +14,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.CommonOIDs.Token;
-import r01f.guids.JavaOIDDispenser;
+import r01f.oids.CommonOIDs.Token;
+import r01f.oids.JavaOIDDispenser;
 import r01f.patterns.IsBuilderStep;
 import r01f.service.ServiceHandler;
 import r01f.util.types.Strings;
@@ -296,14 +298,14 @@ public class HttpConcurrentRetryableRequestExecutor
 	 * </pre>
 	 * 
      * @param <T>
-     * @param httpRequest
+     * @param _httpRequest
      * @return
      * @throws IOException
      * @throws InterruptedException
      */
     public <T> HttpConcurrentRetryableRequestExecutorBuilderRequestStep<T> returningResultOfType(final Class<T> type) throws IOException,
     																		    					  		 	 			 InterruptedException {
-    	return new HttpConcurrentRetryableRequestExecutorBuilderRequestStepImpl<>(this);
+    	return new HttpConcurrentRetryableRequestExecutorBuilderRequestStepImpl<>();
     }   
 /////////////////////////////////////////////////////////////////////////////////////////
 //	SINGLE REQUEST EXECUTION
@@ -380,6 +382,9 @@ public class HttpConcurrentRetryableRequestExecutor
 
         IOException lastIOException = null;
         for (int attempt = 1; attempt <= theRetryParams.maxAttempts(); attempt++) {
+        	if (log.isDebugEnabled()) log.debug("HTTP request attempt {} of {} for {}",
+					  							attempt,theRetryParams.maxAttempts(),httpRequest.uri());
+        	
         	// a) Check if the overall deadline has been exceeded
 	        Duration remaining = Duration.between(Instant.now(),deadlineInstant);
 	        remaining = remaining.isNegative() ? Duration.ZERO : remaining;
@@ -422,6 +427,10 @@ public class HttpConcurrentRetryableRequestExecutor
                 _sleepWithinDeadline(retryDelay,deadlineInstant);
 
             } catch (HttpTimeoutException httpTimeoutEx) {
+            	log.error("HTTP request attempt {} of {} for {} timed out: {}",
+						  attempt,theRetryParams.maxAttempts(),httpRequest.uri(),
+						  httpTimeoutEx.getMessage());
+            	
                  // This includes request-level timeout conditions.
                 lastIOException = httpTimeoutEx;
 
@@ -431,6 +440,10 @@ public class HttpConcurrentRetryableRequestExecutor
                 _sleepWithinDeadline(theRetryParams.exponentialBackoffFor(attempt),
                         			 deadlineInstant);
             } catch (IOException ioEx) {
+            	log.error("HTTP request attempt {} of {} for {} failed: {} > {}",
+						  attempt,theRetryParams.maxAttempts(),httpRequest.uri(),
+						  ioEx.getClass().getSimpleName(),ioEx.getMessage());
+            	
                  // Network failures are potentially transient.
                  // Note that a connection can fail AFTER the remote server has received a POST. 
             	 // Therefore, blindly retrying a POST can create duplicate operations.
@@ -533,72 +546,71 @@ public class HttpConcurrentRetryableRequestExecutor
     	}
     }
 ////////// --- BUILDER IMPL
-    public record HttpConcurrentRetryableRequestExecutorBuilderRequestStepImpl<T>(HttpConcurrentRetryableRequestExecutor executor)
-       implements HttpConcurrentRetryableRequestExecutorBuilderRequestStep<T> {
+    public class HttpConcurrentRetryableRequestExecutorBuilderRequestStepImpl<T>
+      implements HttpConcurrentRetryableRequestExecutorBuilderRequestStep<T> {
 		@Override
 		public HttpConcurrentRetryableRequestExecutorBuilderTimeoutStep<T> forRequest(final HttpRequest httpRequest) throws IOException, 
 																													  		InterruptedException {
-			return new HttpConcurrentRetryableRequestExecutorBuilderTimeoutStepImpl<>(executor,
-																					  httpRequest);
+			return new HttpConcurrentRetryableRequestExecutorBuilderTimeoutStepImpl<>(httpRequest);
 		}
     }
-    public record HttpConcurrentRetryableRequestExecutorBuilderTimeoutStepImpl<T>(HttpConcurrentRetryableRequestExecutor executor,
-    																			  HttpRequest httpRequest)
+    @RequiredArgsConstructor(access=AccessLevel.PRIVATE)
+    public class HttpConcurrentRetryableRequestExecutorBuilderTimeoutStepImpl<T>
        implements HttpConcurrentRetryableRequestExecutorBuilderTimeoutStep<T> {
-
+    	private final HttpRequest _httpRequest;
 		@Override
 		public HttpConcurrentRetryableRequestExecutorBuilderRetryStep<T> withTimeouts(final HttpRequestTimeOuts requestTimeouts) {
-			return new HttpConcurrentRetryableRequestExecutorBuilderRetryStepImpl<>(executor,
-																					httpRequest,
+			return new HttpConcurrentRetryableRequestExecutorBuilderRetryStepImpl<>(_httpRequest,
 																					requestTimeouts);
 		}
     }
-    public record HttpConcurrentRetryableRequestExecutorBuilderRetryStepImpl<T>(HttpConcurrentRetryableRequestExecutor executor,
-    																			HttpRequest httpRequest,
-    																			HttpRequestTimeOuts requestTimeouts)
-       implements HttpConcurrentRetryableRequestExecutorBuilderRetryStep<T> {
-
+    @RequiredArgsConstructor(access=AccessLevel.PRIVATE)
+    public class HttpConcurrentRetryableRequestExecutorBuilderRetryStepImpl<T>
+      implements HttpConcurrentRetryableRequestExecutorBuilderRetryStep<T> {
+    	private final HttpRequest _httpRequest;
+    	private final HttpRequestTimeOuts _requestTimeouts;
+    	
 		@Override
 		public HttpConcurrentRetryableRequestExecutorBuilderIdempotentStep<T> usingRetryParams(final HttpRequestRetryParams retryParams) {
-			return new HttpConcurrentRetryableRequestExecutorBuilderIdempotentStepImpl<>(executor,
-																						 httpRequest,
-																						 requestTimeouts,retryParams);
+			return new HttpConcurrentRetryableRequestExecutorBuilderIdempotentStepImpl<>(_httpRequest,
+																						 _requestTimeouts,retryParams);
 		}
     }
-    public record HttpConcurrentRetryableRequestExecutorBuilderIdempotentStepImpl<T>(HttpConcurrentRetryableRequestExecutor executor,
-    																				 HttpRequest httpRequest,
-    																				 HttpRequestTimeOuts requestTimeouts,HttpRequestRetryParams retryParams)
-       implements HttpConcurrentRetryableRequestExecutorBuilderIdempotentStep<T> {
-
+    @RequiredArgsConstructor(access=AccessLevel.PRIVATE)
+    public class HttpConcurrentRetryableRequestExecutorBuilderIdempotentStepImpl<T>
+      implements HttpConcurrentRetryableRequestExecutorBuilderIdempotentStep<T> {
+    	private final HttpRequest _httpRequest;
+    	private final HttpRequestTimeOuts _requestTimeouts;
+    	private final HttpRequestRetryParams _retryParams;
 		@Override
 		public HttpConcurrentRetryableRequestExecutorBuilderHandlerStep<T> withIdempotencyKey(final Token idempotencyKey) {
-			return new HttpConcurrentRetryableRequestExecutorBuilderHandlerStepImpl<>(executor,
-																					  httpRequest,
-																					  requestTimeouts,retryParams,
+			return new HttpConcurrentRetryableRequestExecutorBuilderHandlerStepImpl<>(_httpRequest,
+																					  _requestTimeouts,_retryParams,
 																					  idempotencyKey);
 		}
     }
-    public record HttpConcurrentRetryableRequestExecutorBuilderHandlerStepImpl<T>(HttpConcurrentRetryableRequestExecutor executor,
-    																			  HttpRequest httpRequest,
-																				  HttpRequestTimeOuts requestTimeouts,HttpRequestRetryParams retryParams,
-																				  Token idempotencyKey)
-	   implements HttpConcurrentRetryableRequestExecutorBuilderHandlerStep<T> {
-
+    @RequiredArgsConstructor(access=AccessLevel.PRIVATE)
+    public class HttpConcurrentRetryableRequestExecutorBuilderHandlerStepImpl<T>
+	  implements HttpConcurrentRetryableRequestExecutorBuilderHandlerStep<T> {
+    	private final HttpRequest _httpRequest;
+    	private final HttpRequestTimeOuts _requestTimeouts;
+    	private final HttpRequestRetryParams _retryParams;
+	    private final Token _idempotencyKey;
 		@Override
 		public HttpRetryableRequestExecResult<T> sendAndhandleResponseWith(final HttpRequestExecutor<T> reqExec) throws IOException, 
 																										  				InterruptedException {
-			return executor._executeRequest(httpRequest,
-										    requestTimeouts,retryParams,
-										    idempotencyKey,
-										  	reqExec);
+			return _executeRequest(_httpRequest,
+								   _requestTimeouts,_retryParams,
+								   _idempotencyKey,
+								   reqExec);
 		}
 		@Override
 		public Future<HttpRetryableRequestExecResult<T>> sendAsyncAndhandleResponseWith(final HttpRequestExecutor<T> reqExec) throws IOException, 
 																													   		 		 InterruptedException {
-			return executor._asyncExecuteRequest(httpRequest,
-										    	 requestTimeouts,retryParams,
-										    	 idempotencyKey,
-										    	 reqExec);
+			return _asyncExecuteRequest(_httpRequest,
+										_requestTimeouts,_retryParams,
+										_idempotencyKey,
+										reqExec);
 		}
     }
 }

@@ -1,9 +1,9 @@
 package r01f.model.persistence;
 
 import lombok.experimental.Accessors;
-import r01f.guids.OID;
 import r01f.model.PersistableModelObject;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OID;
 
 @MarshallType(as="crudResult",typeId="crudOnModelObjectOK")
 @Accessors(prefix="_")

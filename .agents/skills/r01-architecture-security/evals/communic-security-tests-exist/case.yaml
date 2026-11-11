@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: communic-security-tests-exist
+expected_outcome: |
+  communic's security tests already exist in ogov-test, so the run uses generate_security.py --only tests (dry run first), sees that the files exist and the registrations are "already registered", and does not overwrite them without --force: it reports that they already exist and that og11 has no CORE db config in ogov-config (PENDING).

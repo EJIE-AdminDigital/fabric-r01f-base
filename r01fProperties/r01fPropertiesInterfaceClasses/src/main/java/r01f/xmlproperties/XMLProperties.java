@@ -1,6 +1,7 @@
 package r01f.xmlproperties;
 
 import r01f.properties.PropertiesBase;
+import r01f.properties.PropertiesComponentDef;
 
 /**
  * {@link XMLProperties} is the main component of the R01's properties systems

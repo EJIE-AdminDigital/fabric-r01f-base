@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import r01f.guids.CommonOIDs.PropertyID;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
+import r01f.oids.CommonOIDs.PropertyID;
 import r01f.objectstreamer.annotations.MarshallFrom;
 import r01f.objectstreamer.annotations.MarshallType;
 

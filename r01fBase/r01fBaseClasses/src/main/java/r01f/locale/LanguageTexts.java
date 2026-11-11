@@ -146,24 +146,14 @@ public interface LanguageTexts
 	 * @param lang
 	 * @return
 	 */
-	public default String getAny(final Language... langs) {
+	public default String getInFirstAvailableOf(final Language... langs) {
 		if (CollectionUtils.isNullOrEmpty(langs)) throw new IllegalArgumentException();
 		String outText = null;
 		for (Language lang : langs) {
 			outText = this.get(lang);
 			if (Strings.isNOTNullOrEmpty(outText)) break;
 		}
-		if (Strings.isNullOrEmpty(outText)) outText = this.getAny();
 		return outText;
-	}
-	/**
-	 * Gets the first text in any of the given langs
-	 * returns the first text found in the order of the given langs or null if no text is found for any of the given langs
-	 * @param langs
-	 * @return
-	 */
-	public default String getFirstAvailableFor(final Language... langs) {
-		return this.getAny(langs);
 	}
 	/**
 	 * Returns true if some text is defined for the lang

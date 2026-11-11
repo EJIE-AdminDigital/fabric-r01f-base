@@ -1,7 +1,7 @@
 package r01f.model.facets;
 
-import r01f.guids.OIDTyped;
-import r01f.guids.PersistableObjectOID;
+import r01f.oids.OIDTyped;
+import r01f.oids.PersistableObjectOID;
 
 public interface HistoryTrackedObjectOID 
 		 extends OIDTyped<String>,

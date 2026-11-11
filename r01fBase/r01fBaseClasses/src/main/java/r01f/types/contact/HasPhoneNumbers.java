@@ -2,11 +2,10 @@ package r01f.types.contact;
 
 import java.util.Collection;
 
-import r01f.facets.Facet;
 import r01f.util.types.collections.CollectionUtils;
 
 public interface HasPhoneNumbers
-		 extends Facet {
+		 extends HasPhoneNumber {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	
 /////////////////////////////////////////////////////////////////////////////////////////	
@@ -46,5 +45,16 @@ public interface HasPhoneNumbers
 					? CollectionUtils.of(phones)
 									 .toStringSeparatedWith(separator)
 				    : null;
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	HasPhoneNumber
+/////////////////////////////////////////////////////////////////////////////////////////	
+	@Override
+	public default Phone getPhoneNumber() {
+		return this.getFirstPhoneNumber();
+	}
+	@Override
+	public default void setPhoneNumber(final Phone phoneNumber) {
+		throw new UnsupportedOperationException("Overrride this method if you want to set the phone number");
 	}
 }

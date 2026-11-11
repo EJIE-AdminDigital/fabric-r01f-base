@@ -1,5 +1,7 @@
 package r01f.facets;
 
+import java.util.Optional;
+
 import r01f.facets.delegates.LangDependentNamedDelegate;
 import r01f.locale.Language;
 import r01f.locale.LanguageTexts;
@@ -30,5 +32,14 @@ public interface HasLangDependentName
 	public default String getNameIn(final Language lang) {
 		return this.getName()
 				   .getInOrNull(lang);
+	}
+	/**
+	 * Returns the first text in any of the given langs
+	 * @param lang
+	 * @return
+	 */
+	public default Optional<String> getInFirstAvailableOf(final Language... langs) {
+		return this.getName()
+				   .getInFirstAvailableOf(langs);
 	}
 }

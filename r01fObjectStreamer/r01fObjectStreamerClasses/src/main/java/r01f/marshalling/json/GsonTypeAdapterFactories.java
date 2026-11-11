@@ -29,7 +29,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import r01f.enums.EnumWithCode;
-import r01f.guids.OID;
+import r01f.oids.OID;
 import r01f.reflection.ReflectionUtils;
 import r01f.types.datetime.DayOfMonth;
 import r01f.types.datetime.DayOfWeek;

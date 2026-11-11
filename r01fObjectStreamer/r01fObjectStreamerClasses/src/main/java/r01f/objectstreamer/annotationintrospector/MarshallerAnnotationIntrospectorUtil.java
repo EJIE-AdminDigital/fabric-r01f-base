@@ -81,7 +81,9 @@ abstract class MarshallerAnnotationIntrospectorUtil {
 			}
 		}
 		// [3] - @MarshallField annotated field
-		else if (ann instanceof AnnotatedField
+		else if ((ann instanceof AnnotatedField
+				  ||
+				  ann instanceof AnnotatedParameter) 	// records: the constructor parameters are annotated with @MarshallField
 			  && ann.hasAnnotation(MarshallField.class)) {
 			MarshallField m = ann.getAnnotation(MarshallField.class);
 			if (!MarshallField.MARKER_FOR_DEFAULT.equals(m.as())) {

@@ -5,9 +5,9 @@ import java.io.IOException;
 import r01f.configproperties.PropertiesComponentDefLoader;
 import r01f.configproperties.PropertiesErrorType;
 import r01f.exceptions.EnrichedRuntimeException;
-import r01f.guids.CommonOIDs.Environment;
-import r01f.guids.CommonOIDs.IsAppCode;
-import r01f.guids.CommonOIDs.IsAppComponent;
+import r01f.oids.CommonOIDs.Environment;
+import r01f.oids.CommonOIDs.IsAppCode;
+import r01f.oids.CommonOIDs.IsAppComponent;
 import r01f.properties.PropertiesComponentDef;
 import r01f.util.types.Strings;
 

@@ -3,12 +3,12 @@ package r01f.model.metadata;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import r01f.guids.OID;
 import r01f.locale.Language;
 import r01f.model.ModelObject;
 import r01f.model.metadata.annotations.DescInLang;
 import r01f.model.metadata.annotations.MetaDataForField;
 import r01f.model.metadata.annotations.Storage;
+import r01f.oids.OID;
 
 /**
  * Interface for types that describes {@link ModelObject}s

@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import r01f.aspects.interfaces.dirtytrack.NotDirtyStateTrackable;
+import r01f.model.security.context.SecurityContext;
 import r01f.objectstreamer.annotations.MarshallIgnoredField;
-import r01f.securitycontext.SecurityContext;
 
 /**
  * Base type for model object extension objects

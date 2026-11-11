@@ -3,9 +3,9 @@ package r01f.xmlproperties;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import r01f.guids.CommonOIDs.AppCode;
-import r01f.guids.CommonOIDs.AppComponent;
-import r01f.guids.CommonOIDs.Environment;
+import r01f.oids.CommonOIDs.AppCode;
+import r01f.oids.CommonOIDs.AppComponent;
+import r01f.oids.CommonOIDs.Environment;
 import r01f.patterns.IsBuilder;
 
 @NoArgsConstructor(access=AccessLevel.PRIVATE)

@@ -14,9 +14,9 @@ import r01f.config.ContainsConfigData;
 import r01f.debug.Debuggable;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
+import r01f.oids.SecurityIDs.LoginID;
+import r01f.oids.SecurityIDs.Password;
 import r01f.objectstreamer.annotations.MarshallType;
-import r01f.securitycontext.SecurityIDS.LoginID;
-import r01f.securitycontext.SecurityIDS.Password;
 import r01f.types.url.Host;
 import r01f.util.types.Strings;
 

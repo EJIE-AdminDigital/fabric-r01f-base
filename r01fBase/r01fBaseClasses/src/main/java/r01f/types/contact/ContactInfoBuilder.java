@@ -72,14 +72,14 @@ public class ContactInfoBuilder
 	}
 	@NoArgsConstructor(access=AccessLevel.PRIVATE)
 	public final class ContactInfoBuilderMailsStep {
-		public ContactInfoBuilderWebsStep addMail(final ContactMail... mails) {
-			List<ContactMail> contactMails = CollectionUtils.hasData(mails) ? Arrays.asList(mails)
+		public ContactInfoBuilderWebsStep addMail(final ContactEMail... mails) {
+			List<ContactEMail> contactMails = CollectionUtils.hasData(mails) ? Arrays.asList(mails)
 																					.stream()
 																					.filter(Objects::nonNull)
 																					.toList()
 																			: null;
 			if (CollectionUtils.isNullOrEmpty(contactMails)) return new ContactInfoBuilderWebsStep();
-			for (ContactMail mail : contactMails) _contactInfo.addOrUpdateContactMail(mail);
+			for (ContactEMail mail : contactMails) _contactInfo.addOrUpdateContactEMail(mail);
 			return new ContactInfoBuilderWebsStep();
 		}
 		public ContactInfoBuilderWebsStep noMail() {

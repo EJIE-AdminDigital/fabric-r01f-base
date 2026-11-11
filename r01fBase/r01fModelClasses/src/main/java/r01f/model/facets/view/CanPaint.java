@@ -1,6 +1,6 @@
 package r01f.model.facets.view;
 
-import r01f.guids.OID;
+import r01f.oids.OID;
 
 
 /**

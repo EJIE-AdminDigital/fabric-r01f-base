@@ -3,37 +3,37 @@ package r01f.model.facets;
 
 import java.time.Instant;
 
-import r01f.securitycontext.SecurityIDS.LoginID;
-import r01f.securitycontext.SecurityOIDs.UserOID;
+import r01f.oids.SecurityIDs.SecurityPrincipalID;
+import r01f.oids.SecurityOIDs.SecurityPrincipalOID;
 
 public interface HasLastUpdateData {
 	/**
-	 * Gets the user code of the last updator
+	 * Gets the SecurityPrincipalId of the last updator
 	 * @return
 	 */
-	public LoginID getLastUpdatorUserCode();
+	public SecurityPrincipalID getLastUpdaterSecurityPrincipalId();
 	/**
-	 * Sets the user code of the last updator (it comes from the user context)
-	 * @param userCode
+	 * Sets the SecurityPrincipalId of the last updater (it comes from the user context)
+	 * @param SecurityPrincipalId
 	 */
-	public void setLastUpdatorUserCode(final LoginID userCode);
+	public void setLastUpdaterSecurityPrincipalId(final SecurityPrincipalID SecurityPrincipalId);
 	/**
-	 * Gets the user oid of the last updator
+	 * Gets the [security principal] oid of the last updater
 	 * @return
 	 */
-	public UserOID getLastUpdatorUserOid();
+	public SecurityPrincipalOID getLastUpdaterSecurityPrincipalOid();
 	/**
-	 * Sets the user oid of the last updatos (it comes from the user context)
-	 * @param userOid
+	 * Sets the [security principal] oid of the last updater (it comes from the user context)
+	 * @param securityPrincipalOid
 	 */
-	public void setLastUpdatorUserOid(final UserOID userOid);
+	public void setLastUpdaterSecurityPrincipalOid(final SecurityPrincipalOID securityPrincipalOid);
 	/**
 	 * @return the last saving operation timestamp
 	 */
-	public Instant getLastUpdateTimeStamp();
+	public Instant getLastUpdatedAt();
 	/**
 	 * Sets the last saving operation timestamp
 	 * @param newTS the new timestamp
 	 */
-	public void setLastUpdateTimeStamp(Instant newTS);
+	public void setLastUpdatedAt(Instant newTS);
 }

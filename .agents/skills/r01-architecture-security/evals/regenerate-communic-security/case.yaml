@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: regenerate-communic-security
+expected_outcome: |
+  The skill's script generates e80a177-ogov-communic-security-api and -core under out/ with BAI e80a177 and app codes OG10/OG11 (detected from OG00AppCodes, or asked for / passed explicitly when OG00AppCodes no longer has them); the existing projects in ogov-communic are untouched; the comparison reports every file identical (45 api, 56 core) and no IDE, build or git files are generated.

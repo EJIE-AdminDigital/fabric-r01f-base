@@ -3,9 +3,9 @@ package r01f.model.facets;
 
 import java.time.Instant;
 
-import r01f.guids.VersionIndependentOID;
-import r01f.guids.VersionOID;
 import r01f.model.VersionInfo;
+import r01f.oids.VersionIndependentOID;
+import r01f.oids.VersionOID;
 
 public interface Versionable {
 /////////////////////////////////////////////////////////////////////////////////////////

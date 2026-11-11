@@ -58,6 +58,11 @@ public class COREServiceMethodExecError<T>
 	public COREServiceMethodExecError(final COREServiceMethod method) {
 		super(method);
 	}
+	public COREServiceMethodExecError(final COREServiceMethodExecError<?> other) {
+		this(other.getCalledMethod(),
+			 other.getErrorType(),
+			 other.getError());
+	}
 	public COREServiceMethodExecError(final COREServiceMethod reqOp,
 							   		  final Throwable th) {
 		this(reqOp,
@@ -141,6 +146,13 @@ public class COREServiceMethodExecError<T>
 								new COREServiceException(_calledMethod,
 														 errorType,
 														 errorMsg);
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	ABOUT
+/////////////////////////////////////////////////////////////////////////////////////////
+	public COREServiceMethodExecError<T> about(final T about) {
+		_targetEntity = about;
+		return this;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //  REASON

@@ -15,8 +15,8 @@ import javax.crypto.spec.PBEKeySpec;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import r01f.securitycontext.SecurityIDS.Password;
-import r01f.securitycontext.SecurityIDS.PasswordHash;
+import r01f.oids.SecurityIDs.Password;
+import r01f.oids.SecurityIDs.PasswordHash;
 
 /**
  * Hash passwords for storage, and test passwords against password tokens.

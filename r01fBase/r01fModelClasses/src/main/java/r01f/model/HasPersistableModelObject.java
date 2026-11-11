@@ -1,6 +1,6 @@
 package r01f.model;
 
-import r01f.guids.OID;
+import r01f.oids.OID;
 
 /**
  * Types that contains a {@link PersistableModelObject} reference

@@ -5,12 +5,12 @@ import java.time.Instant;
 
 import r01f.facets.HasOID;
 import r01f.facets.delegates.FacetDelegateBase;
-import r01f.guids.OIDForVersionableModelObject;
-import r01f.guids.VersionIndependentOID;
-import r01f.guids.VersionOID;
 import r01f.model.VersionInfo;
 import r01f.model.facets.Versionable;
 import r01f.model.facets.Versionable.HasVersionableFacet;
+import r01f.oids.OIDForVersionableModelObject;
+import r01f.oids.VersionIndependentOID;
+import r01f.oids.VersionOID;
 
 /**
  * Encapsulates the {@link Versionable} behavior

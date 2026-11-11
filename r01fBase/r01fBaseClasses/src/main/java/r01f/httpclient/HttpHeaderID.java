@@ -1,9 +1,9 @@
 package r01f.httpclient;
 
 import lombok.Getter;
-import r01f.guids.JavaOIDDispenser;
-import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.JavaOIDDispenser;
+import r01f.oids.OIDTyped;
 
 
 @MarshallType(as="httpHeaderID")

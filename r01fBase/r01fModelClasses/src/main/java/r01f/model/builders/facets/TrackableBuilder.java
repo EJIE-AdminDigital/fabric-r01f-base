@@ -6,8 +6,8 @@ import java.time.Instant;
 import r01f.facets.builders.FacetBuilderBase;
 import r01f.model.HasTrackableFacet;
 import r01f.model.ModelObjectTracking;
-import r01f.securitycontext.SecurityIDS.LoginID;
-import r01f.securitycontext.SecurityOIDs.UserOID;
+import r01f.oids.SecurityIDs.SecurityPrincipalID;
+import r01f.oids.SecurityOIDs.SecurityPrincipalOID;
 
 public class TrackableBuilder<CONTAINER_TYPE,
 							  SELF_TYPE extends HasTrackableFacet>
@@ -27,23 +27,25 @@ public class TrackableBuilder<CONTAINER_TYPE,
 	 * Sets the creator and the create date to the actual date
 	 * @param creator
 	 */
-	public TrackableBuilder<CONTAINER_TYPE,SELF_TYPE> createdBy(final UserOID creatorUserOid,final LoginID creatorUser) {
-		if (creatorUser == null) return this;
+	public TrackableBuilder<CONTAINER_TYPE,SELF_TYPE> createdBy(final SecurityPrincipalOID creatorSecurityPrincipalOid,final SecurityPrincipalID creatorSecurityPrincipalId) {
+		if (creatorSecurityPrincipalId == null) return this;
 		if (_modelObject.getTrackingInfo() == null) _modelObject.setTrackingInfo(new ModelObjectTracking());
-		_modelObject.getTrackingInfo().setCreatorUserOid(creatorUserOid);
-		_modelObject.getTrackingInfo().setCreatorUserCode(creatorUser);
+		_modelObject.getTrackingInfo()
+					.setCreatorSecurityPrincipalOid(creatorSecurityPrincipalOid);
+		_modelObject.getTrackingInfo()
+					.setCreatorSecurityPrincipalId(creatorSecurityPrincipalId);
 		return this;
 	}
 	/**
 	 * Sets the last modifier and the last update date to the actual date
-	 * @param updatorUser
+	 * @param updaterSecurityPrincipalId
 	 */
-	public TrackableBuilder<CONTAINER_TYPE,SELF_TYPE> lastUpdatedBy(final UserOID updatorUserOid,final LoginID updatorUser) {
+	public TrackableBuilder<CONTAINER_TYPE,SELF_TYPE> lastUpdatedBy(final SecurityPrincipalOID updaterSecurityPrincipalOid,final SecurityPrincipalID updaterSecurityPrincipalId) {
 		if (_modelObject.getTrackingInfo() == null) {
-			return this.createdBy(updatorUserOid,updatorUser);
-		} else if (updatorUser != null) {
+			return this.createdBy(updaterSecurityPrincipalOid,updaterSecurityPrincipalId);
+		} else if (updaterSecurityPrincipalId != null) {
 			_modelObject.getTrackingInfo()
-						.setModifiedBy(updatorUserOid,updatorUser);
+						.setModifiedBy(updaterSecurityPrincipalOid,updaterSecurityPrincipalId);
 		}
 		return this;
 	}
@@ -52,10 +54,11 @@ public class TrackableBuilder<CONTAINER_TYPE,
      * @param date
      * @return
      */
-    public TrackableBuilder<CONTAINER_TYPE,SELF_TYPE> createdIn(final Instant date) {
+    public TrackableBuilder<CONTAINER_TYPE,SELF_TYPE> createdAt(final Instant date) {
     	if (date == null) return this;
     	if (_modelObject.getTrackingInfo() == null) _modelObject.setTrackingInfo(new ModelObjectTracking());
-		_modelObject.getTrackingInfo().setCreateDate(date);
+		_modelObject.getTrackingInfo()
+					.setCreatedAt(date);
 		return this;
     }
     /**
@@ -63,10 +66,11 @@ public class TrackableBuilder<CONTAINER_TYPE,
      * @param date
      * @return
      */
-    public TrackableBuilder<CONTAINER_TYPE,SELF_TYPE> lastUpdatedIn(final Instant date) {
+    public TrackableBuilder<CONTAINER_TYPE,SELF_TYPE> lastUpdatedAt(final Instant date) {
     	if (date == null) return this;
     	if (_modelObject.getTrackingInfo() == null) _modelObject.setTrackingInfo(new ModelObjectTracking());
-		_modelObject.getTrackingInfo().setLastUpdateDate(date);
+		_modelObject.getTrackingInfo()
+					.setLastUpdatedAt(date);
 		return this;
     }
 }

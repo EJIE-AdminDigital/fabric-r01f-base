@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: unregistered-system-asks-codes
+expected_outcome: |
+  The system tramites is not registered in OG00AppCodes, so the app codes can't be detected. The run does not invent them: it generates nothing, explains that the system must be registered first and asks for the API / CORE app codes, proposing the next free pair (even OGx0 / odd OGx1).

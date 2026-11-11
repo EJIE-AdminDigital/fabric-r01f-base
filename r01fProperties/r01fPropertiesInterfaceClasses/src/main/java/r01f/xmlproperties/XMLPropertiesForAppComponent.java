@@ -1,8 +1,8 @@
 package r01f.xmlproperties;
 
 import lombok.experimental.Accessors;
-import r01f.guids.CommonOIDs.IsAppCode;
-import r01f.guids.CommonOIDs.IsAppComponent;
+import r01f.oids.CommonOIDs.IsAppCode;
+import r01f.oids.CommonOIDs.IsAppComponent;
 import r01f.patterns.FactoryFrom;
 import r01f.properties.PropertiesForAppComponent;
 import r01f.types.Path;

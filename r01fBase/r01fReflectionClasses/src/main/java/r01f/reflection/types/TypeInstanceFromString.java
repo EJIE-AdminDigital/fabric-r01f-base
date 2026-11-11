@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-import r01f.guids.OID;
+import r01f.oids.OID;
 import r01f.reflection.ReflectionUtils;
 import r01f.types.CanBeRepresentedAsString;
 import r01f.util.types.Strings;

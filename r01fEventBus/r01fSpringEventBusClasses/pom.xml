@@ -49,6 +49,7 @@
 			<artifactId>r01fDISpringClasses</artifactId>
 			<version>${revision}</version>			
 		</dependency>
+			
 	</dependencies>
 
 </project>

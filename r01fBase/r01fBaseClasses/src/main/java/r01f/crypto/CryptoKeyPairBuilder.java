@@ -35,10 +35,10 @@ public abstract class CryptoKeyPairBuilder
 				return CryptoKeyPairBuilder.createRSA(DEF_KEY_SIZE);
 	}
 	public static CryptoKeyPairSerialized createRSA(final int size,
-										  final ProviderFrom<RSAPublicKey,byte[]> fingerPrintProvider) {
+										  			final ProviderFrom<RSAPublicKey,byte[]> fingerPrintProvider) {
 		// generate keys
 		CryptoKeyPair keyPair = CryptoKeyPairBuilder.createRSAKeyPair(size,
-																		 fingerPrintProvider);
+																	  fingerPrintProvider);
 		// transform
 		CryptoKeyPairSerialized outKeyPair = new CryptoKeyPairSerialized(keyPair);
 
@@ -59,7 +59,7 @@ public abstract class CryptoKeyPairBuilder
 													 null);
 	}
 	public static CryptoKeyPair createRSAKeyPair(final int size,
-													final ProviderFrom<RSAPublicKey,byte[]> fingerPrintProvider) {
+												 final ProviderFrom<RSAPublicKey,byte[]> fingerPrintProvider) {
 		try {
 			KeyPairGenerator keyGenerator;
 			keyGenerator = KeyPairGenerator.getInstance("RSA");
@@ -75,10 +75,10 @@ public abstract class CryptoKeyPairBuilder
 
 			// return
 			return new CryptoKeyPair(publicKey,privateKey,publicKeyFingerPrint);
-		} catch (final NoSuchAlgorithmException e) {
+		} catch (final NoSuchAlgorithmException nsalgEx) {
 			throw new IllegalArgumentException(Strings.customized("Error creating [api key pair]: {}",
-																  e.getLocalizedMessage()),
-											   e);
+																  nsalgEx.getLocalizedMessage()),
+											   nsalgEx);
 		}
 	}
 }

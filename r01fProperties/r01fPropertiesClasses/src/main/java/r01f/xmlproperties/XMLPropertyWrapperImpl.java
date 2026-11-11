@@ -23,21 +23,21 @@ import com.google.common.reflect.TypeToken;
 
 import lombok.extern.slf4j.Slf4j;
 import r01f.enums.EnumWithCode;
-import r01f.guids.CommonOIDs.AppCode;
-import r01f.guids.CommonOIDs.Environment;
-import r01f.guids.CommonOIDs.Token;
-import r01f.guids.OID;
 import r01f.locale.Language;
 import r01f.objectstreamer.Marshaller;
+import r01f.oids.CommonOIDs.AppCode;
+import r01f.oids.CommonOIDs.Environment;
+import r01f.oids.CommonOIDs.Token;
+import r01f.oids.OID;
+import r01f.oids.SecurityIDs.LoginID;
+import r01f.oids.SecurityIDs.Password;
+import r01f.oids.SecurityIDs.SecurityRole;
+import r01f.oids.SecurityIDs.SecurityToken;
 import r01f.patterns.FactoryFrom;
 import r01f.properties.PropertyWrapper;
 import r01f.reflection.ReflectionUtils;
 import r01f.resources.ResourcesLoaderDef;
 import r01f.resources.ResourcesLoaderDefBuilder;
-import r01f.securitycontext.SecurityIDS.LoginID;
-import r01f.securitycontext.SecurityIDS.Password;
-import r01f.securitycontext.SecurityIDS.SecurityToken;
-import r01f.securitycontext.SecurityIDS.UserRole;
 import r01f.types.JavaPackage;
 import r01f.types.JavaTypeName;
 import r01f.types.Path;
@@ -436,16 +436,16 @@ public final class XMLPropertyWrapperImpl
 										  defaultVal);
 	}
 	/**
-	 * Gets a property as a {@link UserRole}
+	 * Gets a property as a {@link SecurityRole}
 	 * @param defaultVal the default value if the property is not defined at the xml properties file
 	 * @return the property value or the default value if the property is NOT found
 	 */
 	@Override
-	public UserRole asUserRole(final UserRole defaultVal) {
+	public SecurityRole asUserRole(final SecurityRole defaultVal) {
 		return _cache.getPropertyFromNode(_xPath,
 										  xmlNode -> {
 												String userRoleStr = XMLUtils.nodeTextContent(xmlNode);	// transform the xml node to an string
-												return Strings.isNOTNullOrEmpty(userRoleStr) ? UserRole.forId(userRoleStr) : null;
+												return Strings.isNOTNullOrEmpty(userRoleStr) ? SecurityRole.forId(userRoleStr) : null;
 										  },
 										  defaultVal);
 	}

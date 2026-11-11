@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.Objects;
 import java.util.function.Function;
 
-import r01f.guids.CommonOIDs.IsAppCode;
-import r01f.guids.OID;
+import r01f.oids.CommonOIDs.IsAppCode;
+import r01f.oids.OID;
 
 /**
  * Represents a java package
@@ -46,6 +46,13 @@ public record JavaPackage(String pckg)
 	}
 	public static JavaPackage of(final Class<?> type) {
 		return new JavaPackage(type);
+	}
+/////////////////////////////////////////////////////////////////////////////////////////
+//	
+/////////////////////////////////////////////////////////////////////////////////////////
+	public JavaPackage joinedWith(final JavaPackage other) {
+		if (other == null) return this;
+		return new JavaPackage(this.pckg() + "." + other.pckg());
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //

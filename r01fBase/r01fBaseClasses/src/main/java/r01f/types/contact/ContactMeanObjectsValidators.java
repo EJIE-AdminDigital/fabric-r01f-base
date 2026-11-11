@@ -13,9 +13,9 @@ public class ContactMeanObjectsValidators {
 	 * @return
 	 */
 	public static boolean isValidEmails(final String value) {
-		Collection<ContactMail> emails = EMail.emailsCollectionFromString(value);
+		Collection<ContactEMail> emails = EMail.emailsCollectionFromString(value);
 		boolean allValid = true;
-		for (ContactMail email : emails) {
+		for (ContactEMail email : emails) {
 			if (email.getMail() == null
 			 || !email.getMail().isValid()) {
 				allValid = false;

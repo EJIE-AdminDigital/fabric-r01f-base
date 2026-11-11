@@ -1,8 +1,8 @@
 package r01f.model.persistence;
 
-import r01f.guids.OID;
 import r01f.model.HasModelObjectTypeInfo;
 import r01f.model.PersistableModelObject;
+import r01f.oids.OID;
 
 public interface CRUDOnModelObjectResult<M extends PersistableModelObject<? extends OID>>
 		 extends CRUDResult<M>,

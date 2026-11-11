@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import org.w3c.dom.Document;
 
-import r01f.guids.CommonOIDs.IsAppComponent;
+import r01f.oids.CommonOIDs.IsAppComponent;
 import r01f.types.Path;
 
 public interface PropertiesForAppComponentAccessor<D,N> {

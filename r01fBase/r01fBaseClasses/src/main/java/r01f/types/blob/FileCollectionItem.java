@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import r01f.file.FileName;
-import r01f.guids.OID;
+import r01f.oids.OID;
 import r01f.util.types.Strings;
 
 /**

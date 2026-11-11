@@ -4,22 +4,22 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import r01f.debug.Debuggable;
-import r01f.guids.PersistableObjectOID;
 import r01f.model.HasModelObjectTypeCode;
 import r01f.model.HasModelObjectTypeInfo;
-import r01f.model.IndexableModelObject;
 import r01f.model.ModelObjectTracking;
 import r01f.model.PersistableModelObject;
+import r01f.model.PersistableObject;
 import r01f.model.facets.HasEntityVersion;
 import r01f.model.facets.HasNumericID;
 import r01f.model.search.SearchOIDs.SearchEngineDBID;
 import r01f.model.search.SearchOIDs.SearchSourceID;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
+import r01f.oids.PersistableObjectOID;
 import r01f.util.types.Strings;
 
 @Accessors(prefix="_")
-public abstract class SearchResultItemForModelObjectBase<M extends IndexableModelObject>
+public abstract class SearchResultItemForModelObjectBase<M extends PersistableObject>
            implements SearchResultItemForModelObject<M>,
            			  HasEntityVersion,
            			  HasNumericID,
@@ -113,7 +113,7 @@ public abstract class SearchResultItemForModelObjectBase<M extends IndexableMode
 //  
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override @SuppressWarnings("unchecked")
-	public <U extends IndexableModelObject> void unsafeSetModelObjectType(final Class<U> modelObjectType) {
+	public <U extends PersistableObject> void unsafeSetModelObjectType(final Class<U> modelObjectType) {
 		_modelObjectType = (Class<M>)modelObjectType;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////

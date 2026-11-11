@@ -5,7 +5,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 
-import r01f.guids.OID;
+import r01f.oids.OID;
 
 
 /**

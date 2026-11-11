@@ -6,13 +6,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import r01f.annotations.Immutable;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.SecurityIDs.LoginID;
 import r01f.patterns.Memoized;
 import r01f.patterns.Supplier;
-import r01f.securitycontext.SecurityIDS.LoginID;
 import r01f.types.url.Host;
 import r01f.util.types.Strings;
 import r01f.util.types.collections.CollectionUtils;
@@ -21,7 +20,6 @@ import r01f.util.types.collections.CollectionUtils;
 
 @MarshallType(as="email")
 @Immutable
-@NoArgsConstructor
 @Accessors(prefix="_")
 public class EMail
      extends ValidatedContactMeanBase {
@@ -34,6 +32,9 @@ public class EMail
 /////////////////////////////////////////////////////////////////////////////////////////
 //  BUILDERS
 /////////////////////////////////////////////////////////////////////////////////////////
+	public EMail() {
+		// nothing
+	}
 	public EMail(final String mail) {
 		super(mail);
 	}
@@ -144,12 +145,12 @@ public class EMail
 	 * @param splitedEmailsStr
 	 * @return emails collection or null if empty.
 	 */
-	public static Collection<ContactMail> emailsCollectionFromString(final String splitedEmailsStr) {
+	public static Collection<ContactEMail> emailsCollectionFromString(final String splitedEmailsStr) {
 		Collection<String> emails = _split(splitedEmailsStr);
 		return CollectionUtils.hasData(emails)
 					? emails.stream()
 							.map(EMail::of)
-							.map(email -> ContactMail.createToBeUsedFor(ContactInfoUsage.ANY)
+							.map(email -> ContactEMail.createToBeUsedFor(ContactInfoUsage.ANY)
 									 			     .mailTo(email))
 							.collect(Collectors.toList())
 					: null;

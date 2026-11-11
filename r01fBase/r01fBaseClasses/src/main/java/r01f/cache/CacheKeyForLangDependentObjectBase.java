@@ -6,8 +6,8 @@ import java.util.Objects;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import r01f.guids.OID;
 import r01f.locale.Language;
+import r01f.oids.OID;
 import r01f.util.types.Strings;
 
 @Accessors(prefix="_")

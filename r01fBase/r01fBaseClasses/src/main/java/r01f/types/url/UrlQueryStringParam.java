@@ -57,6 +57,10 @@ public class UrlQueryStringParam
 		return UrlQueryStringParam.of(name,
 									  value != null ? value.asString() : null);
 	}
+	public static <E extends Enum<E>> UrlQueryStringParam of(final String name,final E value) {
+		return UrlQueryStringParam.of(name,
+									  value != null ? value.name() : null);
+	}
 	public static UrlQueryStringParam valueOf(final String paramAndValue) {
 		return UrlQueryStringParam.from(paramAndValue);
 	}

@@ -1,8 +1,8 @@
 package r01f.crypto;
 
 import java.io.Serializable;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.spec.KeySpec;
 
 import lombok.Getter;
@@ -11,8 +11,8 @@ import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
 import r01f.objectstreamer.annotations.MarshallFrom;
 import r01f.objectstreamer.annotations.MarshallType;
-import r01f.securitycontext.SecurityIDS.LoginID;
-import r01f.securitycontext.SecurityIDS.SecurityToken;
+import r01f.oids.SecurityIDs.LoginID;
+import r01f.oids.SecurityIDs.SecurityToken;
 import r01f.util.types.StringEncodeUtils;
 
 
@@ -59,9 +59,11 @@ public class CryptoKeyPairSerialized
 
 	}
 	public CryptoKeyPairSerialized(final CryptoKeyPair keyPair) {
-		this(keyPair.getPublicKey(),keyPair.getPrivateKey(),keyPair.getPublicKeyFingerPrint());
+		this(keyPair.getPublicKey(),keyPair.getPrivateKey(),
+			 keyPair.getPublicKeyFingerPrint());
 	}
-	public CryptoKeyPairSerialized(final RSAPublicKey publicKey,final RSAPrivateKey privateKey,final byte[] fingerPrint) {
+	public CryptoKeyPairSerialized(final PublicKey publicKey,final PrivateKey privateKey,
+								   final byte[] fingerPrint) {
 		// The public key,
 		byte[] publicKeyBytes = publicKey.getEncoded();
 		_publicKey = SecurityToken.from(StringEncodeUtils.encodeBase64AsString(publicKeyBytes));
@@ -71,8 +73,10 @@ public class CryptoKeyPairSerialized
         // The fingerprint
 		_fingerPrint = SecurityToken.from(StringEncodeUtils.encodeHex(fingerPrint));
 	}
-	public static CryptoKeyPairSerialized serialize(final RSAPublicKey publicKey,final RSAPrivateKey privateKey,final byte[] fingerPrint) {
-		return new CryptoKeyPairSerialized(publicKey,privateKey,fingerPrint);
+	public static CryptoKeyPairSerialized serialize(final PublicKey publicKey,final PrivateKey privateKey,
+													final byte[] fingerPrint) {
+		return new CryptoKeyPairSerialized(publicKey,privateKey,
+										   fingerPrint);
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	As KeySpec

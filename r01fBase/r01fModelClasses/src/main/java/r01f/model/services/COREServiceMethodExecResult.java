@@ -31,7 +31,8 @@ public interface COREServiceMethodExecResult<T>
 	}
 	public default T getOrNull() {
 		if (this.hasFailed()
-		 && this.asCOREServiceMethodExecError().wasBecauseAClientError()) return null;
+		 && this.asCOREServiceMethodExecError()
+		 		.wasBecauseAClientError()) return null;
 		return this.getOrThrow();
 	}
 	public default T getOrDefault(final T def) {

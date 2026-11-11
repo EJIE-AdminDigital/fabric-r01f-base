@@ -2,7 +2,7 @@ package r01f.xmlproperties;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import r01f.guids.CommonOIDs.Environment;
+import r01f.oids.CommonOIDs.Environment;
 import r01f.types.Path;
 import r01f.util.types.Strings;
 import r01f.xml.XMLUtils;

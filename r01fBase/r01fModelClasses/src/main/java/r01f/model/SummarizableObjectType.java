@@ -4,7 +4,7 @@ import java.util.EnumSet;
 
 import r01f.enums.EnumExtended;
 import r01f.facets.Summarizable;
-import r01f.guids.PersistableObjectOID;
+import r01f.oids.PersistableObjectOID;
 
 /**
  * All {@link Summarizable} object types ENUM must implement this interface

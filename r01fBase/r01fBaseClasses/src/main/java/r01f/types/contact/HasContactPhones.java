@@ -42,7 +42,7 @@ public interface HasContactPhones
 	public default ContactPhone removeContactPhone(final ContactInfoUsage usage) {
 		if (this.getContactPhones() == null) return null;
 		
-		ContactPhone outPhone = ContactMean.find(this.getContactPhones(),usage);
+		ContactPhone outPhone = IsContactMean.find(this.getContactPhones(),usage);
 		if (outPhone != null) this.getContactPhones()
 								  .remove(outPhone);
 		return outPhone;
@@ -67,7 +67,7 @@ public interface HasContactPhones
 								: false;
 	}
 	public default Collection<ContactPhone> getContactPhonesWithDefaultOneFirst() {
-		return ContactMean.orderDefaultFirst(this.getContactPhones());
+		return IsContactMean.orderDefaultFirst(this.getContactPhones());
 	}
 	/**
 	 * Returns the phones matching the given predicate
@@ -75,7 +75,7 @@ public interface HasContactPhones
 	 * @return
 	 */
 	public default Collection<ContactPhone> getContactPhonesMatching(final Predicate<ContactPhone> predicate) {
-		return ContactMean.findMatching(this.getContactPhones(),predicate);
+		return IsContactMean.findMatching(this.getContactPhones(),predicate);
 	}
 	/**
 	 * Returns the default contact phone.
@@ -83,7 +83,7 @@ public interface HasContactPhones
 	 * @return
 	 */
 	public default ContactPhone getDefaultContactPhone() {
-		ContactPhone phone = ContactMean.findDefault(this.getContactPhones());
+		ContactPhone phone = IsContactMean.findDefault(this.getContactPhones());
 		return phone != null ? phone : null;
 	}
 	/**
@@ -91,7 +91,7 @@ public interface HasContactPhones
 	 * @return
 	 */
 	public default ContactPhone getDefaultContactPhoneOrAny() {
-		ContactPhone phone = ContactMean.findDefault(this.getContactPhones());
+		ContactPhone phone = IsContactMean.findDefault(this.getContactPhones());
 		if (phone == null && CollectionUtils.hasData(this.getContactPhones())) phone = CollectionUtils.pickOneElement(this.getContactPhones());
 		return phone != null ? phone : null;
 	}
@@ -100,9 +100,9 @@ public interface HasContactPhones
 	 * @return
 	 */
 	public default ContactPhone getDefaultContactPhoneOrAnyForType(final ContactPhoneType type) {
-		ContactPhone phone = ContactMean.findDefaultForType(this.getContactPhones(),
+		ContactPhone phone = IsContactMean.findDefaultForType(this.getContactPhones(),
 												 			type);
-		if (phone == null && hasContactPhonesOfType(type)) phone = ContactMean.findOtherThanDefaultForType(this.getContactPhones(),
+		if (phone == null && hasContactPhonesOfType(type)) phone = IsContactMean.findOtherThanDefaultForType(this.getContactPhones(),
 																						 			type);
 		return phone != null ? phone : null;
 	}
@@ -126,7 +126,7 @@ public interface HasContactPhones
 	@Override
 	public default Collection<Phone> getPhoneNumbers() {
 		// order the phones so that the default one is the first of the list
-		Collection<ContactPhone> orderedPhones = ContactMean.orderDefaultFirst(this.getContactPhones());
+		Collection<ContactPhone> orderedPhones = IsContactMean.orderDefaultFirst(this.getContactPhones());
 		// transform to phones
 		return CollectionUtils.hasData(orderedPhones)
 					? orderedPhones.stream()
@@ -155,7 +155,7 @@ public interface HasContactPhones
 	 * @return
 	 */
 	public default Phone getPhoneNumber(final ContactInfoUsage usage) {
-		ContactPhone phone = ContactMean.find(this.getContactPhones(),usage);
+		ContactPhone phone = IsContactMean.find(this.getContactPhones(),usage);
 		return phone != null ? phone.getNumber() : null;
 	}
 	/**
@@ -164,7 +164,7 @@ public interface HasContactPhones
 	 * @return
 	 */
 	public default Phone getPhoneNumber(final ContactPhoneType type) {
-		ContactPhone phone = ContactMean.find(this.getContactPhones(),type);
+		ContactPhone phone = IsContactMean.find(this.getContactPhones(),type);
 		return phone != null ? phone.getNumber() : null;
 	}
 	/**
@@ -172,7 +172,7 @@ public interface HasContactPhones
 	 * @return
 	 */
 	public default Phone getDefaultPhoneNumber() {
-		ContactPhone phone = ContactMean.findDefault(this.getContactPhones());
+		ContactPhone phone = IsContactMean.findDefault(this.getContactPhones());
 		return phone != null ? phone.getNumber() : null;
 	}
 	/**
@@ -180,7 +180,7 @@ public interface HasContactPhones
 	 * @return
 	 */
 	public default Phone getDefaultPhoneNumberOrAny() {
-		ContactPhone phone = ContactMean.findDefault(this.getContactPhones());
+		ContactPhone phone = IsContactMean.findDefault(this.getContactPhones());
 		if (phone == null && CollectionUtils.hasData(this.getContactPhones())) phone = CollectionUtils.pickOneElement(this.getContactPhones());
 		return phone != null ? phone.getNumber() : null;
 	}
@@ -189,7 +189,7 @@ public interface HasContactPhones
 	 * @return
 	 */
 	public default Phone getPhoneNumberOtherThanDefault() {
-		ContactPhone phone = ContactMean.findOtherThanDefault(this.getContactPhones());
+		ContactPhone phone = IsContactMean.findOtherThanDefault(this.getContactPhones());
 		return phone != null ? phone.getNumber() : null;
 	}
 	/**
@@ -201,7 +201,7 @@ public interface HasContactPhones
 		Phone phone = this.getDefaultPhoneNumber();
 		// ... if there's NO default, return any of them
 		if (phone == null) {
-			ContactPhone contactPhone = ContactMean.findOne(this.getContactPhones());
+			ContactPhone contactPhone = IsContactMean.findOne(this.getContactPhones());
 			phone = contactPhone != null ? contactPhone.getNumber() : null;
 		}
 		return phone;

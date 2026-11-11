@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: find-mediagroup-by-name
+expected_outcome: |
+  findByNameExact(SecurityContext,String) goes through every layer as in the sample: NAME column copied by the transfer delegate, @NamedQuery with aligned JPQL, DAO, Tier 2 validates with Strings.isNullOrEmpty, Tier 1 delegates, Client API delegate and a test block.

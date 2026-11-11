@@ -1,7 +1,7 @@
 package r01f.model.persistence;
 
-import r01f.guids.PersistableObjectOID;
 import r01f.objectstreamer.annotations.MarshallPolymorphicTypeInfo;
+import r01f.oids.PersistableObjectOID;
 
 @MarshallPolymorphicTypeInfo
 public interface FindOIDsResult<O extends PersistableObjectOID>

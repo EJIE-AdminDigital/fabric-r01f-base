@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: format-sample-find-dao
+expected_outcome: |
+  Only spaces and tabs change; no tabs remain; parameters, chains, extends/implements and JPQL follow the house style; line endings are preserved.

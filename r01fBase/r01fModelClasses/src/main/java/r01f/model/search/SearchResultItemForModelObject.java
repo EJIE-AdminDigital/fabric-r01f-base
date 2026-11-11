@@ -1,7 +1,7 @@
 package r01f.model.search;
 
 import r01f.model.HasTrackableFacet;
-import r01f.model.IndexableModelObject;
+import r01f.model.PersistableObject;
 import r01f.model.facets.HasEntityVersion;
 import r01f.model.facets.HasNumericID;
 
@@ -10,7 +10,7 @@ import r01f.model.facets.HasNumericID;
 /**
  * Marker interface for search result items
  */
-public interface SearchResultItemForModelObject<M extends IndexableModelObject>
+public interface SearchResultItemForModelObject<M extends PersistableObject>
 		 extends SearchResultItem,
 		 		 HasEntityVersion,
 		 		 HasNumericID,
@@ -27,7 +27,7 @@ public interface SearchResultItemForModelObject<M extends IndexableModelObject>
 	 * if the model object's type is not the expected
 	 * @param modelObject
 	 */
-	public <U extends IndexableModelObject> void unsafeSetModelObjectType(final Class<U> modelObjectType);
+	public <U extends PersistableObject> void unsafeSetModelObjectType(final Class<U> modelObjectType);
 	/**
 	 * @return a code for the model object type
 	 */

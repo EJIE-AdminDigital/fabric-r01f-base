@@ -3,17 +3,17 @@ package r01f.model.search;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import r01f.guids.OID;
-import r01f.guids.PersistableObjectOID;
-import r01f.model.IndexableModelObject;
 import r01f.model.ModelObjectTracking;
 import r01f.model.PersistableModelObject;
+import r01f.model.PersistableObject;
 import r01f.model.metadata.TypeMetaDataInspector;
 import r01f.objectstreamer.annotations.MarshallField;
+import r01f.oids.OID;
+import r01f.oids.PersistableObjectOID;
 
 
 @Accessors(prefix="_")
-public abstract class SearchResultItemContainsPersistableObjectBase<O extends PersistableObjectOID,M extends PersistableModelObject<O> & IndexableModelObject>
+public abstract class SearchResultItemContainsPersistableObjectBase<O extends PersistableObjectOID,M extends PersistableModelObject<O>>
     	   implements SearchResultItemContainsPersistableObject<O,M> {
 
 	private static final long serialVersionUID = -2917189770601857300L;
@@ -38,7 +38,7 @@ public abstract class SearchResultItemContainsPersistableObjectBase<O extends Pe
 //  
 /////////////////////////////////////////////////////////////////////////////////////////
 	@Override @SuppressWarnings("unchecked")
-	public <U extends IndexableModelObject> void unsafeSetModelObject(final U modelObject) {
+	public <U extends PersistableModelObject<?>> void unsafeSetModelObject(final U modelObject) {
 		_modelObject = (M)modelObject;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -49,7 +49,7 @@ public abstract class SearchResultItemContainsPersistableObjectBase<O extends Pe
 		return (Class<M>)_modelObject.getClass();
 	}
 	@Override
-	public <U extends IndexableModelObject> void unsafeSetModelObjectType(final Class<U> modelObjectType) {
+	public <U extends PersistableObject> void unsafeSetModelObjectType(final Class<U> modelObjectType) {
 		// nothing
 	}
 	@Override

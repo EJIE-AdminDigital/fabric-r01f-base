@@ -16,8 +16,8 @@ import java.util.function.Function;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import r01f.guids.OID;
 import r01f.locale.Language;
+import r01f.oids.OID;
 import r01f.patterns.FactoryFrom;
 import r01f.types.Path;
 import r01f.util.types.StringConverter.StringConverterFilter;

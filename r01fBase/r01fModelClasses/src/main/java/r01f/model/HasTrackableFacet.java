@@ -4,8 +4,8 @@ package r01f.model;
 import java.time.Instant;
 
 import r01f.model.facets.ModelObjectFacet;
-import r01f.securitycontext.SecurityIDS.LoginID;
-import r01f.securitycontext.SecurityOIDs.UserOID;
+import r01f.oids.SecurityIDs.SecurityPrincipalID;
+import r01f.oids.SecurityOIDs.SecurityPrincipalOID;
 
 public interface HasTrackableFacet
 		 extends ModelObjectFacet {
@@ -20,28 +20,28 @@ public interface HasTrackableFacet
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 /////////////////////////////////////////////////////////////////////////////////////////
-	public default Instant getCreateDate() {
+	public default Instant getCreatedAt() {
 		return this.getTrackingInfo()
-				   .getCreateDate();
+				   .getCreatedAt();
 	}
-	public default Instant getLastUpdateDate() {
+	public default Instant getLastUpdatedAt() {
 		return this.getTrackingInfo()
-				   .getLastUpdateDate();
+				   .getLastUpdatedAt();
 	}
-	public default UserOID getCreatorUserOid() {
+	public default SecurityPrincipalOID getCreatorSecurityPrincipalOid() {
 		return this.getTrackingInfo()
-				   .getCreatorUserOid();
+				   .getCreatorSecurityPrincipalOid();
 	}
-	public default LoginID getCreatorUserCode() {
+	public default SecurityPrincipalID getCreatorSecurityPrincipalId() {
 		return this.getTrackingInfo()
-				   .getCreatorUserCode();
+				   .getCreatorSecurityPrincipalId();
 	}
-	public default UserOID getLastUpdatorUserOid() {
+	public default SecurityPrincipalOID getLastUpdaterSecurityPrincipalOid() {
 		return this.getTrackingInfo()
-				   .getLastUpdatorUserOid();
+				   .getLastUpdaterSecurityPrincipalOid();
 	}
-	public default LoginID getLastUpdatorUserCode() {
+	public default SecurityPrincipalID getLastUpdaterLoginId() {
 		return this.getTrackingInfo()
-				   .getLastUpdatorUserCode();
+				   .getLastUpdaterSecurityPrincipalId();
 	}
 }

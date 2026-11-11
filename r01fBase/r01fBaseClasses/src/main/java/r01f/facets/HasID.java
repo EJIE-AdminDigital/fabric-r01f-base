@@ -1,6 +1,6 @@
 package r01f.facets;
 
-import r01f.guids.OID;
+import r01f.oids.OID;
 
 /**
  * Every model object which has an ID should implement this interface

@@ -4,12 +4,12 @@ import java.lang.annotation.AnnotationFormatError;
 
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import r01f.guids.OID;
 import r01f.objectstreamer.annotations.MarshallType;
 import r01f.objectstreamer.custom.MarshallerCustomStreamersForCanBeRepresentedAsString.CanBeRepresentedAsStringDeserializerBase;
 import r01f.objectstreamer.custom.MarshallerCustomStreamersForCanBeRepresentedAsString.CanBeRepresentedAsStringSerializerBase;
 import r01f.objectstreamer.custom.MarshallerCustomStreamersForCanBeRepresentedAsString.PolymorphicCanBeRepresentedAsStringDeserializerBase;
 import r01f.objectstreamer.custom.MarshallerCustomStreamersForCanBeRepresentedAsString.PolymorphicCanBeRepresentedAsStringSerializerBase;
+import r01f.oids.OID;
 import r01f.patterns.FactoryFromType;
 import r01f.reflection.ReflectionUtils;
 import r01f.types.CanBeRepresentedAsString;

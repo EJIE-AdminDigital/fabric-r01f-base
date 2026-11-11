@@ -2,7 +2,7 @@ package r01f.internal;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import r01f.guids.CommonOIDs.AppCode;
+import r01f.oids.CommonOIDs.AppCode;
 
 @NoArgsConstructor(access=AccessLevel.PRIVATE)
 public abstract class R01FAppCodes {

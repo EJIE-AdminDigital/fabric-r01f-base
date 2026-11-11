@@ -1,0 +1,82 @@
+================================================================================
+  REGISTRO DE MEDIOS (media-register) - Peticiones y skills utilizadas
+================================================================================
+
+  Dominio ....... ogov  (BAI e80a177)
+  Sistema ....... communic
+  Componente .... media-register
+  App codes ..... OG10 (API) / OG11 (CORE) / OG99 (test)
+
+  Skills:
+    - r01-architecture    Genera el código según la arquitectura FABRIC (r01f)
+    - r01-java-formatter  Ajusta los .java al estilo de la casa (solo espacios)
+
+
+--------------------------------------------------------------------------------
+  1. ESTRUCTURA DE PROYECTOS API / CORE
+--------------------------------------------------------------------------------
+  Prompt ....... "Crea toda la estructura de proyectos para el API / CORE
+                  siendo {domain id}=ogov {domain bai}=e80a177
+                  {system id}=communic {system bai}=XXX
+                  {component id}=media-register"
+  Skills ....... r01-architecture + r01-java-formatter
+  Playbook ..... task1-scaffold-component.md
+  Invocación ... Cargar las dos skills (automático, o pidiéndolo:
+                 "usa las skills r01-architecture y r01-java-formatter")
+
+--------------------------------------------------------------------------------
+  >>>>>>>>>    CREATE MODEL
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+  2. SERVICE INTERFACES Y API DE OG10MediaGroup
+--------------------------------------------------------------------------------
+  Prompt ....... "Crea los service interfaces y API para el persistable
+                  object OG10MediaGroup."
+  Skills ....... r01-architecture + r01-java-formatter
+  Playbook ..... task2-api-layer.md
+  Invocación ... Versión cargada en el paso 1
+
+
+--------------------------------------------------------------------------------
+  3. LAYERS DEL CORE DE OG10MediaGroup
+--------------------------------------------------------------------------------
+  Prompt ....... "Crea las layers del CORE correspondiente al persistable
+                  object OG10MediaGroup y los service interfaces definidos
+                  en el API"
+  Skills ....... r01-architecture + r01-java-formatter
+  Playbook ..... task3-core-layer.md
+  Invocación ... Versión cargada en el paso 1
+
+
+--------------------------------------------------------------------------------
+  4. TESTS DE OG10MediaGroup
+--------------------------------------------------------------------------------
+  Prompt ....... "Crea los tests del persistable object OG10MediaGroup"
+  Skills ....... r01-architecture + r01-java-formatter
+  Playbook ..... task4-tests.md
+  Invocación ... r01-architecture: cargarla de nuevo
+                 r01-java-formatter: versión cargada en el paso 1
+
+
+================================================================================
+  Resumen
+================================================================================
+
+  +---+----------------------------+--------------------------------+
+  | # | Paso                       | Playbook                       |
+  +---+----------------------------+--------------------------------+
+  | 1 | Estructura API / CORE      | task1-scaffold-component.md    |
+  | 2 | API de OG10MediaGroup      | task2-api-layer.md             |
+  | 3 | CORE de OG10MediaGroup     | task3-core-layer.md            |
+  | 4 | Tests de OG10MediaGroup    | task4-tests.md                 |
+  +---+----------------------------+--------------------------------+
+
+  Los cuatro pasos usan r01-architecture + r01-java-formatter.
+
+  Las skills siguen el formato estándar Agent Skills (SKILL.md), así que
+  sirven para Claude Code, Codex, Gemini CLI, Antigravity, Cursor, etc.
+  Si una herramienta no las carga sola, pídele que lea el SKILL.md:
+  "lee .agents/skills/r01-architecture/SKILL.md y síguelo".
+
+================================================================================

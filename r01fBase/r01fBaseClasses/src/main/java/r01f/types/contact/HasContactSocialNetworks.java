@@ -3,7 +3,7 @@ package r01f.types.contact;
 import java.util.Collection;
 
 import r01f.facets.Facet;
-import r01f.securitycontext.SecurityIDS.LoginID;
+import r01f.oids.SecurityIDs.LoginID;
 import r01f.util.types.collections.CollectionUtils;
 import r01f.util.types.collections.Lists;
 
@@ -22,7 +22,7 @@ public interface HasContactSocialNetworks
 		
 		if (this.getContactSocialNetworks() == null) this.setContactSocialNetworks(Lists.newArrayList());
 		// check if there exists another social net with the same user
-		ContactSocialNetwork other = this.getContactSocialNetworkFor(net.getType(),net.getUser());
+		ContactSocialNetwork other = this.getContactSocialNetworkFor(net.getSocialNetworkType(),net.getUser());
 		// update the existing or add
 		if (other != null) {
 			other.updateFrom(net);
@@ -40,7 +40,7 @@ public interface HasContactSocialNetworks
 		}
 	}
 	public default ContactSocialNetwork removeContactSocialNetwork(final ContactInfoUsage id) {
-		ContactSocialNetwork outNet = ContactMean.find(this.getContactSocialNetworks(),id);
+		ContactSocialNetwork outNet = IsContactMean.find(this.getContactSocialNetworks(),id);
 		if (outNet != null) this.getContactSocialNetworks()
 								.remove(outNet);
 		return outNet;
@@ -72,12 +72,12 @@ public interface HasContactSocialNetworks
 												   final LoginID user) {
 		return this.getContactSocialNetworks().stream()
 									 .filter(socialNet -> socialNet != null
-												       && socialNet.getType() == type
+												       && socialNet.getSocialNetworkType() == type
 												       && socialNet.getUser().is(user))
 			         				 .count() > 0;
 	}
 	public default Collection<ContactSocialNetwork> getContactSocialNetworksWithDefaultOneFirst() {
-		return ContactMean.orderDefaultFirst(this.getContactSocialNetworks());
+		return IsContactMean.orderDefaultFirst(this.getContactSocialNetworks());
 	}
 	/**
 	 * Returns the first {@link ContactSocialNetwork} with the given type for the given user
@@ -90,7 +90,7 @@ public interface HasContactSocialNetworks
 		return CollectionUtils.hasData(this.getContactSocialNetworks())
 					? CollectionUtils.of(this.getContactSocialNetworks())
 									 .findFirstElementMatching(socialNet -> socialNet != null
-															  			 && socialNet.getType() == type
+															  			 && socialNet.getSocialNetworkType() == type
 															  			 && socialNet.getUser().is(user))
 					: null;
 	}
@@ -105,7 +105,7 @@ public interface HasContactSocialNetworks
 		return CollectionUtils.hasData(this.getContactSocialNetworks())
 						? CollectionUtils.of(this.getContactSocialNetworks())
 								     	 .findFirstElementMatching(el -> el.getUsage() == usage
-																	  && el.getType() == type)
+																	  && el.getSocialNetworkType() == type)
 						: null;
 	}
 	/**
@@ -113,7 +113,7 @@ public interface HasContactSocialNetworks
 	 * @return
 	 */
 	public default ContactSocialNetwork getDefaultContactSocialNetwork() {
-		ContactSocialNetwork net = ContactMean.findDefault(this.getContactSocialNetworks());
+		ContactSocialNetwork net = IsContactMean.findDefault(this.getContactSocialNetworks());
 		return net;
 	}
 	/**
@@ -121,7 +121,7 @@ public interface HasContactSocialNetworks
 	 * @return
 	 */
 	public default ContactSocialNetwork getDefaultContactSocialNetworkOrAny() {
-		ContactSocialNetwork net = ContactMean.findDefault(this.getContactSocialNetworks());
+		ContactSocialNetwork net = IsContactMean.findDefault(this.getContactSocialNetworks());
 		if (CollectionUtils.hasData(this.getContactSocialNetworks())) net = CollectionUtils.pickOneElement(this.getContactSocialNetworks());
 		return net;
 	}

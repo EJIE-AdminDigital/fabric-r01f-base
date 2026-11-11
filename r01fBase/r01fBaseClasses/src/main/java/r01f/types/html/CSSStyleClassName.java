@@ -2,8 +2,8 @@ package r01f.types.html;
 
 import lombok.Getter;
 import r01f.annotations.Immutable;
-import r01f.guids.OIDTyped;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OIDTyped;
 
 @Immutable
 @MarshallType(as="cssStyleClassName")

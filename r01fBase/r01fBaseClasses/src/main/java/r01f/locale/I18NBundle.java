@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import lombok.RequiredArgsConstructor;
-import r01f.guids.OID;
+import r01f.oids.OID;
 
 /**
  * Default {@link I18NBundleAccess} impl wrapping a {@link ResourceBundle}

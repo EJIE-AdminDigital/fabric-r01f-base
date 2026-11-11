@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 import com.google.common.collect.Lists;
 
 import lombok.experimental.Accessors;
-import r01f.guids.OID;
 import r01f.model.PersistableModelObject;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OID;
 import r01f.util.types.collections.CollectionUtils;
 
 @MarshallType(as="findResult",typeId="findOnModelObjectOK")

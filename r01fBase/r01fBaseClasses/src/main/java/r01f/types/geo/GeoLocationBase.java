@@ -317,7 +317,7 @@ public abstract class GeoLocationBase<GID extends GeoID,
 								  this.getId(),
 								  path.toString(),
 								  this.getOfficialName() != null ? this.getOfficialName() 
-										  						 : this.getNameByLanguage() != null ? this.getNameByLanguage().getAny(Language.ENGLISH,Language.SPANISH,Language.BASQUE)
+										  						 : this.getNameByLanguage() != null ? this.getNameByLanguage().getInFirstAvailableOf(Language.ENGLISH,Language.SPANISH,Language.BASQUE)
 										  								 				  			: "no name");
 	}
 }

@@ -1,12 +1,12 @@
 package r01f.model.metadata;
 
 import lombok.experimental.Accessors;
-import r01f.guids.OID;
 import r01f.locale.Language;
 import r01f.model.ModelObject;
 import r01f.model.metadata.annotations.DescInLang;
 import r01f.model.metadata.annotations.MetaDataForType;
 import r01f.model.metadata.annotations.ModelObjectData;
+import r01f.oids.OID;
 
 
 /**

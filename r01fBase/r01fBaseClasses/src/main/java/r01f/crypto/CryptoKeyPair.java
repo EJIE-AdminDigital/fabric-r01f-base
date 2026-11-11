@@ -1,6 +1,8 @@
 package r01f.crypto;
 
 import java.io.Serializable;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.KeySpec;
@@ -16,16 +18,21 @@ public class CryptoKeyPair
 /////////////////////////////////////////////////////////////////////////////////////////
 //  FIELDS
 /////////////////////////////////////////////////////////////////////////////////////////
-	@Getter private final RSAPublicKey _publicKey;		
-	@Getter private final RSAPrivateKey _privateKey;
+	@Getter private final PublicKey _publicKey;		
+	@Getter private final PrivateKey _privateKey;
 	@Getter private final byte[] _publicKeyFingerPrint;
 /////////////////////////////////////////////////////////////////////////////////////////
 //  CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
-	public CryptoKeyPair(final RSAPublicKey publicKey,final RSAPrivateKey privateKey,final byte[] publicKeyFingerPrint) {
+	public CryptoKeyPair(final PublicKey publicKey,final PrivateKey privateKey,
+						 final byte[] publicKeyFingerPrint) {
 		_publicKey = publicKey;
 		_privateKey = privateKey;
 		_publicKeyFingerPrint = publicKeyFingerPrint;
+	}
+	public CryptoKeyPair(final PublicKey publicKey,final PrivateKey privateKey) {
+			this(publicKey,privateKey,
+				 null);	// no fingerprint
 	}
 	public CryptoKeyPair(final CryptoKeyPairSerialized cryptoKeyPairSerialized) {
 		// public key

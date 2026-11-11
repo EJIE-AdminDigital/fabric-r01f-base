@@ -22,7 +22,7 @@ import r01f.util.types.collections.CollectionUtils;
 @Accessors(prefix="_")
 public class ContactInfo
   implements Serializable,
-  			 HasMailAddresses,HasContactMails,
+  			 HasEMailAddresses,HasContactEMails,
   			 HasPhoneNumbers,HasContactPhones,
   			 HasContactSocialNetworks,
   			 HasContactWebSites,
@@ -61,7 +61,7 @@ public class ContactInfo
 	 * email
 	 */
 	@MarshallField(as="emailChannels")
-	@Getter @Setter private Collection<ContactMail> _contactMails;
+	@Getter @Setter private Collection<ContactEMail> _contactEMails;
 	/**
 	 * web sites
 	 */
@@ -100,7 +100,7 @@ public class ContactInfo
 	public ContactInfo doNotExposeData() {
 		_private = true;
 		if (CollectionUtils.hasData(_contactPhones)) _contactPhones.forEach(phone -> phone.setPrivate(true));
-		if (CollectionUtils.hasData(_contactMails)) _contactMails.forEach(mail -> mail.setPrivate(true));
+		if (CollectionUtils.hasData(_contactEMails)) _contactEMails.forEach(mail -> mail.setPrivate(true));
 		if (CollectionUtils.hasData(_contactWebSites)) _contactWebSites.forEach(web -> web.setPrivate(true));
 		if (CollectionUtils.hasData(_contactSocialNetworks)) _contactSocialNetworks.forEach(net -> net.setPrivate(true));
 		
@@ -127,13 +127,13 @@ public class ContactInfo
 		return this;
 	}
 ////////// Mail
-	public ContactInfo addMail(final ContactMail mail) {
+	public ContactInfo addMail(final ContactEMail mail) {
 		if (this.isPrivate() && mail != null) mail.setPrivate(true);
-		this.addOrUpdateContactMail(mail);
+		this.addOrUpdateContactEMail(mail);
 		return this;
 	}
-	public ContactInfo addMails(final Collection<ContactMail> mails) {
-		this.addOrUpdateContactMails(mails);
+	public ContactInfo addMails(final Collection<ContactEMail> mails) {
+		this.addOrUpdateContactEMails(mails);
 		return this;
 	}
 ////////// Social network

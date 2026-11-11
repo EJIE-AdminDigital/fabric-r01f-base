@@ -8,7 +8,7 @@ import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
 import r01f.util.types.Objects;
 
 /**
- * Base type for every {@link ContactInfo} media related object: {@link ContactMail}, {@link ContactPhone}, {@link ContactSocialNetwork}, etc
+ * Base type for every {@link ContactInfo} media related object: {@link ContactEMail}, {@link ContactPhone}, {@link ContactSocialNetwork}, etc
  * @param <SELF_TYPE>
  */
 @Accessors(prefix="_")

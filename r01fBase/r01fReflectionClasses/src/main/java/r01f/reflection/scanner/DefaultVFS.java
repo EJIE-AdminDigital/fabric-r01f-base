@@ -170,7 +170,8 @@ public class DefaultVFS
      * @return The URL of the JAR file, if one is found. Null if not.
      * @throws MalformedURLException
      */
-    protected static URL _findJarForResource(final URL url) throws MalformedURLException {
+    @SuppressWarnings("deprecation")
+	protected static URL _findJarForResource(final URL url) throws MalformedURLException {
         log.trace("Find JAR URL: {}", url);
 
         // If the file part of the URL is itself a URL, then that URL probably points to the JAR

@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: remove-website-from-media
+expected_outcome: |
+  The _webSite field disappears from OG10Media and every use (mock factory setter) is removed, nothing else in the model changes, no reference remains, and the report mentions stored descriptors/DB.

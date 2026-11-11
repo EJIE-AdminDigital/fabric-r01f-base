@@ -54,19 +54,18 @@ import r01f.objectstreamer.annotations.MarshallType;
  *		SerializedData<Data> serData = SerializedData.from(data)
  *													 .marshalledUsing(m)
  *													 .toXml();
+ *		// [3] - Store the SerializedData<Data> object for example in a CLOB col of a DB table
+ *		dbEntity.setData(marshaller.forWriting()
+ *								   .toXml(serData));
  * </pre>
- * This object can be used like:
+ * When the data has to be read, it can be deserialized as:
  * <pre class='brush:java'>
- * 		// data as xml
- * 		String xml = serData.getSerializedData();
- * 
- * 		// data as object
- * 		// [1] - Build a marshaller
- * 		//		 (or get it injected)
- * 		Marshaller m =  MarshallerBuilder.findTypesToMarshallAt(AppCode.API.code())
- *									     .build();
- *		// [2] - Serialize
- * 		Data obj = serData.toModelObjUsing(m);
+ * 		// [1] - Read the SerializedData<Data> object from the DB
+ * 		String serDataXml = dbEntity.getData();
+ * 		SerializedData<Data> serData = marshaller.forReading()
+ * 												 .fromXml(serDataXml,new TypeToken<SerializedData<Data>>() { });
+ *		// [2] - Get the original data object from the serialized data
+ * 		Data obj = serData.toModelObjUsing(marshaller);
  * 
  * 		Assert.asserEquals(data,obj);O
  * </pre>
@@ -180,7 +179,7 @@ public class SerializedData<T>
 		
 		public SerializedConfigDataBuilderFormatStep<T> marshalledUsing(final Marshaller m) {
 			return new SerializedConfigDataBuilderFormatStep<T>(_obj,
-																	m);
+																m);
 		}
 	}
 	@RequiredArgsConstructor(access=AccessLevel.PRIVATE)

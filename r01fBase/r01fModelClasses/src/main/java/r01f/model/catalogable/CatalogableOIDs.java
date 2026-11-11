@@ -2,8 +2,8 @@ package r01f.model.catalogable;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import r01f.guids.OIDTyped;
-import r01f.guids.PersistableObjectOID;
+import r01f.oids.OIDTyped;
+import r01f.oids.PersistableObjectOID;
 
 /**
  * Catalog oids

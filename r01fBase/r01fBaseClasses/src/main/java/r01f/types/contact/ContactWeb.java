@@ -27,7 +27,7 @@ import r01f.util.types.Objects;
 @NoArgsConstructor @AllArgsConstructor
 public class ContactWeb 
      extends ContactMeanDataBase<ContactWeb>
-  implements ContactMean,
+  implements IsContactMean,
   			 HasLanguage {
 	
 	private static final long serialVersionUID = -4012809208590547328L;

@@ -1,10 +1,10 @@
 package r01f.model.services;
 
 import lombok.Getter;
-import r01f.guids.OIDTyped;
 import r01f.model.persistence.PersistencePerformedOperation;
 import r01f.model.persistence.PersistenceRequestedOperation;
 import r01f.objectstreamer.annotations.MarshallType;
+import r01f.oids.OIDTyped;
 import r01f.util.types.collections.CollectionUtils;
 
 /**

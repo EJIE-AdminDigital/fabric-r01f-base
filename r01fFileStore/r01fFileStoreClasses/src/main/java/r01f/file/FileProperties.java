@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.time.Instant;
 
 import r01f.debug.Debuggable;
-import r01f.securitycontext.SecurityIDS.LoginID;
-import r01f.securitycontext.SecurityIDS.UserGroupCode;
+import r01f.oids.SecurityIDs.LoginID;
+import r01f.oids.SecurityIDs.UserGroupCode;
 import r01f.types.Path;
 
 public interface FileProperties

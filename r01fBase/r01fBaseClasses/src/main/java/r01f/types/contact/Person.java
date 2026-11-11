@@ -15,7 +15,8 @@ import r01f.util.types.Objects;
 @Accessors(prefix="_")
 @NoArgsConstructor
 public class Person<PERSONID extends IsPersonID>
-	 extends PersonalData  {
+	 extends PersonalData
+  implements IsPerson {
 
 	private static final long serialVersionUID = 3678962348416518107L;
 

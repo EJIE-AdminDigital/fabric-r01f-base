@@ -10,12 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import r01f.model.persistence.PersistencePerformedOperation;
+import r01f.model.security.context.SecurityContext;
 import r01f.objectstreamer.annotations.MarshallField;
 import r01f.objectstreamer.annotations.MarshallField.MarshallFieldAsXml;
 import r01f.objectstreamer.annotations.MarshallType;
-import r01f.securitycontext.SecurityContext;
-import r01f.securitycontext.SecurityIDS.LoginID;
-import r01f.securitycontext.SecurityOIDs.UserOID;
+import r01f.oids.SecurityIDs.SecurityPrincipalID;
+import r01f.oids.SecurityOIDs.SecurityPrincipalOID;
 
 /**
  * Object's Tracking info (author/a, create date, update date, etc)
@@ -29,42 +29,54 @@ public class ModelObjectTracking
 /////////////////////////////////////////////////////////////////////////////////////////
 //	FIELDS
 /////////////////////////////////////////////////////////////////////////////////////////
+////////// --- CREATION
 	/**
 	 * Object create date
 	 */
-	@MarshallField(as="createDate",
+	@MarshallField(as="createdAt",
 				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private Instant _createDate = Instant.now();
+	@Getter @Setter private Instant _createdAt = Instant.now();
 	/**
-	 * Creator user oid
+	 * Creator [security principal] oid
 	 */
-	@MarshallField(as="creatorUserOid",
+	@MarshallField(as="creatorSecurityPrincipalOid",
 				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private UserOID _creatorUserOid;
+	@Getter @Setter private SecurityPrincipalOID _creatorSecurityPrincipalOid;
 	/**
-	 * Creator user code
+	 * Creator [security principal] id
 	 */
-	@MarshallField(as="creatorUserCode",
+	@MarshallField(as="creatorSecurityPrincipalId",
 				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private LoginID _creatorUserCode;
+	@Getter @Setter private SecurityPrincipalID _creatorSecurityPrincipalId;
+	
+////////// --- LAST UPDATE
 	/**
 	 * Object's create date
 	 */
-	@MarshallField(as="lastUpdate",
+	@MarshallField(as="lastUpdatedAt",
 				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private Instant _lastUpdateDate;
+	@Getter @Setter private Instant _lastUpdatedAt;
 	/**
-	 * Last update user oid
+	 * Last update [security principal] oid
 	 */
-	@MarshallField(as="lastUpdaterUserOid",
+	@MarshallField(as="lastUpdaterSecurityPrincipalOid",
 				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private UserOID _lastUpdatorUserOid;
+	@Getter @Setter private SecurityPrincipalOID _lastUpdaterSecurityPrincipalOid;
 	/**
-	 * Last update user code
+	 * Last update [security principal] id
 	 */
-	@MarshallField(as="lastUpdaterUserCode",
+	@MarshallField(as="lastUpdaterSecurityPrincipalId",
 				   whenXml=@MarshallFieldAsXml(attr=true))
-	@Getter @Setter private LoginID _lastUpdatorUserCode;
+	@Getter @Setter private SecurityPrincipalID _lastUpdaterSecurityPrincipalId;
+	
+////////// --- IMPERSONATION
+	/**
+	 * The [principal] impersonating (the impersonated principal is the one in the creator/lastUpdater fields)
+	 */
+	@MarshallField(as="impersonatinSecurityPrincipalOid",
+				   whenXml=@MarshallFieldAsXml(attr=true))
+	@Getter @Setter private SecurityPrincipalOID _impersonatingSecurityPrincipalOid;
+	
 /////////////////////////////////////////////////////////////////////////////////////////
 //  CONSTRUCTOR
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -72,25 +84,40 @@ public class ModelObjectTracking
 		// default no-args constructor
 	}
 	public ModelObjectTracking(final ModelObjectTracking other) {
-		_createDate = other.getCreateDate();
-		_creatorUserOid = other.getCreatorUserOid();
-		_creatorUserCode = other.getCreatorUserCode();
-		_lastUpdateDate = other.getLastUpdateDate();
-		_lastUpdatorUserOid = other.getLastUpdatorUserOid();
-		_lastUpdatorUserCode = other.getLastUpdatorUserCode();
+		// create
+		_createdAt = other.getCreatedAt();
+		_creatorSecurityPrincipalOid = other.getCreatorSecurityPrincipalOid();
+		_creatorSecurityPrincipalId = other.getCreatorSecurityPrincipalId();
+		// last update
+		_lastUpdatedAt = other.getLastUpdatedAt();
+		_lastUpdaterSecurityPrincipalOid = other.getLastUpdaterSecurityPrincipalOid();
+		_lastUpdaterSecurityPrincipalId = other.getLastUpdaterSecurityPrincipalId();
+		// impersonation
+		_impersonatingSecurityPrincipalOid = other.getImpersonatingSecurityPrincipalOid();
 	}
-	public ModelObjectTracking(final UserOID creatorOid,final LoginID creator,final Instant createDate) {
-		this(creatorOid,creator,createDate,
-			 creatorOid,creator,createDate);
+	public ModelObjectTracking(final SecurityPrincipalOID creatorSecurityPrincipalOid,final SecurityPrincipalID creatorSecurityPrincipalId,final Instant createdAt) {
+		this(creatorSecurityPrincipalOid,creatorSecurityPrincipalId,createdAt,
+			 creatorSecurityPrincipalOid,creatorSecurityPrincipalId,createdAt);	// Updater is the same as creator
 	}
-	public ModelObjectTracking(final UserOID creatorOid,final LoginID creator,final Instant createDate,
-							   final UserOID updatorOid,final LoginID lastUpdator,final Instant lastUpdateDate) {
-		_createDate = createDate;
-		_lastUpdateDate = lastUpdateDate;
-		_creatorUserOid = creatorOid;
-		_creatorUserCode = creator;
-		_lastUpdatorUserOid = updatorOid;
-		_lastUpdatorUserCode = lastUpdator;
+	public ModelObjectTracking(final SecurityPrincipalOID creatorSecurityPrincipalOid,final SecurityPrincipalID creatorSecurityPrincipalId,final Instant createdAt,
+							   final SecurityPrincipalOID UpdaterSecurityPrincipalOid,final SecurityPrincipalID UpdaterSecurityPrincipaId,final Instant lastUpdatedAt) {
+		this(creatorSecurityPrincipalOid,creatorSecurityPrincipalId,createdAt,
+			 UpdaterSecurityPrincipalOid,UpdaterSecurityPrincipaId,lastUpdatedAt,
+			 null);
+	}
+	public ModelObjectTracking(final SecurityPrincipalOID creatorSecurityPrincipalOid,final SecurityPrincipalID creatorSecurityPrincipalId,final Instant createdAt,
+							   final SecurityPrincipalOID UpdaterSecurityPrincipalOid,final SecurityPrincipalID UpdaterSecurityPrincipalId,final Instant lastUpdatedAt,
+							   final SecurityPrincipalOID impersonatingSecurityPrincipalOid) {
+		// create
+		_createdAt = createdAt;
+		_creatorSecurityPrincipalOid = creatorSecurityPrincipalOid;
+		_creatorSecurityPrincipalId = creatorSecurityPrincipalId;
+		// last update
+		_lastUpdatedAt = lastUpdatedAt;
+		_lastUpdaterSecurityPrincipalOid = UpdaterSecurityPrincipalOid;
+		_lastUpdaterSecurityPrincipalId = UpdaterSecurityPrincipalId;
+		// impersonation
+		_impersonatingSecurityPrincipalOid = impersonatingSecurityPrincipalOid;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //  METHODS
@@ -100,20 +127,22 @@ public class ModelObjectTracking
 	 * @param userCode
 	 * @return
 	 */
-	public ModelObjectTracking setModifiedBy(final UserOID userOid,final LoginID userCode) {
-		this.setLastUpdatorUserOid(userOid);
-		this.setLastUpdatorUserCode(userCode);
-		this.setLastUpdateDate(Instant.now());
+	public ModelObjectTracking setModifiedBy(final SecurityPrincipalOID securityPrincipalOid,final SecurityPrincipalID userCode) {
+		this.setLastUpdaterSecurityPrincipalOid(securityPrincipalOid);
+		this.setLastUpdaterSecurityPrincipalId(userCode);
+		this.setLastUpdatedAt(Instant.now());
 		return this;
 	}
 	public void copyFrom(final ModelObjectTracking other) {
 		if (other == null) return;
-		_createDate = other.getCreateDate();
-		_creatorUserOid = other.getCreatorUserOid();
-		_creatorUserCode = other.getCreatorUserCode();
-		_lastUpdateDate = other.getLastUpdateDate();
-		_lastUpdatorUserOid = other.getLastUpdatorUserOid();
-		_lastUpdatorUserCode = other.getLastUpdatorUserCode();
+		// create
+		_createdAt = other.getCreatedAt();
+		_creatorSecurityPrincipalOid = other.getCreatorSecurityPrincipalOid();
+		_creatorSecurityPrincipalId = other.getCreatorSecurityPrincipalId();
+		// last update
+		_lastUpdatedAt = other.getLastUpdatedAt();
+		_lastUpdaterSecurityPrincipalOid = other.getLastUpdaterSecurityPrincipalOid();
+		_lastUpdaterSecurityPrincipalId = other.getLastUpdaterSecurityPrincipalId();
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
 //	MERGE
@@ -159,25 +188,26 @@ public class ModelObjectTracking
 
 		// and update
 		if (op == PersistencePerformedOperation.CREATED) {
-			out.setCreateDate(Instant.now());
-			out.setLastUpdateDate(out.getCreateDate());
-			out.setCreatorUserOid(other.getCreatorUserOid() != null ? other.getCreatorUserOid()
-															    	: securityContext != null
-															       && securityContext.isForUser() ? securityContext.asForUser()
-															    											   	   .getUserOid()
-															    								  : null);
-			out.setCreatorUserCode(other.getCreatorUserCode() != null ? other.getCreatorUserCode()
-																  	  : securityContext != null ? securityContext.getLoginId()
+			out.setCreatedAt(Instant.now());
+			out.setLastUpdatedAt(out.getCreatedAt());
+			out.setCreatorSecurityPrincipalOid(other.getCreatorSecurityPrincipalOid() != null ? other.getCreatorSecurityPrincipalOid()
+															    	: securityContext != null ? securityContext.getSecurityPrincipal()
+															    											   .getOid()
+															    			    			  : null);
+			out.setCreatorSecurityPrincipalId(other.getCreatorSecurityPrincipalId() != null ? other.getCreatorSecurityPrincipalId()
+																  	  : securityContext != null ? securityContext.getSecurityPrincipalId()
 																  	  							: null);
-			out.setLastUpdatorUserCode(null);
+			out.setLastUpdaterSecurityPrincipalId(null);
 		}
 		else if (op == PersistencePerformedOperation.UPDATED) {
-			out.setLastUpdateDate(Instant.now());
-			out.setLastUpdatorUserOid(securityContext.isForUser() ? securityContext.asForUser()
-																			       .getUserOid()
-																  : null);
-			out.setLastUpdatorUserCode(securityContext.getLoginId());
+			out.setLastUpdatedAt(Instant.now());
+			out.setLastUpdaterSecurityPrincipalOid(securityContext != null ? securityContext.getSecurityPrincipal()
+																							.getOid()
+											    			  : null);
+			out.setLastUpdaterSecurityPrincipalId(securityContext.getSecurityPrincipalId());
 		}
+		// impersonation
+		out.setImpersonatingSecurityPrincipalOid(other.getImpersonatingSecurityPrincipalOid());
 		return out;
 	}
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -190,17 +220,18 @@ public class ModelObjectTracking
 		if (!(obj instanceof ModelObjectTracking)) return false;
 
 		ModelObjectTracking other = (ModelObjectTracking)obj;
-		return Objects.equal(this.getCreateDate(),other.getCreateDate())
-			&& Objects.equal(this.getCreatorUserOid(),other.getCreatorUserOid())
-			&& Objects.equal(this.getCreatorUserCode(),other.getCreatorUserCode())
-			&& Objects.equal(this.getLastUpdateDate(),other.getLastUpdateDate())
-			&& Objects.equal(this.getLastUpdatorUserCode(),other.getLastUpdatorUserCode())
-			&& Objects.equal(this.getLastUpdatorUserOid(),other.getLastUpdatorUserOid());
-
+		return Objects.equal(this.getCreatedAt(),other.getCreatedAt())
+			&& Objects.equal(this.getCreatorSecurityPrincipalOid(),other.getCreatorSecurityPrincipalOid())
+			&& Objects.equal(this.getCreatorSecurityPrincipalId(),other.getCreatorSecurityPrincipalId())
+			&& Objects.equal(this.getLastUpdatedAt(),other.getLastUpdatedAt())
+			&& Objects.equal(this.getLastUpdaterSecurityPrincipalId(),other.getLastUpdaterSecurityPrincipalId())
+			&& Objects.equal(this.getLastUpdaterSecurityPrincipalOid(),other.getLastUpdaterSecurityPrincipalOid())
+			&& Objects.equal(this.getImpersonatingSecurityPrincipalOid(),other.getImpersonatingSecurityPrincipalOid());
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hashCode(_createDate,_creatorUserCode,_creatorUserOid,
-								_lastUpdateDate,_lastUpdatorUserCode,_lastUpdatorUserOid);
+		return Objects.hashCode(_createdAt,_creatorSecurityPrincipalId,_creatorSecurityPrincipalOid,
+								_lastUpdatedAt,_lastUpdaterSecurityPrincipalId,_lastUpdaterSecurityPrincipalOid,
+								_impersonatingSecurityPrincipalOid);
 	}
 }

@@ -1,15 +1,14 @@
 package r01f.model.search;
 
 import r01f.facets.HasOID;
-import r01f.guids.PersistableObjectOID;
-import r01f.model.IndexableModelObject;
 import r01f.model.PersistableModelObject;
+import r01f.oids.PersistableObjectOID;
 
 /**
  * A {@link SearchResultItemForModelObject} that wraps (or contains) a model object's instance
  * @param <M>
  */
-public interface SearchResultItemContainsPersistableObject<O extends PersistableObjectOID,M extends PersistableModelObject<O> & IndexableModelObject>
+public interface SearchResultItemContainsPersistableObject<O extends PersistableObjectOID,M extends PersistableModelObject<O>>
 		 extends SearchResultItemForModelObject<M>,
 		 		 HasOID<O> {
 	/**
@@ -26,5 +25,5 @@ public interface SearchResultItemContainsPersistableObject<O extends Persistable
 	 * if the model object's type is not the expected
 	 * @param modelObject
 	 */
-	public <U extends IndexableModelObject> void unsafeSetModelObject(final U modelObject);	
+	public <U extends PersistableModelObject<?>> void unsafeSetModelObject(final U modelObject);	
 }

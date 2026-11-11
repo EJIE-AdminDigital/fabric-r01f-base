@@ -41,7 +41,7 @@ public interface HasContactWebSites
 		}
 	}
 	public default ContactWeb removeContactWebSite(final ContactInfoUsage usage) {
-		ContactWeb outWeb = ContactMean.find(this.getContactWebSites(),usage);
+		ContactWeb outWeb = IsContactMean.find(this.getContactWebSites(),usage);
 		if (outWeb != null) this.getContactWebSites().remove(outWeb);
 		return outWeb;
 	}
@@ -69,7 +69,7 @@ public interface HasContactWebSites
 		return false;
 	}
 	public default Collection<ContactWeb> getContactWebSitesWithDefaultOneFirst() {
-		return ContactMean.orderDefaultFirst(this.getContactWebSites());
+		return IsContactMean.orderDefaultFirst(this.getContactWebSites());
 	}
 	/**
 	 * Returns the first {@link ContactWeb} with the given url
@@ -127,7 +127,7 @@ public interface HasContactWebSites
 	 * @return
 	 */
 	public default Url getWebSiteUrl(final ContactInfoUsage usage) {
-		ContactWeb web = ContactMean.find(this.getContactWebSites(),usage);
+		ContactWeb web = IsContactMean.find(this.getContactWebSites(),usage);
 		return web != null ? web.getUrl() : null;
 	}
 	/**
@@ -149,7 +149,7 @@ public interface HasContactWebSites
 	 * @return
 	 */
 	public default Url getDefaultWebSiteUrl() {
-		ContactWeb web = ContactMean.findDefault(this.getContactWebSites());
+		ContactWeb web = IsContactMean.findDefault(this.getContactWebSites());
 		return web != null ? web.getUrl() : null;
 	}
 	/**
@@ -157,7 +157,7 @@ public interface HasContactWebSites
 	 * @return
 	 */
 	public default Url getDefaultWebSiteUrlOrAny() {
-		ContactWeb web = ContactMean.findDefault(this.getContactWebSites());
+		ContactWeb web = IsContactMean.findDefault(this.getContactWebSites());
 		if (web == null && CollectionUtils.hasData(this.getContactWebSites())) web = CollectionUtils.pickOneElement(this.getContactWebSites());
 		return web != null ? web.getUrl() : null;
 	}
@@ -166,7 +166,7 @@ public interface HasContactWebSites
 	 * @return
 	 */
 	public default Url getWebSiteUrlOtherThanDefaul() {
-		ContactWeb web = ContactMean.findOtherThanDefault(this.getContactWebSites());
+		ContactWeb web = IsContactMean.findOtherThanDefault(this.getContactWebSites());
 		return web != null ? web.getUrl() : null;
 	}
 	/**
@@ -178,7 +178,7 @@ public interface HasContactWebSites
 		Url defUrl = this.getDefaultWebSiteUrl();
 		// ... if there's NO default, return any of them
 		if (defUrl == null) {
-			ContactWeb contactWeb = ContactMean.findOne(this.getContactWebSites());
+			ContactWeb contactWeb = IsContactMean.findOne(this.getContactWebSites());
 			defUrl = contactWeb != null ? contactWeb.getUrl() : null;
 		}
 		return defUrl;

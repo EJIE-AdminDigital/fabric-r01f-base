@@ -32,7 +32,7 @@
 														  ... this causes issues in eclipse
 													-->
 		<!--<jackson.version>2.19.2</jackson.version> -->	<!-- v2.13.1 requires jdk1.8 for jdk 1.6 use 2.9.0-->
-	    <jackson.version>3.2.1</jackson.version>
+	    <jackson.version>3.2.2</jackson.version>
 	    <jackson.annotations.version>2.22</jackson.annotations.version>
 
 	    <gson.version>2.13.2</gson.version>
@@ -544,10 +544,15 @@
 		-->
 		<profile>
 			<id>batsdlc</id>
+			<!-- Only for IDE eclipse on developer mode
+			<activation>
+                <activeByDefault>true</activeByDefault>
+           </activation> -->
+
 			<properties>
 
 				<!-- Unified version for all r01f artifacts -->
-				<r01f.version>0.4.16</r01f.version>
+				<r01f.version>0.5.20</r01f.version>
 
 				<!--  Revion version for all modules -->
 			    <revision>${r01f.version}</revision>

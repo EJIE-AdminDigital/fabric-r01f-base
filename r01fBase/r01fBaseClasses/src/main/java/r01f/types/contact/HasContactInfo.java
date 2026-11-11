@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 public interface HasContactInfo 
-		 extends HasMailAddresses,HasContactMails,
+		 extends HasEMailAddresses,HasContactEMails,
 		 		 HasPhoneNumbers,HasContactPhones {
 /////////////////////////////////////////////////////////////////////////////////////////
 //	
@@ -23,11 +23,11 @@ public interface HasContactInfo
 		return this.getContactInfo() != null ? this.getContactInfo().getPhoneNumbers() : Collections.emptyList();
 	}
 	@Override
-	public default Collection<ContactMail> getContactMails() {
-		return this.getContactInfo() != null ? this.getContactInfo().getContactMails() : Collections.emptyList();
+	public default Collection<ContactEMail> getContactEMails() {
+		return this.getContactInfo() != null ? this.getContactInfo().getContactEMails() : Collections.emptyList();
 	}
 	@Override
-	public default Collection<EMail> getMailAddresses() {
-		return this.getContactInfo() != null ? this.getContactInfo().getMailAddresses() : Collections.emptyList();
+	public default Collection<EMail> getEMailAddresses() {
+		return this.getContactInfo() != null ? this.getContactInfo().getEMailAddresses() : Collections.emptyList();
 	}
 }

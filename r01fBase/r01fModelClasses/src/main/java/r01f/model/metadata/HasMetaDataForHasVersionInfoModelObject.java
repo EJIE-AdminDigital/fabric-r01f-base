@@ -3,12 +3,12 @@ package r01f.model.metadata;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
-import r01f.guids.VersionIndependentOID;
-import r01f.guids.VersionOID;
 import r01f.locale.Language;
 import r01f.model.metadata.annotations.DescInLang;
 import r01f.model.metadata.annotations.MetaDataForField;
 import r01f.model.metadata.annotations.MetaDataForType;
+import r01f.oids.VersionIndependentOID;
+import r01f.oids.VersionOID;
 
 @MetaDataForType(modelObjTypeCode = HasFieldsMetaData.HAS_VERSION_INFO_MODEL_OBJECT_TYPE_CODE,
 			     description = {

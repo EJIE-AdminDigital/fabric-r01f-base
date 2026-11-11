@@ -11,7 +11,7 @@ import r01f.model.metadata.annotations.DescInLang;
 import r01f.model.metadata.annotations.MetaDataForField;
 import r01f.model.metadata.annotations.MetaDataForType;
 import r01f.model.metadata.annotations.Storage;
-import r01f.securitycontext.SecurityIDS.LoginID;
+import r01f.oids.SecurityIDs.LoginID;
 
 @MetaDataForType(modelObjTypeCode = HasFieldsMetaData.HAS_TRACKING_INFO_MODEL_OBJECT_TYPE_CODE,
 			     description = {

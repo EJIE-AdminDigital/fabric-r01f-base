@@ -2,9 +2,9 @@ package r01f.model.search;
 
 import java.util.Collection;
 
-import r01f.guids.OID;
 import r01f.model.ModelObject;
 import r01f.model.metadata.HasTypesMetaData;
+import r01f.oids.OID;
 
 
 /**

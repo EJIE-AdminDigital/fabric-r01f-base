@@ -1,6 +1,6 @@
 package r01f.facets;
 
-import r01f.guids.CommonOIDs.TenantID;
+import r01f.oids.CommonOIDs.TenantID;
 
 /**
  * Every model object which has a {@link TenantID} should implement this interface

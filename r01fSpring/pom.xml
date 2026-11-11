@@ -9,15 +9,24 @@
 <!-- PROPERTIES                                                             -->
 <!-- ====================================================================== -->
 	<properties>
-	 
-		  <spring.version>7.0.8</spring.version>	 
-	      <spring.security.version>7.1.0</spring.security.version>	     
-	      <spring.boot.version>4.1.0</spring.boot.version>
+
+        <!--ROLLBACK Caused by: java.lang.NoSuchFieldError: Class org.springframework.http.HttpMethod does not have member field 'org.springframework.http.HttpMethod QUERY'-->
+        <!--ROLLBACK 7.1.0-RC1 -> 7.1.0-M1-->
+        <!--ROLLBACK 7.2.0-RC1 -> 7.2.0-M1-->
+        <!--ROLLBACK 4.2.0-RC1 -> 4.2.0-M1-->
+		  <spring.version>7.1.0-M1</spring.version>
+	      <spring.security.version>7.2.0-M1</spring.security.version>
+	      
+	      <spring.boot.version>4.2.0-M1</spring.boot.version>
+	      
+	      <spring.doc-openapi.version>3.1.1</spring.doc-openapi.version>
+	         
+	  
 		  
 		  
 		  <!-- #############################################################################################
 			   [STEPS TO USE Spring  4 ! 
-		      ##############################################################################################
+		       ##############################################################################################
 		       
 		        [1] Change the Spring Dependecies, in this pom, just this : 		        
 		            _______________________________________________________________________________________
@@ -95,7 +104,8 @@
 	<modules>
 		<module>r01fSpringClasses</module>		
 		<module>r01fSpringWeb</module>
-		<module>r01fSpringSecurityClasses</module>
+		<module>r01fSpringSecurity</module>
+		<module>r01fSpringSupport</module>
 		<module>r01fSpringBoot</module>
 	</modules>
 

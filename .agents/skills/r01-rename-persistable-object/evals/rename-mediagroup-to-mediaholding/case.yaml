@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: rename-mediagroup-to-mediaholding
+expected_outcome: |
+  Every MediaGroup class, package, member, XML name, table and test is renamed to MediaHolding (including OG10Media._mediaGroupRef and belongsToMediaGroup), OG10Media and MediaRegister names are untouched, imports resolve, a backup exists and the report explains the Eclipse Clean and the old table.

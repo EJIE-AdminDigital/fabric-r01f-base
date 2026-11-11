@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import r01f.eventbus.annotations.EventListenerSubscriber;
 
 /**
- *   Sample [ Bootstrap]
+ *   For [ Bootstrap]
  *   ------------------------------------------------: 
 	    @Bean
 	    @EventBusFor(MY_SERVICE_FQN)
@@ -33,7 +33,7 @@ import r01f.eventbus.annotations.EventListenerSubscriber;
 	        // 3.Return
 	        return new EventBusIsolatedAsyncImpl(multicaster);
 	    }
-	 if the subscriber listner it not  for crud services, must call the register  [ if is crud nothing to do with fabric ]
+	 if the subscriber listener it not  for crud services, must call the register  [ if is crud nothing to do with fabric ]
 	 		this._busInstance.register(listener);
 	 
  */
@@ -44,20 +44,46 @@ public class EventBusSpringIsolatedImpl
 /////////////////////////////////////////////////////////////////////////////////////////
 //	FIELDS
 /////////////////////////////////////////////////////////////////////////////////////////
-    private final SimpleApplicationEventMulticaster _eventMulticaster;
+    private final SimpleApplicationEventMulticaster   _eventMulticaster;
+    private final TransactionalSynchronizationSupport _transactionalSynchronizationSupport;
 /////////////////////////////////////////////////////////////////////////////////////////
-//	CONSTRUCTOR
+//	CONSTRUCTORS
 /////////////////////////////////////////////////////////////////////////////////////////
     public EventBusSpringIsolatedImpl(final SimpleApplicationEventMulticaster eventMulticaster) {
+    	 this(eventMulticaster,null);
+    }
+    public EventBusSpringIsolatedImpl(final SimpleApplicationEventMulticaster eventMulticaster, final TransactionalSynchronizationSupport transactionalSynchronizationSupport)  {
     	_eventMulticaster = eventMulticaster;
+    	_transactionalSynchronizationSupport = transactionalSynchronizationSupport;
     }
 /////////////////////////////////////////////////////////////////////////////////////////
-//	METHODS TO IMPLEMENT
+// TRANSACTONAL SUPPORT FACET IF REQUIRED.
+/////////////////////////////////////////////////////////////////////////////////////////
+    public static interface TransactionalSynchronizationSupport {
+    	public boolean isActualTransactionActive();
+    	public void multicastEventAfterCommit(final PayloadApplicationEvent<Event> event);    	
+    }
+/////////////////////////////////////////////////////////////////////////////////////////
+//	POST
 /////////////////////////////////////////////////////////////////////////////////////////
     @Override
-    public void post(final Event event) {      
-    	_eventMulticaster.multicastEvent(new PayloadApplicationEvent<>(this, event));
+    public void post(final Event event) {     
+    	PayloadApplicationEvent<Event> payloadEvent = new PayloadApplicationEvent<>(this, event);
+    	if(  _transactionalSynchronizationSupport == null) {
+    		 _eventMulticaster.multicastEvent(payloadEvent);
+    	}
+    	if (!_transactionalSynchronizationSupport.isActualTransactionActive()) {
+    		 _eventMulticaster.multicastEvent(payloadEvent);
+    	} else {
+    		// If an active transaction IS present (like in  a persist method),
+    	    // it tells the helper NOT to dispatch the event yet, but rather to wait 
+    	    // until the transaction completes a successful COMMIT (AFTER_COMMIT).
+    		_transactionalSynchronizationSupport.multicastEventAfterCommit(payloadEvent);
+    	}    
     }
+/////////////////////////////////////////////////////////////////////////////////////////
+// REGISTER
+/////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public void register(final EventBusListener listener) {    	
     	final List<Method> subscriberMethods = new ArrayList<>();
@@ -76,30 +102,29 @@ public class EventBusSpringIsolatedImpl
         }
         // 2. Register  ApplicationListener into  multicaster 
         _eventMulticaster.addApplicationListener(applicationEvent -> {
-		            if (applicationEvent instanceof PayloadApplicationEvent<?> payloadEvent) {
-		                Object payload = payloadEvent.getPayload();
-		
-		                if (payload instanceof Event customEvent) {
-		                    // [Invoke]
-		                    for (Method method : subscriberMethods) {
-		                        Class<?> targetEventType = method.getParameterTypes()[0];
-		                        if (targetEventType.isAssignableFrom(customEvent.getClass())) {
-		                            try {
-		                                method.invoke(listener,
-		                                			  customEvent);
-		                            } catch (final Throwable  e) {
-		                                log.error("error listener {}#{}", 
-			                                          customEvent.getClass().getSimpleName(), 
-			                                          listener.getClass().getSimpleName(), 
-			                                          method.getName(), e);
-		                            }
-		                        }
-		                    }
-		                }
-		            }
+														            if (applicationEvent instanceof PayloadApplicationEvent<?> payloadEvent) {
+														                Object payload = payloadEvent.getPayload();
+														
+														                if (payload instanceof Event customEvent) {
+														                    // [Invoke]
+														                    for (Method method : subscriberMethods) {
+														                        Class<?> targetEventType = method.getParameterTypes()[0];
+														                        if (targetEventType.isAssignableFrom(customEvent.getClass())) {
+														                            try {
+														                                method.invoke(listener,
+														                                			  customEvent);
+														                            } catch (final Throwable  e) {
+														                                log.error("error listener {}#{}", 
+															                                          customEvent.getClass().getSimpleName(), 
+															                                          listener.getClass().getSimpleName(), 
+															                                          method.getName(), e);
+														                            }
+														                        }
+														                    }
+														                }
+									            }
 		        });
-        log.info("Listener {} registrado con éxito en el EventBus privado.", 
+        log.info("Listener {} sucessufull registry at isolated EventBut", 
                  listener.getClass().getSimpleName());
     }
-
 }

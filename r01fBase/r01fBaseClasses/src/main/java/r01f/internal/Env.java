@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import r01f.enums.EnumExtended;
-import r01f.guids.CommonOIDs.Environment;
+import r01f.oids.CommonOIDs.Environment;
 import r01f.util.types.Strings;
 import r01f.util.types.collections.Lists;
 

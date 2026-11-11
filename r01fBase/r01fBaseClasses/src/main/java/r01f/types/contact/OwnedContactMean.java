@@ -5,13 +5,14 @@ import lombok.experimental.Accessors;
 import r01f.types.CanBeRepresentedAsString;
 
 /**
- * Represents a {@link ContactMean} like a {@link Phone} or an {@link EMail}
+ * Represents a {@link IsContactMean} like a {@link Phone} or an {@link EMail}
  * alongside with data about it's owner
  * @param <M>
  */
 @Accessors(prefix="_")
-public class OwnedContactMean<M extends ContactMean>
-  implements CanBeRepresentedAsString {
+public class OwnedContactMean<M extends IsContactMean>
+  implements IsContactMean,
+  			 CanBeRepresentedAsString {
 
 	private static final long serialVersionUID = -1135076268050723452L;
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -26,10 +27,10 @@ public class OwnedContactMean<M extends ContactMean>
 		_id = id;
 		_owner = owner;
 	}
-	public static <M extends ContactMean> OwnedContactMean<M> from(final M id,final String owner) {
+	public static <M extends IsContactMean> OwnedContactMean<M> from(final M id,final String owner) {
 		return new OwnedContactMean<M>(id,owner);
 	}
-	public static <M extends ContactMean> OwnedContactMean<M> from(final M id) {
+	public static <M extends IsContactMean> OwnedContactMean<M> from(final M id) {
 		return new OwnedContactMean<M>(id,id.asString());
 	}
 /////////////////////////////////////////////////////////////////////////////////////////

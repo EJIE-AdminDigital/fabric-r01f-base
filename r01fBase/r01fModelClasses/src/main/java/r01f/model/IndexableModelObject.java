@@ -1,14 +1,5 @@
 package r01f.model;
 
-import r01f.facets.Facetable;
-import r01f.model.facets.HasEntityVersion;
-import r01f.model.facets.HasNumericID;
-import r01f.model.metadata.MetaDataDescribable;
-
-
-
-
-
 /**
  * interface for model objects that can be persisted in some kind of search engine storage
  * IMPORTANT!!
@@ -26,11 +17,8 @@ import r01f.model.metadata.MetaDataDescribable;
  *
  * @param <O> the indexed oid type (it must not have to be the same as the model object's oid)
  */
+@Deprecated
 public interface IndexableModelObject
-		 extends ModelObject,
-		 		 MetaDataDescribable,
-		 		 Facetable,
-		 		 HasEntityVersion,
-		 		 HasNumericID {
+		 extends PersistableObject {
 	/* just extend */
 }
